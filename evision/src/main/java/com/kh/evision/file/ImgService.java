@@ -28,6 +28,9 @@ public class ImgService {
 		"jpeg",
 		"png",
 		"gif",
+		"bmp",
+		"heic",
+		"heif",
 		"webp",
 		"svg"
 		
