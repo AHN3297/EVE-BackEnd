@@ -58,23 +58,23 @@
     </delete>
 
     <!-- 토큰 갱신 (기존 토큰 삭제 후 새 토큰 저장) -->
-    <update id="updateToken" parameterType="TokenVO">
-        MERGE INTO TB_TOKEN T
-        USING (
-            SELECT 
-                #{token} AS TOKEN,
-                #{memberNo} AS MEMBER_NO,
-                #{expiration} AS EXPIRATION
-            FROM DUAL
-        ) S
-        ON (T.MEMBER_NO = S.MEMBER_NO)
-        WHEN MATCHED THEN
-            UPDATE SET 
-                T.TOKEN = S.TOKEN,
-                T.EXPIRATION = S.EXPIRATION
-        WHEN NOT MATCHED THEN
-            INSERT (TOKEN, MEMBER_NO, EXPIRATION)
-            VALUES (S.TOKEN, S.MEMBER_NO, S.EXPIRATION)
-    </update>
+<insert id="updateToken" parameterType="TokenVO">
+    MERGE INTO TB_TOKEN T
+    USING (
+        SELECT
+            #{token} AS TOKEN,
+            #{memberNo} AS MEMBER_NO,
+            #{expirationTime} AS EXPIRATION
+        FROM DUAL
+    ) S
+    ON (T.MEMBER_NO = S.MEMBER_NO)
+    WHEN MATCHED THEN
+        UPDATE SET
+            T.TOKEN = S.TOKEN,
+            T.EXPIRATION = S.EXPIRATION
+    WHEN NOT MATCHED THEN
+        INSERT (TOKEN, MEMBER_NO, EXPIRATION)
+        VALUES (S.TOKEN, S.MEMBER_NO, S.EXPIRATION)
+</insert>
 
 </mapper>

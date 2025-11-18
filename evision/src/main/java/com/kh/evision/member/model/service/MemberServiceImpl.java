@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.evision.exception.custom.member.IdDuplicateException;
 import com.kh.evision.exception.custom.member.LoginFailException;
 import com.kh.evision.member.model.dao.MemberMapper;
+import com.kh.evision.member.model.dto.LoginDTO;
+import com.kh.evision.member.model.dto.LoginResponseDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.vo.MemberVO;
 import com.kh.evision.token.member.dao.TokenMapper;
@@ -52,6 +54,31 @@ public class MemberServiceImpl implements MemberService {
 
         return result;
     }
+    
+    @Override
+    public LoginResponseDTO login(LoginDTO loginDTO) {
+        // selectMemberById로 회원 조회
+        MemberVO memberVO = memberMapper.selectMemberById(loginDTO.getMemberId());
+
+        // 회원이 없거나 비밀번호가 맞지 않으면 예외 발생
+        if (memberVO == null || !passwordEncoder.matches(loginDTO.getMemberPwd(), memberVO.getMemberPwd())) {
+            throw new LoginFailException("아이디 또는 비밀번호가 틀렸습니다.");
+        }
+
+        // JWT 토큰 생성 및 DB 저장
+        String token = jwtUtil.generateToken(memberVO.getMemberNo());
+        
+        log.info("로그인 성공 - 회원번호: {}, 아이디: {}", memberVO.getMemberNo(), memberVO.getMemberId());
+
+        return LoginResponseDTO.builder()
+                .memberNo(memberVO.getMemberNo())
+                .memberId(memberVO.getMemberId())
+                .memberName(memberVO.getMemberName())
+                .token(token)
+                .message("로그인 성공")
+                .build();
+    }
+    
     
     public int login(MemberDTO member) {
         // selectMemberById로 회원 조회
