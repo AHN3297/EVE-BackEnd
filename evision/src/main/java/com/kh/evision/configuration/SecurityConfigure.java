@@ -29,13 +29,18 @@ public class SecurityConfigure {
 				   .cors(Customizer.withDefaults())
 				   .authorizeHttpRequests(requests -> {
 					   
-					   requests.requestMatchers(HttpMethod.POST, "/member/login").permitAll();
+					   // 로그인 - 누구나 접근
+		               requests.requestMatchers(HttpMethod.POST, "/member/login").permitAll();
+		               // 🔹 공지사항 - 조회/검색은 모두 허용
+		               requests.requestMatchers(HttpMethod.GET, "/notice/**").permitAll();
+		               // 공지 작성/수정/삭제는 권한자 전용
+					   requests.requestMatchers(HttpMethod.POST, "/notice/**").authenticated();
 					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member").authenticated();
 					   // requests.requestMatchers("/admin/**").hasRole("ADMIN"); // 권한검증방법
-					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station").permitAll();
+					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/cars", "/station").permitAll();
 					   
 				   })
 				   .sessionManagement(manager ->

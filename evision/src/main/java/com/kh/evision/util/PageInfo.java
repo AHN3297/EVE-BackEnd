@@ -14,7 +14,7 @@ import lombok.ToString;
 public class PageInfo {
 	
 	private int listCount;
-	private int currentPate;
+	private int currentPage;
 	private int boardLimit;
 	private int pageLimit;
 	
