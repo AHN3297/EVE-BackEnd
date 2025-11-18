@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.evision.token.member.dao.TokenMapper">
+
+    <!-- 토큰 저장 -->
+    <insert id="insertToken" parameterType="TokenVO">
+        INSERT INTO TB_TOKEN (
+            TOKEN, 
+            MEMBER_NO, 
+            EXPIRATION
+        ) VALUES (
+            #{token}, 
+            #{memberNo}, 
+            #{expiration}
+        )
+    </insert>
+
+    <!-- 토큰으로 조회 -->
+    <select id="selectTokenByToken" resultType="TokenVO">
+        SELECT 
+            TOKEN,
+            MEMBER_NO AS memberNo,
+            EXPIRATION
+        FROM TB_TOKEN
+        WHERE TOKEN = #{token}
+    </select>
+
+    <!-- 회원 번호로 토큰 조회 -->
+    <select id="selectTokenByMemberNo" resultType="TokenVO">
+        SELECT 
+            TOKEN,
+            MEMBER_NO AS memberNo,
+            EXPIRATION
+        FROM TB_TOKEN
+        WHERE MEMBER_NO = #{memberNo}
+        ORDER BY EXPIRATION DESC
+        FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <!-- 토큰 삭제 -->
+    <delete id="deleteToken">
+        DELETE FROM TB_TOKEN
+        WHERE TOKEN = #{token}
+    </delete>
+
+    <!-- 회원의 모든 토큰 삭제 -->
+    <delete id="deleteTokenByMemberNo">
+        DELETE FROM TB_TOKEN
+        WHERE MEMBER_NO = #{memberNo}
+    </delete>
+
+    <!-- 만료된 토큰 일괄 삭제 -->
+    <delete id="deleteExpiredTokens">
+        DELETE FROM TB_TOKEN
+        WHERE EXPIRATION <![CDATA[<]]> SYSDATE
+    </delete>
+
+    <!-- 토큰 갱신 (기존 토큰 삭제 후 새 토큰 저장) -->
+    <update id="updateToken" parameterType="TokenVO">
+        MERGE INTO TB_TOKEN T
+        USING (
+            SELECT 
+                #{token} AS TOKEN,
+                #{memberNo} AS MEMBER_NO,
+                #{expiration} AS EXPIRATION
+            FROM DUAL
+        ) S
+        ON (T.MEMBER_NO = S.MEMBER_NO)
+        WHEN MATCHED THEN
+            UPDATE SET 
+                T.TOKEN = S.TOKEN,
+                T.EXPIRATION = S.EXPIRATION
+        WHEN NOT MATCHED THEN
+            INSERT (TOKEN, MEMBER_NO, EXPIRATION)
+            VALUES (S.TOKEN, S.MEMBER_NO, S.EXPIRATION)
+    </update>
+
+</mapper>
