@@ -1,8 +1,15 @@
 package com.kh.evision.car.model.service;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.kh.evision.car.model.dto.CarDTO;
+
 public interface CarService {
 	
 	// 차량 등록
+	void saveCar(CarDTO car, List<MultipartFile> file);
 	
 	// 차량 목록 조회
 	

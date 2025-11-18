@@ -3,8 +3,10 @@ package com.kh.evision.car.model.vo;
 import java.sql.Date;
 
 import lombok.Builder;
+import lombok.Value;
 
-@Builder
+@Value // 불변객체 생성용
+@Builder // 생성 편하게 하려고
 public class CarVO {
 	
 	private Long carNo;
