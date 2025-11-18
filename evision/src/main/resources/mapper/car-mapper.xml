@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.evision.car.model.dao.CarMapper">
+	
+	<insert id="saveCar"
+			parameterType="CarVO">
+		INSERT
+		  INTO
+		       TB_CAR
+		VALUES
+		       (
+		       SEQ_CNO.NEXTVAL
+		     , #{carName}
+		     , #{carPlate}
+		     , #{maxPassenger}
+		     , #{color}
+		     , DEFAULT
+		     , SYSDATE
+		     , #{carLocation}
+		     , #{carBrand}
+		       )
+	</insert>
+	
+	<!-- sql 태그, resultMap(+ resultSet), selectKey 쓰는거 생각하기 -->
+	
+	<select id="findAll"
+			resultType="CarDTO">
+		SELECT
+		       CAR_NO carNo
+		     , CAR_NAME carName
+		     , CAR_PLATE carPlate
+		     , MAX_PASSENGER maxPassenger
+		     , COLOR color
+		     , STATUS status
+		     , REGISTER_DATE registerDate
+		     , CAR_LOCATION carLocation
+		     , CAR_BRAND carBrand
+		  FROM
+		       TB_CAR
+		 WHERE
+		       STATUS = 'Y'
+		 ORDER
+		    BY
+		       REGISTER_DATE DESC
+	</select>
+	
+</mapper>

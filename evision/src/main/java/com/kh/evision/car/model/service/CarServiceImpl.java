@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.evision.car.model.dao.CarMapper;
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.vo.CarVO;
 import com.kh.evision.file.FileService;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
+	
+	private final CarMapper carMapper;
 	
 	private final FileService fileService;
 	private final ImgService imgService;
@@ -42,9 +45,20 @@ public class CarServiceImpl implements CarService {
 			
 		}
 		
+		carMapper.saveCar(c);
+		
 	}
 	
 	// 차량 목록 조회
+	public List<CarDTO> findAll(int pageNo) {
+		
+		// 페이지 번호 검증 -> 예외처리 해야함(Bad Request)
+		
+		// 페이징처리 고민!
+		
+		return carMapper.findAll();
+		
+	}
 	
 	// 차량 정보 수정
 	
