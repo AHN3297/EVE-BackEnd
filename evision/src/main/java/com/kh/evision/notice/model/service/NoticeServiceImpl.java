@@ -22,19 +22,20 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeMapper noticeMapper;
     private final Pagination pagination;
-    
-    private static final int BOARD_LIMIT = 10; // 한 페이지당 게시물 수
-    private static final int PAGE_LIMIT = 5;   // 한 화면당 페이지 수
+
+    private static final int BOARD_LIMIT = 10;
+    private static final int PAGE_LIMIT = 5;
 
     @Override
-    public List<NoticeDTO> getNoticeList(int currentPage) {
-        PageInfo pageInfo = getPageInfo(currentPage);
-        
+    public List<NoticeDTO> getNoticeList(int currentPage, String keyword) {
+        PageInfo pageInfo = getPageInfo(currentPage, keyword);
+
         int startRow = (currentPage - 1) * BOARD_LIMIT + 1;
         int endRow = currentPage * BOARD_LIMIT;
-        
-        List<NoticeVO> noticeList = noticeMapper.getNoticeList(startRow, endRow);
-        
+
+        // keyword 파라미터 추가
+        List<NoticeVO> noticeList = noticeMapper.getNoticeList(startRow, endRow, keyword);
+
         return noticeList.stream()
                 .map(vo -> new NoticeDTO(
                     vo.getNoticeNo(),
@@ -48,19 +49,20 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public PageInfo getPageInfo(int currentPage) {
-        int listCount = noticeMapper.getNoticeCount();
+    public PageInfo getPageInfo(int currentPage, String keyword) {
+        // keyword 파라미터 추가
+        int listCount = noticeMapper.getNoticeCount(keyword);
         return pagination.getPageInfo(listCount, currentPage, BOARD_LIMIT, PAGE_LIMIT);
     }
 
     @Override
     public NoticeDTO getNoticeDetail(Long noticeNo) {
         NoticeVO noticeVO = noticeMapper.getNoticeDetail(noticeNo);
-        
+
         if (noticeVO == null) {
             return null;
         }
-        
+
         return new NoticeDTO(
             noticeVO.getNoticeNo(),
             noticeVO.getNoticeTitle(),

@@ -22,20 +22,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/notice")
 @RequiredArgsConstructor
 public class NoticeController {
-    
+
     private final NoticeService noticeService;
-    
+
     /**
-     * 공지사항 목록 조회 (페이징)
+     * 공지사항 목록 조회 (검색 포함)
      */
     @GetMapping("/list")
     public ResponseEntity<?> getNoticeList(
-        @RequestParam(value = "currentPage", defaultValue = "1") int currentPage  // ⭐ value 추가!
-    ) {
-        log.info("공지사항 목록 조회 - 현재 페이지: {}", currentPage);
+            @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        
+        log.info("공지사항 목록 조회 - 현재 페이지: {}, 검색어: {}", currentPage, keyword);
 
-        List<NoticeDTO> noticeList = noticeService.getNoticeList(currentPage);
-        PageInfo pageInfo = noticeService.getPageInfo(currentPage);
+        List<NoticeDTO> noticeList = noticeService.getNoticeList(currentPage, keyword);
+        PageInfo pageInfo = noticeService.getPageInfo(currentPage, keyword);
 
         return ResponseEntity.ok()
                 .body(Map.of(
@@ -43,19 +44,20 @@ public class NoticeController {
                     "pageInfo", pageInfo
                 ));
     }
+
     /**
      * 공지사항 상세 조회
      */
     @GetMapping("/{noticeNo}")
     public ResponseEntity<?> getNoticeDetail(@PathVariable("noticeNo") Long noticeNo) {
         log.info("공지사항 상세 조회 - 공지사항 번호: {}", noticeNo);
-        
+
         NoticeDTO notice = noticeService.getNoticeDetail(noticeNo);
-        
+
         if (notice == null) {
             return ResponseEntity.notFound().build();
         }
-        
+
         return ResponseEntity.ok(notice);
     }
 }
