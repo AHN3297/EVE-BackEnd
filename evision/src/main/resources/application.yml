@@ -3,7 +3,7 @@ spring:
     name: evision
   datasource:
     url: jdbc:oracle:thin:@115.90.212.20:10000:XE
-    username: DLQMDL133
+    username: C##DLQMDL133
     password: DLQMDL1331234
     driver-class-name: oracle.jdbc.driver.OracleDriver
   mvc:
@@ -23,7 +23,7 @@ mybatis:
   configuration:
     jdbc-type-for-null: VARCHAR
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  type-aliases-package: 
+  type-aliases-package: com.kh.evision.board.model.vo, com.kh.evision.board.model.dto, com.kh.evision.comment.model.vo, com.kh.evision.comment.model.dto
   mapper-locations: classpath:mapper/*.xml
 
 jwt:

@@ -3,4 +3,79 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.evision.board.model.dao.BoardMapper">
+	
+	<sql id="boardColumn">
+		SELECT 
+		       BOARD_NO boardNo
+		     , BOARD_TITLE boardTitle
+		     , BOARD_WRITER boardWriter
+		     , CREATE_DATE createDate
+	</sql>
+	
+		<insert id="save" 
+			parameterType="BoardVO">
+		INSERT 
+		  INTO 
+		       TB_BOARD
+		VALUES 
+			   (
+			   SEQ_BNO.NEXTVAL
+			 , #{boardTitle}
+			 , #{boardWriter}
+			 , #{boardContent}
+			 , #{count}
+			 , DEFAULT
+			 , DEFAULT
+			   )
+	</insert>
+	
+		<select id="findAll"
+			resultType="BoardDTO">
+		<include refid="boardColumn" />
+		  FROM 
+		       TB_BOARD
+		 WHERE 
+		       STATUS = 'Y'
+		 ORDER 
+		    BY 
+		       BOARD_NO DESC
+	</select>
+	
+	<select id="findByBoardNo"
+			resultType="BoardDTO"
+			parameterType="long">
+		<include refid="boardColumn" />
+			 , BOARD_CONTENT boardContent
+			 , COUNT count
+		  FROM 
+		       TB_BOARD
+		 WHERE 
+		       STATUS = 'Y'
+		   AND 
+		       BOARD_NO = #{boardNo}
+	</select>
+	
+	<update id="update"
+			parameterType="BoardDTO">
+		UPDATE 
+		       TB_BOARD
+		   SET 
+		       BOARD_TITLE = #{boardTitle}
+		     , BOARD_CONTENT = #{boardContent}
+		     , COUNT = #{count}
+		 WHERE 
+		       BOARD_NO = #{boardNo}
+		   AND 
+		       STATUS = 'Y'
+	</update>
+	
+	<update id="deleteByBoardNo">
+		UPDATE 
+		       TB_BOARD
+		   SET 
+		       STATUS = 'N'
+		 WHERE 
+		       BOARD_NO = #{boardNo}
+	</update>
+		
 </mapper>
