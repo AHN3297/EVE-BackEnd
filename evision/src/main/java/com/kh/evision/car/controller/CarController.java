@@ -59,6 +59,8 @@ public class CarController {
 	@GetMapping("/{carNo}")
 	public ResponseEntity<CarDTO> findByCarNo(@PathVariable(name="carNo") @Min(value=1, message="올바른 접근 경로가 아닙니다.") Long carNo) {
 		
+		log.info("FE에서 넘어오는 차량 번호 : {}", carNo);
+		
 		CarDTO car = carService.findByCarNo(carNo);
 		
 		return ResponseEntity.ok(car);

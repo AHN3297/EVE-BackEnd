@@ -57,51 +57,50 @@
 		<result column="carBrand" property="carBrand" />
 		<collection property="imgs" ofType="ImgInfo">
 			<id column="imgId" property="imgId" />
-			<result column="originName" property="originName" />
-			<result column="changeName" property="changeName" />
+			<result column="imgOriginName" property="originName" />
+			<result column="imgChangeName" property="changeName" />
 		</collection>
 		<collection property="files" ofType="FileInfo">
 			<id column="fileId" property="fileId" />
-			<result column="originName" property="originName" />
-			<result column="changeName" property="changeName" />
+			<result column="fileOriginName" property="originName" />
+			<result column="fileChangeName" property="changeName" />
 		</collection>
 	</resultMap>
 	
 	<select id="findByCarNo"
-			resultType="CarDTO"
+			resultMap="carResultSet"
 			parameterType="long">
 		SELECT
-		       CAR_NO carNo
-		     , CAR_NAME carName
-		     , CAR_PLATE carPlate
-		     , MAX_PASSENGER maxPassenger
-		     , COLOR color
-		     , STATUS status
-		     , REGISTER_DATE registerDate
-		     , CAR_LOCATION carLocation
-		     , CAR_BRAND carBrand
-		     , IMG_ID imgId
+		       C.CAR_NO carNo
+		     , C.CAR_NAME carName
+		     , C.CAR_PLATE carPlate
+		     , C.MAX_PASSENGER maxPassenger
+		     , C.COLOR color
+		     , C.REGISTER_DATE registerDate
+		     , C.CAR_LOCATION carLocation
+		     , C.CAR_BRAND carBrand
+		     , I.IMG_ID imgId
 		     , I.ORIGIN_NAME imgOriginName
 		     , I.CHANGE_NAME imgChangeName
-		     , FILE_ID fileId
+		     , F.FILE_ID fileId
 		     , F.ORIGIN_NAME fileOriginName
 		     , F.CHANGE_NAME fileChangeName
 		  FROM
 		       TB_CAR C
 		  LEFT
 		  JOIN
-		       TB_CAR_IMG I USING (CAR_NO)
+		       TB_CAR_IMG I ON C.CAR_NO = I.CAR_NO
 		   AND
 		       I.STATUS = 'Y'
 		  LEFT
 		  JOIN
-		       TB_CAR_FILE F USING (CAR_NO)
+		       TB_CAR_FILE F ON C.CAR_NO = F.CAR_NO
 		   AND
 		       F.STATUS = 'Y'
 		 WHERE
 		       C.STATUS = 'Y'
 		   AND
-		       CAR_NO = #{carNo}
+		       C.CAR_NO = #{carNo}
 	</select>
 	
 </mapper>

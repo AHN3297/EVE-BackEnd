@@ -9,13 +9,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.evision.exception.FileUploadFailureException;
 import com.kh.evision.exception.InvalidImgFormatException;
 
-@Service
+@Component
 public class ImgService {
 	
 	// 파일 경로 필드
