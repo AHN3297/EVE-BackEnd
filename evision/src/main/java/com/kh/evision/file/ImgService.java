@@ -89,7 +89,7 @@ public class ImgService {
 		// 원본 확장자 분리
 		String ext = originalFileName.substring(originalFileName.lastIndexOf("."));
 		
-		// 검증 메소드 호출
+		// 검증 메소드 호출 -> 이미지 아니면 어케야하지? 파일 서비스로 연결하고싶은데...? 지금은 바로 예외발생시켜뒀음
 		isImg(ext);
 
 		// 원본 확장자 추가

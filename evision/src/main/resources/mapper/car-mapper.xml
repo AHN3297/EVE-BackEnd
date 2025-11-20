@@ -23,6 +23,36 @@
 		       )
 	</insert>
 	
+	<insert id="saveCarImg"
+			parameterType="ImgInfo">
+		INSERT
+		  INTO
+		       TB_CAR_IMG
+		VALUES
+		       (
+		       SEQ_CINO.NEXTVAL
+		     , #{carNo}
+		     , #{originName}
+		     , #{changeName}
+		     , DEFAULT
+		       )
+	</insert>
+	
+	<insert id="saveCarFile"
+			parameterType="FileInfo">
+		INSERT
+		  INTO
+		       TB_CAR_FILE
+		VALUES
+		       (
+		       SEQ_CFNO.NEXTVAL
+		     , #{carNo}
+		     , #{originName}
+		     , #{changeName}
+		     , DEFAULT
+		       )
+	</insert>
+	
 	<!-- sql 태그, resultMap(+ resultSet), selectKey 쓰는거 생각하기 -->
 	
 	<select id="findAll"
@@ -102,5 +132,58 @@
 		   AND
 		       C.CAR_NO = #{carNo}
 	</select>
+	
+	<update id="updateCar"
+			parameterType="CarDTO">
+		UPDATE
+		       TB_CAR
+		   SET
+		       CAR_NAME = #{carName}
+		     , CAR_PLATE = #{carPlate}
+		     , MAX_PASSENGER = #{maxPassenger}
+		     , COLOR = #{color}
+		     , CAR_LOCATION = #{carLocation}
+		     , CAR_BRAND = #{carBrand}
+		 WHERE
+		       CAR_NO = #{carNo}
+		   AND
+		       STATUS = 'Y'
+	</update>
+	
+	<update id="updateCarImg"
+			parameterType="ImgInfo">
+		UPDATE
+		       TB_CAR_IMG
+		   SET
+		       ORIGIN_NAME = #{originName}
+		     , CHANGE_NAME = #{changeName}
+		 WHERE
+		       CAR_NO = #{carNo}
+		   AND
+		       STATUS = 'Y'
+	</update>
+	
+	<update id="updateCarFile"
+			parameterType="FileInfo">
+		UPDATE
+		       TB_CAR_FILE
+		   SET
+		       ORIGIN_NAME = #{originName}
+		     , CHANGE_NAME = #{changeName}
+		 WHERE
+		       CAR_NO = #{carNo}
+		   AND
+		       STATUS = 'Y'
+	</update>
+	
+	<delete id="deleteByCarNo"
+			parameterType="long">
+		UPDATE
+		       TB_CAR
+		   SET
+		       STATUS = 'N'
+		 WHERE
+		       CAR_NO = #{carNo}
+	</delete>
 	
 </mapper>

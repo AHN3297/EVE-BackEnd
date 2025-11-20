@@ -24,13 +24,13 @@ public class CarServiceImpl implements CarService {
 	
 	// 차량 등록
 	@Override
-	public void saveCar(CarDTO car, List<MultipartFile> file) {
+	public void saveCar(CarDTO car, List<MultipartFile> files) {
 		
 		CarVO c = null;
 		
 		// 파일존재여부 확인
-		// 있으면 업로드하고 VO에 담아서 넘기기 / 없으면 그냥 넘기기
-		if(file != null && !file.isEmpty()) {
+		// 있으면 업로드하고 VO에 담아서 넘기기 / 없으면 그냥 넘기기 -> 어쨌든 VO는 넘겨줘야한다 -> 파일 작업만 if로 구분
+		if(files != null && !files.isEmpty()) {
 			
 			// 파일이 여러개 있을 수 있음, 리스트에서 꺼내서
 			// 있는지 없는지 검증
@@ -43,7 +43,23 @@ public class CarServiceImpl implements CarService {
 			 * 
 			 */
 			
+			// 일단 한개씩 꺼내보기
+			MultipartFile file = files.get(1);
+			
+			// 하나 이미지로 저장 시도
+			imgService.store(file);
+			
 		}
+		
+		// 어쨌든 차량 정보는 넘겨서 저장시켜야함
+		c = CarVO.builder()
+				.carName(car.getCarName())
+				.carPlate(car.getCarPlate())
+				.maxPassenger(car.getMaxPassenger())
+				.color(car.getColor())
+				.carLocation(car.getCarLocation())
+				.carBrand(car.getCarBrand())
+				.build();
 		
 		carMapper.saveCar(c);
 		
@@ -56,12 +72,35 @@ public class CarServiceImpl implements CarService {
 		// 페이지 번호 검증 -> 예외처리 해야함(Bad Request)
 		
 		// 페이징처리 고민!
+		// int count carMapper.
 		
 		return carMapper.findAll();
 		
 	}
 	
 	// 차량 정보 수정
+	@Override
+	public CarDTO updateCar(Long carNo, CarDTO car, List<MultipartFile> files) {
+		
+		// 파일이 없었다면 새 파일 첨부
+		// 파일 수정되면 기존 파일은 삭제하고 새 파일 추가
+		
+		if(files != null && !files.isEmpty()) {
+			
+			fileService.store(null);
+			
+		}
+		
+		// 차근차근 해야함
+		// 이미지 업로드
+		// 파일 업로드
+		carMapper.updateCar(car);
+		
+		// 둘 다 성공해야 리턴
+		
+		return car;
+		
+	}
 	
 	// 차량 상세 조회
 	@Override
@@ -70,6 +109,10 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	// 차량 삭제
+	@Override
+	public void deleteByCarNo(Long carNo) {
+		carMapper.deleteByCarNo(carNo);
+	}
 	
 	// 차량 검색
 

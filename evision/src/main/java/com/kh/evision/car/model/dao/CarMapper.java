@@ -17,11 +17,13 @@ public interface CarMapper {
 	List<CarDTO> findAll();
 	
 	// 차량 정보 수정
+	CarDTO updateCar(CarDTO car);
 	
 	// 차량 상세 조회
 	CarDTO findByCarNo(Long carNo);
 	
 	// 차량 삭제
+	void deleteByCarNo(Long carNo);
 	
 	// 차량 검색
 
