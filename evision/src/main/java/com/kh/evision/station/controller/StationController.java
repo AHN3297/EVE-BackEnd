@@ -2,7 +2,6 @@ package com.kh.evision.station.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.evision.station.model.dto.StationDTO;
 import com.kh.evision.station.model.service.StationService;
 import com.kh.evision.station.model.vo.ReviewVO;
 import com.kh.evision.station.model.vo.StationVO;
@@ -31,20 +31,15 @@ public class StationController {
 
     // 충전소 검색
     @GetMapping("/search")
-    public ResponseEntity<List<StationVO>> searchList(
-            @RequestParam(required = false) String stationName,
-            @RequestParam(required = false) String stationAddress,
-            @RequestParam(required = false) String stationType,
-            @RequestParam(required = false) Long stationLng,
-            @RequestParam(required = false) Long stationLat) {
-        List<StationVO> stations = stationService.searchList(stationName, stationAddress, stationType,  stationLng,  stationLat);
+    public ResponseEntity<List<StationDTO>> searchList(
+            @RequestParam(name="keyword") String keyword) {
+        List<StationDTO> stations = stationService.searchList(keyword);
         return ResponseEntity.ok(stations);
     }
 
     // 충전소 등록
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody StationVO station) {
-    	System.out.println("나는 컨트롤러");
+    public ResponseEntity<String> save(@RequestBody StationDTO station) {
         int result = stationService.save(station);
         if (result > 0) {
             return ResponseEntity.status(HttpStatus.CREATED).body("충전소가 등록되었습니다.");
@@ -61,8 +56,8 @@ public class StationController {
     }
 
     // 충전소 삭제
-    @DeleteMapping("/{stationNo}")
-    public ResponseEntity<String> delete(@PathVariable Long stationNo) {
+    @DeleteMapping
+    public ResponseEntity<String> delete(@RequestParam(name="stationNo") Long stationNo) {
         int result = stationService.delete(stationNo);
         if (result > 0) {
             return ResponseEntity.ok("충전소가 삭제되었습니다.");
@@ -73,8 +68,8 @@ public class StationController {
 
     // 충전소 상세보기
     @GetMapping("/{stationNo}")
-    public ResponseEntity<StationVO> stationDetail(@PathVariable Long stationNo) {
-    	StationVO station = stationService.stationDetail(stationNo);
+    public ResponseEntity<StationDTO> stationDetail(@PathVariable("stationNo") Long stationNo) {
+    	StationDTO station = stationService.stationDetail(stationNo);
         if (station != null) {
             return ResponseEntity.ok(station);
         } else {

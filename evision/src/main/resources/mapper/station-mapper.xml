@@ -13,9 +13,9 @@
         <result property="stationLat" column="STATION_LAT"/>
         <result property="registerDate" column="REGISTER_DATE"/>
         <result property="status" column="STATUS"/>
-        <result property="stationCount" column="STATION_COUNT"/>
-        <result property="useableStation" column="USEABLE_STATION"/>
+        <result property="delStatus" column="DEL_STATUS"/>
     </resultMap>
+    
 
     <resultMap id="ReviewResultMap" type="com.kh.evision.station.model.vo.ReviewVO">
         <id property="reviewNo" column="REVIEW_NO"/>
@@ -28,37 +28,28 @@
     </resultMap>
 
     <!-- 충전소 검색 -->
-    <select id="searchList" resultMap="StationResultMap">
+    <select id="searchList" resultType="com.kh.evision.station.model.dto.StationDTO">
         SELECT 
-	     STATION_NO
-	   , STATION_NAME
-	   , STATION_ADDRESS
- 	   , STATION_TYPE
-	   , REGISTER_DATE
-	   , STATUS
-	   , STATION_COUNT
-	   , USEABLE_STATION
-        FROM 
-	     TB_STATION
-       WHERE 
-	     STATUS = 'Y'
-        <if test="stationName != null and stationName != ''">
-            AND STATION_NAME LIKE '%' || #{stationName} || '%'
-        </if>
-        <if test="stationAddress != null and stationAddress != ''">
-            AND STATION_ADDRESS LIKE '%' || #{stationAddress} || '%'
-        </if>
-        <if test="stationType != null and stationType != ''">
-            AND STATION_TYPE = #{stationType}
-        </if>
+	    	   STATION_NO stationNo
+             , STATION_NAME stationName
+             , STATION_ADDRESS stationAddress
+             , STATION_TYPE stationType
+             , STATION_LNG stationLng
+             , STATION_LAT stationLat
+             , REGISTER_DATE registerDate
+             , STATUS 
+             , DEL_STATUS
+          FROM 
+	     	   TB_STATION
+       	 WHERE 
+	     	   DEL_STATUS = 'Y'
+           AND STATION_NAME LIKE '%' || #{keyword} || '%'
+            OR STATION_ADDRESS LIKE '%' || #{keyword} || '%'
         ORDER BY REGISTER_DATE DESC
     </select>
 
     <!-- 충전소 등록 -->
     <insert id="save" parameterType="com.kh.evision.station.model.vo.StationVO">
-        <selectKey keyProperty="stationNo" resultType="Long" order="BEFORE">
-            SELECT NVL(MAX(STATION_NO), 0) + 1 FROM TB_STATION
-        </selectKey>
         INSERT
           INTO 
           	   TB_STATION 
@@ -71,48 +62,70 @@
              , STATION_LAT
              , REGISTER_DATE
              , STATUS
-             , STATION_COUNT
-             , USEABLE_STATION
+             , DEL_STATUS
         	 ) 
       VALUES (
-             #{stationNo}
+             SEQ_SNO.NEXTVAL
            , #{stationName}
            , #{stationAddress}
            , #{stationType}
            , #{stationLng}
            , #{stationLat}
            , SYSDATE
-           , NVL(#{status}
-           , 'Y'
+           , #{status}
+           , DEFAULT
              )
-           , #{stationCount}
-           , #{useableStation}
-        )
     </insert>
 
     <!-- 충전소 목록 보기 -->
     <select id="findAll" resultMap="StationResultMap">
-        SELECT STATION_NO, STATION_NAME, STATION_ADDRESS, STATION_TYPE, STATION_LNG, STATION_LAT 
-               REGISTER_DATE, STATUS, STATION_COUNT, USEABLE_STATION
-        FROM TB_STATION
-        WHERE STATUS = 'Y'
-        ORDER BY REGISTER_DATE DESC
+        SELECT 
+        	   STATION_NO
+        	 , STATION_NAME
+        	 , STATION_ADDRESS
+        	 , STATION_TYPE
+        	 , STATION_LNG
+        	 , STATION_LAT 
+             , REGISTER_DATE
+             , STATUS
+             , DEL_STATUS
+          FROM 
+        	   TB_STATION
+         WHERE
+               DEL_STATUS='Y'
+        ORDER 
+           BY 
+               REGISTER_DATE DESC
     </select>
 
     <!-- 충전소 삭제 (논리 삭제) -->
     <update id="delete" parameterType="Long">
-        UPDATE TB_STATION
-        SET STATUS = 'N'
-        WHERE STATION_NO = #{stationNo}
+        UPDATE 
+        	   TB_STATION
+           SET 
+           	   DEL_STATUS = 'N'
+         WHERE 
+         	   STATION_NO = #{stationNo}
     </update>
 
     <!-- 충전소 상세보기 -->
-    <select id="stationDetail" resultMap="StationResultMap">
-        SELECT STATION_NO, STATION_NAME, STATION_ADDRESS, STATION_TYPE, 
-               REGISTER_DATE, STATUS, STATION_COUNT, USEABLE_STATION
-        FROM TB_STATION
-        WHERE STATION_NO = #{stationNo}
-        AND STATUS = 'Y'
+    <select id="stationDetail" resultType="com.kh.evision.station.model.dto.StationDTO">
+        SELECT 
+        	   STATION_NO stationNo
+        	 , STATION_NAME stationName
+        	 , STATION_ADDRESS stationAddress
+        	 , STATION_TYPE stationType
+        	 , STATION_LNG stationLng
+        	 , STATION_LAT stationLat
+        	 , REGISTER_DATE registerDate
+        	 , STATUS status
+        	 , DEL_STATUS delStatus
+          FROM 
+        	   TB_STATION
+         WHERE 
+         	   STATION_NO = #{stationNo}
+           AND 
+           	   DEL_STATUS = 'Y'
     </select>
 
     <!-- 충전소 리뷰 등록 -->

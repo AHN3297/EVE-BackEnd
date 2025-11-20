@@ -30,6 +30,7 @@ public class SecurityConfigure {
 				   .authorizeHttpRequests(requests -> {
 					   
 					   requests.requestMatchers(HttpMethod.POST, "/member/login","/station/**").permitAll();
+					   requests.requestMatchers(HttpMethod.DELETE, "/station/**").permitAll();
 					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**",  /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();

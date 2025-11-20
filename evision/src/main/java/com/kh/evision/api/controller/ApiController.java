@@ -21,5 +21,4 @@ public class ApiController {
 	public String getStation(@RequestParam(name="pageNo") int pageNo) throws Exception {
 		return service.requestChargerInfo(pageNo);
 	}
-	
 }

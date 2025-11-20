@@ -4,16 +4,17 @@ package com.kh.evision.station.model.service;
 
 import java.util.List;
 
+import com.kh.evision.station.model.dto.StationDTO;
 import com.kh.evision.station.model.vo.ReviewVO;
 import com.kh.evision.station.model.vo.StationVO;
 
 public interface StationService {
     
     // 충전소 검색
-    List<StationVO> searchList(String stationName, String stationAddress, String stationType, Long stationLng, Long stationLat);
+    List<StationDTO> searchList(String keyword);
     
     // 충전소 등록
-    int save(StationVO station);
+    int save(StationDTO station);
     
     // 충전소 목록 보기
     List<StationVO> findAll();
@@ -22,7 +23,7 @@ public interface StationService {
     int delete(Long stationNo);
     
     // 충전소 상세보기
-    StationVO stationDetail(Long stationNo);
+    StationDTO stationDetail(Long stationNo);
     
     // 충전소 리뷰 등록
     int commentSave(ReviewVO review);

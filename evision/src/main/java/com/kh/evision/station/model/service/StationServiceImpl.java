@@ -3,10 +3,10 @@ package com.kh.evision.station.model.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.evision.station.model.dao.StationMapper;
+import com.kh.evision.station.model.dto.StationDTO;
 import com.kh.evision.station.model.vo.ReviewVO;
 import com.kh.evision.station.model.vo.StationVO;
 
@@ -20,13 +20,13 @@ public class StationServiceImpl implements StationService {
     private final StationMapper stationMapper;
 
     @Override
-    public List<StationVO> searchList(String stationName, String stationAddress, String stationType, Long stationLng, Long stationLat) {
+    public List<StationDTO> searchList(String keyword) {
     	System.out.println("나 넘어옴?");
-        return stationMapper.searchList(stationName, stationAddress, stationType);
+        return stationMapper.searchList(keyword);
     }
 
     @Override
-    public int save(StationVO station) {
+    public int save(StationDTO station) {
         return stationMapper.save(station);
     }
 
@@ -41,7 +41,7 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public StationVO stationDetail(Long stationNo) {
+    public StationDTO stationDetail(Long stationNo) {
         return stationMapper.stationDetail(stationNo);
     }
 

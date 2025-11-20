@@ -21,6 +21,6 @@ public class StationVO {
 	private Long stationLat;
 	private Date registerDate;
 	private String status;
-	private Long stationCount;
-	private Long useableStation;
+	private String delStatus;
+
 }
