@@ -50,7 +50,8 @@ public class CarController {
 	
 	// 차량 목록 조회
 	@GetMapping
-	public ResponseEntity<List<CarDTO>> findAll(@RequestParam(name="page", defaultValue="0") int pageNo) {
+	public ResponseEntity<List<CarDTO>> findAll(@RequestParam(name="pageNo", defaultValue="0") Long pageNo) {
+		
 		log.info("여기 호출확인");
 		
 		List<CarDTO> cars = carService.findAll(pageNo);

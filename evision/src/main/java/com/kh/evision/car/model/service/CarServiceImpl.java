@@ -13,7 +13,9 @@ import com.kh.evision.file.FileService;
 import com.kh.evision.file.ImgService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
@@ -68,10 +70,14 @@ public class CarServiceImpl implements CarService {
 	
 	// 차량 목록 조회
 	@Override
-	public List<CarDTO> findAll(int pageNo) {
+	public List<CarDTO> findAll(Long pageNo) {
+		
+		// 예외처리됨?
+		log.info("불러와지나요?");
 		
 		// 페이지 번호 검증 -> 예외처리 해야함(Bad Request)
 		if(pageNo < 0) {
+			log.info("예외는 여기 들어와야해!");
 			throw new InvalidParameterException("유효하지 않은 접근입니다.");
 		}
 		

@@ -12,7 +12,7 @@ public interface CarService {
 	void saveCar(CarDTO car, List<MultipartFile> files);
 	
 	// 차량 목록 조회
-	List<CarDTO> findAll(int pageNo);
+	List<CarDTO> findAll(Long pageNo);
 	
 	// 차량 정보 수정
 	CarDTO updateCar(Long carNo, CarDTO car, List<MultipartFile> files);
