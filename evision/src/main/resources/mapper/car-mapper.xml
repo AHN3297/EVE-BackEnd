@@ -46,6 +46,27 @@
 		       REGISTER_DATE DESC
 	</select>
 	
+	<resultMap id="carResultSet" type="CarDTO">
+		<id column="carNo" property="carNo" />
+		<result column="carName" property="carName" />
+		<result column="carPlate" property="carPlate" />
+		<result column="maxPassenger" property="maxPassenger" />
+		<result column="color" property="color" />
+		<result column="registerDate" property="registerDate" />
+		<result column="carLocation" property="carLocation" />
+		<result column="carBrand" property="carBrand" />
+		<collection property="imgs" ofType="ImgInfo">
+			<id column="imgId" property="imgId" />
+			<result column="originName" property="originName" />
+			<result column="changeName" property="changeName" />
+		</collection>
+		<collection property="files" ofType="FileInfo">
+			<id column="fileId" property="fileId" />
+			<result column="originName" property="originName" />
+			<result column="changeName" property="changeName" />
+		</collection>
+	</resultMap>
+	
 	<select id="findByCarNo"
 			resultType="CarDTO"
 			parameterType="long">
@@ -59,12 +80,24 @@
 		     , REGISTER_DATE registerDate
 		     , CAR_LOCATION carLocation
 		     , CAR_BRAND carBrand
+		     , IMG_ID
+		     , ORIGIN_NAME
+		     , CHANGE_NAME
+		     , 
 		  FROM
 		       TB_CAR
+		  LEFT
+		  JOIN
+		       TB_CAR_IMG USING (CAR_NO)
+		  LEFT
+		  JOIN
+		       TB_CAR_FILE USING (CAR_NO)
 		 WHERE
-		       STATUS = 'Y'
+		       TB_CAR.STATUS = 'Y'
 		   AND
 		       CAR_NO = #{carNo}
+		   AND
+		       TB_CAR_IMG.STATUS = 'Y'
 	</select>
 	
 </mapper>
