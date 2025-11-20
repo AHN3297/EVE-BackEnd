@@ -1,6 +1,7 @@
 package com.kh.evision.member.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -8,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.evision.auth.model.vo.CustomUserDetails;
 import com.kh.evision.member.model.dto.ChangePasswordDTO;
+import com.kh.evision.member.model.dto.ChangeRoleDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.service.MemberService;
 
@@ -45,5 +48,18 @@ public class MemberController {
     	memberService.changePassword(password);
     	return ResponseEntity.ok("확인되었습니다.");
     }
+    
+    @PostMapping("/admin/change-role/{memberNo}")
+    public ResponseEntity<?> changeRole(
+            @RequestBody ChangeRoleDTO change,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        String actingRole = userDetails.getAuthorities().iterator().next().getAuthority();
+        boolean success = memberService.changeRole(change, actingRole);
+
+        return success ? ResponseEntity.ok("변경에 성공했습니다!")
+                       : ResponseEntity.badRequest().body("변경에 실패했습니다...");
+    }
+
     
 }

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.kh.evision.member.model.dto.ChangeRoleDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.vo.MemberVO;
 
@@ -53,5 +54,8 @@ public interface MemberMapper {
     
     @Update("UPDATE TB_MEMBER SET MEMBER_PWD - #{newPassword} WHERE MEMBER_NO = #{memberNo}")
     String changePassword(Map<String, Object> changeRequest);
+    
+    @Update("UPDATE MEMBER SET ROLE_STATUS = #{newRole} WHERE MEMBER_NO = #{memberNo}")
+    int changeRole(ChangeRoleDTO change);;
 }
 

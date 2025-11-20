@@ -52,7 +52,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         
         
-        // 관리자 권한 확인 (roleStatus가 "ADMIN"인 경우와 "OPERATOR"인 경우)
+        // 관리자 권한 확인 (roleStatus가 "ADMIN"인 경우와 "OPERATOR"인 경우, "USER"인 경우)
         if ("ROLE_ADMIN".equals(user.getRoleStatus())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         } else if ("ROLE_OPERATOR".equals(user.getRoleStatus())) {

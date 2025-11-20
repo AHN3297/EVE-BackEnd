@@ -2,6 +2,7 @@ package com.kh.evision.member.model.service;
 
 import java.util.Map;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import com.kh.evision.exception.custom.member.IdDuplicateException;
 import com.kh.evision.exception.custom.member.NicknameDuplicateException;
 import com.kh.evision.member.model.dao.MemberMapper;
 import com.kh.evision.member.model.dto.ChangePasswordDTO;
+import com.kh.evision.member.model.dto.ChangeRoleDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.vo.MemberVO;
 import com.kh.evision.token.model.dao.TokenMapper;
@@ -87,7 +89,25 @@ public class MemberServiceImpl implements MemberService {
 			throw new CustomAuthenticationException("비밀번호가 일치하지 않습니다.");
 		}
 		return user;
+	}
+
+
+	@Override
+	public boolean changeRole(ChangeRoleDTO change, String actingRole) {
+		if(!"ROLE_ADMIN".equals(actingRole)) {
+			throw new AccessDeniedException("권한이 없습니다! 관리자만 변경이 가능합니다.");
+		}
+		
+		if(!change.getNewRole().equals("ROLE_USER") && !change.getNewRole().equals("ROLE_OPERATOR")) {
+			throw new IllegalArgumentException("변경할 수 없는 권한입니다."); // 일단 지금은 이거쓰고 학원에서는 예외를 만들자
+			// 변경되는 값이 user랑 oprator임, 이거 2개 외에는 변경이 되면 안된다는뜻
+		}
+		int result = memberMapper.changeRole(change);
+		
+		return result > 0;
 	} 
+	
+	
     
     
  }
