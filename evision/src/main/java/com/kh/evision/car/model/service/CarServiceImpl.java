@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.evision.car.model.dao.CarMapper;
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.vo.CarVO;
+import com.kh.evision.exception.InvalidParameterException;
 import com.kh.evision.file.FileService;
 import com.kh.evision.file.ImgService;
 
@@ -70,6 +71,9 @@ public class CarServiceImpl implements CarService {
 	public List<CarDTO> findAll(int pageNo) {
 		
 		// 페이지 번호 검증 -> 예외처리 해야함(Bad Request)
+		if(pageNo < 0) {
+			throw new InvalidParameterException("유효하지 않은 접근입니다.");
+		}
 		
 		// 페이징처리 고민!
 		// int count carMapper.

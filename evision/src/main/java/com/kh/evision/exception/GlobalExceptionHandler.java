@@ -28,5 +28,10 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<Map<String, String>> handleInvalidImgFormat(InvalidImgFormatException e) {
 		return createResponseEntity(e, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
 	}
+	
+	@ExceptionHandler(InvalidParameterException.class)
+	public ResponseEntity<Map<String, String>> handleInvalidParameter(InvalidParameterException e) {
+		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
 
 }
