@@ -17,6 +17,7 @@ public interface CarService {
 	// 차량 정보 수정
 	
 	// 차량 상세 조회
+	CarDTO findByCarNo(Long carNo);
 	
 	// 차량 삭제
 	

@@ -50,6 +50,7 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	// 차량 목록 조회
+	@Override
 	public List<CarDTO> findAll(int pageNo) {
 		
 		// 페이지 번호 검증 -> 예외처리 해야함(Bad Request)
@@ -63,6 +64,10 @@ public class CarServiceImpl implements CarService {
 	// 차량 정보 수정
 	
 	// 차량 상세 조회
+	@Override
+	public CarDTO findByCarNo(Long carNo) {
+		return carMapper.findByCarNo(carNo);
+	}
 	
 	// 차량 삭제
 	

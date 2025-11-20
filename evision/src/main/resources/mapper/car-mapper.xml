@@ -46,4 +46,25 @@
 		       REGISTER_DATE DESC
 	</select>
 	
+	<select id="findByCarNo"
+			resultType="CarDTO"
+			parameterType="long">
+		SELECT
+		       CAR_NO carNo
+		     , CAR_NAME carName
+		     , CAR_PLATE carPlate
+		     , MAX_PASSENGER maxPassenger
+		     , COLOR color
+		     , STATUS status
+		     , REGISTER_DATE registerDate
+		     , CAR_LOCATION carLocation
+		     , CAR_BRAND carBrand
+		  FROM
+		       TB_CAR
+		 WHERE
+		       STATUS = 'Y'
+		   AND
+		       CAR_NO = #{carNo}
+	</select>
+	
 </mapper>
