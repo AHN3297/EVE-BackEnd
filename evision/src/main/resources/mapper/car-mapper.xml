@@ -80,24 +80,28 @@
 		     , REGISTER_DATE registerDate
 		     , CAR_LOCATION carLocation
 		     , CAR_BRAND carBrand
-		     , IMG_ID
-		     , ORIGIN_NAME
-		     , CHANGE_NAME
-		     , 
+		     , IMG_ID imgId
+		     , I.ORIGIN_NAME imgOriginName
+		     , I.CHANGE_NAME imgChangeName
+		     , FILE_ID fileId
+		     , F.ORIGIN_NAME fileOriginName
+		     , F.CHANGE_NAME fileChangeName
 		  FROM
-		       TB_CAR
+		       TB_CAR C
 		  LEFT
 		  JOIN
-		       TB_CAR_IMG USING (CAR_NO)
+		       TB_CAR_IMG I USING (CAR_NO)
+		   AND
+		       I.STATUS = 'Y'
 		  LEFT
 		  JOIN
-		       TB_CAR_FILE USING (CAR_NO)
+		       TB_CAR_FILE F USING (CAR_NO)
+		   AND
+		       F.STATUS = 'Y'
 		 WHERE
-		       TB_CAR.STATUS = 'Y'
+		       C.STATUS = 'Y'
 		   AND
 		       CAR_NO = #{carNo}
-		   AND
-		       TB_CAR_IMG.STATUS = 'Y'
 	</select>
 	
 </mapper>
