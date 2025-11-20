@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,11 +17,13 @@ import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.service.CarService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@Validated
 @RequestMapping("/cars")
 @RequiredArgsConstructor
 public class CarController {
@@ -44,6 +48,7 @@ public class CarController {
 	public ResponseEntity<List<CarDTO>> findAll(@RequestParam(name="page", defaultValue="0") int pageNo) {
 		
 		List<CarDTO> cars = carService.findAll(pageNo);
+		
 		return ResponseEntity.ok(cars);
 		
 	}
@@ -51,6 +56,14 @@ public class CarController {
 	// 차량 정보 수정
 	
 	// 차량 상세 조회
+	@GetMapping("/{carNo}")
+	public ResponseEntity<CarDTO> findByCarNo(@PathVariable(name="carNo") @Min(value=1, message="올바른 접근 경로가 아닙니다.") Long carNo) {
+		
+		CarDTO car = carService.findByCarNo(carNo);
+		
+		return ResponseEntity.ok(car);
+		
+	}
 	
 	// 차량 삭제
 	
