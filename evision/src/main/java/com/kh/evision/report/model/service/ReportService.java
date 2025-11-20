@@ -1,0 +1,12 @@
+package com.kh.evision.report.model.service;
+
+import java.util.List;
+
+import com.kh.evision.report.model.dto.ReportDTO;
+
+public interface ReportService {
+//	int save(ReportDTO report, CustomUserDetails userDetails);
+//	List<ReportDTO> findMyReports(CustomUserDetails userDetails);
+//	List<ReportDTO> findAll();
+//	ReportDTO findByReportNo(Long reportNo);
+}
