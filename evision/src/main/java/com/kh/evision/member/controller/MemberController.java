@@ -3,15 +3,16 @@ package com.kh.evision.member.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kh.evision.member.model.dto.LoginDTO;
-import com.kh.evision.member.model.dto.LoginResponseDTO;
+import com.kh.evision.member.model.dto.ChangePasswordDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.service.MemberService;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -39,19 +40,10 @@ public class MemberController {
         }
     }
     
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO) {
-        log.info("로그인 요청 수신: {}", loginDTO.getMemberId());
-        LoginResponseDTO response = memberService.login(loginDTO);
-        return ResponseEntity.ok(response);
+    @PutMapping
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO password){
+    	memberService.changePassword(password);
+    	return ResponseEntity.ok("확인되었습니다.");
     }
     
-    
-    // 로그 테스트 엔드포인트
-    @PostMapping("/log-test")
-    public ResponseEntity<String> logTest() {
-        System.out.println("✅ System.out.println 테스트");
-        log.info("✅ log.info 테스트");
-        return ResponseEntity.ok("로그 테스트 완료");
-    }
 }

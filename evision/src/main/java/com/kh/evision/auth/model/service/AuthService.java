@@ -6,5 +6,4 @@ import com.kh.evision.member.model.dto.MemberDTO;
 
 public interface AuthService {
 	Map<String, String> login(MemberDTO member);
-
 }

@@ -1,10 +1,13 @@
 package com.kh.evision.member.model.dao;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
+import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.vo.MemberVO;
 
 @Mapper
@@ -28,44 +31,27 @@ public interface MemberMapper {
     int countByNickname(String nickname);
     
     /**
-     * 회원 번호로 회원 조회 (JWT 인증용)
-     */
-    @Select("""
-        SELECT 
-            MEMBER_NO AS memberNo,
-            MEMBER_NAME AS memberName,
-            MEMBER_ID AS memberId,
-            MEMBER_PWD AS memberPwd,
-            NICKNAME,
-            ADDRESS,
-            PHONE,
-            EMAIL,
-            ENROLL_DATE AS enrollDate,
-            STATUS,
-            ROLE_STATUS AS roleStatus
-        FROM TB_MEMBER
-        WHERE MEMBER_NO = #{memberNo}
-    """)
-    MemberVO selectMemberByNo(@Param("memberNo") Long memberNo);
-    
-    /**
      * 로그인용 - 아이디로 회원 조회
      */
     @Select("""
         SELECT 
-            MEMBER_NO AS memberNo,
-            MEMBER_NAME AS memberName,
-            MEMBER_ID AS memberId,
-            MEMBER_PWD AS memberPwd,
+            MEMBER_NO memberNo,
+            MEMBER_NAME memberName,
+            MEMBER_ID memberId,
+            MEMBER_PWD memberPwd,
             NICKNAME,
             ADDRESS,
             PHONE,
             EMAIL,
-            ENROLL_DATE AS enrollDate,
+            ENROLL_DATE enrollDate,
             STATUS,
-            ROLE_STATUS AS roleStatus
+            ROLE_STATUS roleStatus
         FROM TB_MEMBER
         WHERE MEMBER_ID = #{memberId}
     """)
-    MemberVO selectMemberById(@Param("memberId") String memberId);
+    MemberDTO loadUser(String memberId);
+    
+    @Update("UPDATE TB_MEMBER SET MEMBER_PWD - #{newPassword} WHERE MEMBER_NO = #{memberNo}")
+    String changePassword(Map<String, Object> changeRequest);
 }
+

@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.kh.evision.exception.custom.member.CustomAuthenticationException;
 import com.kh.evision.exception.custom.member.IdDuplicateException;
 import com.kh.evision.exception.custom.member.LoginFailException;
 import com.kh.evision.exception.custom.member.NicknameDuplicateException;
@@ -22,6 +24,10 @@ public class GlobalExceptionHandler {
 		Map<String, String> error = new HashMap();
 		error.put("error-message", e.getMessage());
 		return ResponseEntity.status(status).body(error);
+	}
+	@ExceptionHandler(CustomAuthenticationException.class)
+	public ResponseEntity<Map<String, String>> handleAuth(CustomAuthenticationException e){
+			return createResponseEntity(e, HttpStatus.UNAUTHORIZED);
 	}
 	
 	@ExceptionHandler(IdDuplicateException.class)
@@ -60,6 +66,13 @@ public class GlobalExceptionHandler {
 		Map<String, String> errors = new HashMap();
 		e.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 		return ResponseEntity.badRequest().body(errors);
+	}
+	
+	@ExceptionHandler(UsernameNotFoundException.class)
+	public ResponseEntity<?> handlerUsernameNotFound(UsernameNotFoundException e){
+		Map<String, String> error = new HashMap();
+		error.put("error-message", e.getMessage());
+		return ResponseEntity.badRequest().body(error);
 	}
 
 }

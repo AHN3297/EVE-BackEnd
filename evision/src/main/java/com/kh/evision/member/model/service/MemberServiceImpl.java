@@ -1,19 +1,22 @@
 package com.kh.evision.member.model.service;
 
+import java.util.Map;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.evision.auth.model.vo.CustomUserDetails;
+import com.kh.evision.exception.custom.member.CustomAuthenticationException;
 import com.kh.evision.exception.custom.member.IdDuplicateException;
-import com.kh.evision.exception.custom.member.LoginFailException;
 import com.kh.evision.exception.custom.member.NicknameDuplicateException;
 import com.kh.evision.member.model.dao.MemberMapper;
-import com.kh.evision.member.model.dto.LoginDTO;
-import com.kh.evision.member.model.dto.LoginResponseDTO;
+import com.kh.evision.member.model.dto.ChangePasswordDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.vo.MemberVO;
-import com.kh.evision.token.member.dao.TokenMapper;
-import com.kh.evision.token.util.JwtUtil;
+import com.kh.evision.token.model.dao.TokenMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +29,6 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;  
     private final TokenMapper tokenMapper; 
     
     
@@ -54,56 +56,39 @@ public class MemberServiceImpl implements MemberService {
         	    .phone(member.getPhone() != null && !member.getPhone().isEmpty() ? member.getPhone() : "010-0000-0000")      // 기본값
         	    .email(member.getEmail() != null ? member.getEmail() : null)
         	    .status('Y')
-        	    .roleStatus("ROLE_USER")
+        	    .roleStatus(member.getRoleStatus())
         	    .build();
         int result = memberMapper.signUp(memberVO);
         log.info("사용자 등록 성공 : {}", memberVO);
+		return result;
 
-        return result;
     }
+
+
+	@Override
+	public void changePassword(ChangePasswordDTO password) {
+		CustomUserDetails user = validatePassword(password.getCurrentPassword());
+		String newPassword = passwordEncoder.encode(password.getNewPassword());
+		Map<String, Object> changeRequest = Map.of("memberNo", user.getUsername(),
+												   "newPassword", newPassword);
+	
+		memberMapper.changePassword(changeRequest);
+	
+	}
     
-    @Override
-    public LoginResponseDTO login(LoginDTO loginDTO) {
-        // selectMemberById로 회원 조회
-        MemberVO memberVO = memberMapper.selectMemberById(loginDTO.getMemberId());
-
-        // 회원이 없거나 비밀번호가 맞지 않으면 예외 발생
-        if (memberVO == null || !passwordEncoder.matches(loginDTO.getMemberPwd(), memberVO.getMemberPwd())) {
-            throw new LoginFailException("아이디 또는 비밀번호가 틀렸습니다.");
-        }
-
-        // JWT 토큰 생성 및 DB 저장
-        String token = jwtUtil.generateToken(memberVO.getMemberNo());
-        
-        log.info("로그인 성공 - 회원번호: {}, 아이디: {}", memberVO.getMemberNo(), memberVO.getMemberId());
-
-        return LoginResponseDTO.builder()
-                .memberNo(memberVO.getMemberNo())
-                .memberId(memberVO.getMemberId())
-                .memberName(memberVO.getMemberName())
-                .token(token)
-                .message("로그인 성공")
-                .build();
-    }
+	
+	private CustomUserDetails validatePassword(String password) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails user = (CustomUserDetails)auth.getPrincipal();
+		
+		
+		if(!passwordEncoder.matches(password, user.getPassword())) {
+			throw new CustomAuthenticationException("비밀번호가 일치하지 않습니다.");
+		}
+		return user;
+	} 
     
-    
-    public int login(MemberDTO member) {
-        // selectMemberById로 회원 조회
-        MemberVO memberVO = memberMapper.selectMemberById(member.getMemberId());
-
-        // 회원이 없거나 비밀번호가 맞지 않으면 예외 발생
-        if (memberVO == null || !passwordEncoder.matches(member.getMemberPwd(), memberVO.getMemberPwd())) {
-            throw new LoginFailException("아이디 또는 비밀번호가 틀렸습니다.");
-        }
-
-        // JWT 토큰 생성 및 DB 저장 (generateToken이 이미 다 처리함)
-        String token = jwtUtil.generateToken(memberVO.getMemberNo());
-        
-        log.info("로그인 성공 - 회원번호: {}, 아이디: {}", memberVO.getMemberNo(), memberVO.getMemberId());
-
-        return 1; // 성공
-    
-    }
     
  }
     
