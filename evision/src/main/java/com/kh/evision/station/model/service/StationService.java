@@ -33,5 +33,8 @@ public interface StationService {
     
     // 충전소 리뷰 삭제
     int commentDelete(Long reviewNo);
+    
+    // 충전소별 리뷰 조회
+    List<ReviewVO> findReviewsByStationNo(Long stationNo);
 }
 

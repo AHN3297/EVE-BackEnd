@@ -7,8 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data                // getter, setter, toString 등 생성
-@NoArgsConstructor   // 기본 생성자 - Jackson 필수!
+
+
 @AllArgsConstructor
 @Builder
 //@Value

@@ -37,6 +37,8 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member").authenticated();
 					   // requests.requestMatchers("/admin/**").hasRole("ADMIN"); // 권한검증방법
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station/**","/api/**").permitAll();
+					   requests.requestMatchers(HttpMethod.PUT, "/station/**").permitAll();
+					   
 					   
 				   })
 				   .sessionManagement(manager ->

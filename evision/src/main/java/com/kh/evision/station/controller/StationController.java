@@ -78,7 +78,7 @@ public class StationController {
     }
 
     // 충전소 리뷰 등록
-    @PostMapping("/review")
+    @PostMapping("/reviews")
     public ResponseEntity<String> commentSave(@RequestBody ReviewVO review) {
         int result = stationService.commentSave(review);
         if (result > 0) {
@@ -89,8 +89,12 @@ public class StationController {
     }
 
     // 충전소 리뷰 수정
-    @PutMapping("/review")
+    @PutMapping("/reviews")
     public ResponseEntity<String> commentUpdate(@RequestBody ReviewVO review) {
+        if (review.getReviewNo() == null || review.getStationNo() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("리뷰 번호와 충전소 번호가 필요합니다.");
+        }
+
         int result = stationService.commentUpdate(review);
         if (result > 0) {
             return ResponseEntity.ok("리뷰가 수정되었습니다.");
@@ -100,8 +104,8 @@ public class StationController {
     }
 
     // 충전소 리뷰 삭제
-    @DeleteMapping("/review/{reviewNo}")
-    public ResponseEntity<String> commentDelete(@PathVariable Long reviewNo) {
+    @DeleteMapping("/reviews/{reviewNo}")
+    public ResponseEntity<String> commentDelete(@PathVariable("reviewNo") Long reviewNo) {
         int result = stationService.commentDelete(reviewNo);
         if (result > 0) {
             return ResponseEntity.ok("리뷰가 삭제되었습니다.");
@@ -109,5 +113,16 @@ public class StationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("리뷰를 찾을 수 없습니다.");
         }
     }
+    
+    // 충전소별 리뷰 조회
+    @GetMapping("/reviews/{stationNo}")
+    public ResponseEntity<List<ReviewVO>> getReviewsByStationNo(@PathVariable("stationNo") Long stationNo) {
+        List<ReviewVO> reviews = stationService.findReviewsByStationNo(stationNo);
+        if (reviews.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(reviews);
+    }
+
 }
 

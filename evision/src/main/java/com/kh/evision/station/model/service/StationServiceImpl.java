@@ -59,5 +59,11 @@ public class StationServiceImpl implements StationService {
     public int commentDelete(Long reviewNo) {
         return stationMapper.commentDelete(reviewNo);
     }
+    
+    @Override
+    public List<ReviewVO> findReviewsByStationNo(Long stationNo) {
+        return stationMapper.findReviewsByStationNo(stationNo);
+    }
+
 }
 
