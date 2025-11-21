@@ -22,15 +22,10 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-<<<<<<< HEAD
 		
 		filterChain.doFilter(request, response);
 		return;
 		
-=======
-		filterChain.doFilter(request, response);
-		return;
->>>>>>> 379f10e1ca3ff3d59b02f942eef3e2653e9dfff2
 	}
 
 }
