@@ -26,23 +26,34 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     /**
-     * 공지사항 목록 조회 (검색 포함)
+     * 공지사항 전체 목록 조회
      */
     @GetMapping("/list")
     public ResponseEntity<?> getNoticeList(
-            @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
-            @RequestParam(value = "keyword", required = false) String keyword) {
+            @RequestParam(value = "pageNo", defaultValue = "1") int pageNo) {
         
-        log.info("공지사항 목록 조회 - 현재 페이지: {}, 검색어: {}", currentPage, keyword);
+        log.info("공지사항 목록 조회 - 현재 페이지: {}", pageNo);
 
-        List<NoticeDTO> noticeList = noticeService.getNoticeList(currentPage, keyword);
-        PageInfo pageInfo = noticeService.getPageInfo(currentPage, keyword);
+        List<NoticeDTO> noticeList = noticeService.getNoticeList(pageNo);
+        PageInfo pageInfo = noticeService.getPageInfo(pageNo);
 
-        return ResponseEntity.ok()
-                .body(Map.of(
-                    "noticeList", noticeList,
-                    "pageInfo", pageInfo
-                ));
+        return createResponse(noticeList, pageInfo);
+    }
+
+    /**
+     * 공지사항 검색
+     */
+    @GetMapping("/search")
+    public ResponseEntity<?> searchNotices(
+            @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+            @RequestParam(value = "keyword") String keyword) {
+        
+        log.info("공지사항 검색 - 현재 페이지: {}, 검색어: {}", pageNo, keyword);
+
+        List<NoticeDTO> noticeList = noticeService.searchNotices(pageNo, keyword);
+        PageInfo pageInfo = noticeService.getSearchPageInfo(pageNo, keyword);
+
+        return createResponse(noticeList, pageInfo);
     }
 
     /**
@@ -54,10 +65,19 @@ public class NoticeController {
 
         NoticeDTO notice = noticeService.getNoticeDetail(noticeNo);
 
-        if (notice == null) {
-            return ResponseEntity.notFound().build();
-        }
+        return notice != null 
+                ? ResponseEntity.ok(notice) 
+                : ResponseEntity.notFound().build();
+    }
 
-        return ResponseEntity.ok(notice);
+    /**
+     * 공통 응답 생성
+     */
+    private ResponseEntity<?> createResponse(List<NoticeDTO> noticeList, PageInfo pageInfo) {
+        return ResponseEntity.ok()
+                .body(Map.of(
+                    "noticeList", noticeList,
+                    "pageInfo", pageInfo
+                ));
     }
 }

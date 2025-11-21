@@ -5,13 +5,11 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import com.kh.evision.notice.model.vo.NoticeVO;
+import com.kh.evision.notice.model.vo.NoticeImageVO;
 
 @Mapper
 public interface NoticeMapper {
 
-    /**
-     * 공지사항 목록 조회 (검색 포함)
-     */
     @Select("""
         <script>
         SELECT * FROM (
@@ -37,9 +35,6 @@ public interface NoticeMapper {
         @Param("keyword") String keyword
     );
 
-    /**
-     * 공지사항 전체 개수 (검색 포함)
-     */
     @Select("""
         <script>
         SELECT COUNT(*) 
@@ -55,9 +50,10 @@ public interface NoticeMapper {
     """)
     int getNoticeCount(@Param("keyword") String keyword);
 
-    /**
-     * 공지사항 상세 조회
-     */
     @Select("SELECT * FROM TB_NOTICE WHERE NOTICE_NO = #{noticeNo} AND STATUS = 'Y'")
     NoticeVO getNoticeDetail(@Param("noticeNo") Long noticeNo);
+    
+    // ⭐ 이미지 조회 추가
+    @Select("SELECT * FROM TB_NOTICE_IMG WHERE NOTICE_NO = #{noticeNo} AND STATUS = 'Y'")
+    List<NoticeImageVO> getNoticeImages(@Param("noticeNo") Long noticeNo);
 }

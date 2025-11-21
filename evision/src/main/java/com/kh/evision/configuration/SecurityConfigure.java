@@ -29,6 +29,7 @@ public class SecurityConfigure {
 				   .cors(Customizer.withDefaults())
 				   .authorizeHttpRequests(requests -> {
 					   
+					   requests.requestMatchers(HttpMethod.GET, "/uploads/**").permitAll();
 					   // 로그인 - 누구나 접근
 		               requests.requestMatchers(HttpMethod.POST, "/member/login").permitAll();
 		               // 🔹 공지사항 - 조회/검색은 모두 허용

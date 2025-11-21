@@ -21,10 +21,16 @@ public class JwtFilter extends OncePerRequestFilter {
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-	
-		
-		filterChain.doFilter(request, response);
+	        throws ServletException, IOException {
+	    
+	    // ⭐ /uploads 경로는 필터 건너뛰기
+	    String path = request.getRequestURI();
+	    if (path.startsWith("/uploads")) {
+	        filterChain.doFilter(request, response);
+	        return;
+	    }
+	    
+	    // 기존 JWT 검증 로직...
+	    filterChain.doFilter(request, response);
 	}
-
 }

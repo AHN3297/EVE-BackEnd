@@ -6,9 +6,14 @@ import com.kh.evision.util.PageInfo;
 
 public interface NoticeService {
     
-    List<NoticeDTO> getNoticeList(int currentPage, String keyword);
+    // 전체 목록
+    List<NoticeDTO> getNoticeList(int pageNo);
+    PageInfo getPageInfo(int pageNo);
     
-    PageInfo getPageInfo(int currentPage, String keyword);
+    // 검색
+    List<NoticeDTO> searchNotices(int pageNo, String keyword);
+    PageInfo getSearchPageInfo(int pageNo, String keyword);
     
+    // 상세
     NoticeDTO getNoticeDetail(Long noticeNo);
 }
