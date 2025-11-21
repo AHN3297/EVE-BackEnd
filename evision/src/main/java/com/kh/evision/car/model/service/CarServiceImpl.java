@@ -13,6 +13,7 @@ import com.kh.evision.car.model.dao.CarMapper;
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.vo.CarVO;
 import com.kh.evision.exception.InvalidParameterException;
+import com.kh.evision.file.FileInfo;
 import com.kh.evision.file.FileService;
 import com.kh.evision.file.ImgService;
 import com.kh.evision.util.PageInfo;
@@ -56,8 +57,8 @@ public class CarServiceImpl implements CarService {
 			// 일단 한개씩 꺼내보기
 			MultipartFile file = files.get(1);
 			
-			// 하나 이미지로 저장 시도
-			imgService.store(file);
+			// 하나 이미지로 저장 시도 -> fileInfo 돌아온다
+			FileInfo fileinfo = imgService.store(file);
 			
 		}
 		

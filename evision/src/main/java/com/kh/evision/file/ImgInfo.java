@@ -1,5 +1,7 @@
 package com.kh.evision.file;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,5 +15,7 @@ public class ImgInfo {
 	private String originName;
 	private String changeName;
 	private String filePath;
+	
+	private MultipartFile file;
 
 }

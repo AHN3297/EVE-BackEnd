@@ -43,6 +43,7 @@ public class CarController {
 		log.info("등록메소드 호출시도");
 		
 		log.info("FE에서 넘어오는 차량 정보 : {}", car);
+		log.info("FE에서 넘어오는 파일 정보 : {}", files);
 		
 		carService.saveCar(car, files);
 		
