@@ -51,7 +51,12 @@ public class ImgService {
 		// 파일 경로 관련작업
 		Path targetLocation = this.imgLocation.resolve(changedImgName);
 		// 객체에서 경로 필드의 자료형을 String으로 변경 후 -> targetLocation이 Path형이니 넣어줄 때 toString으로 변환
-		FileInfo fileInfo = new FileInfo(originalImgName, changedImgName, targetLocation.toString());
+		FileInfo fileInfo =	FileInfo.builder()
+									.originName(originalImgName)
+									.changeName(changedImgName)
+									.filePath(targetLocation.toString())
+									.build();
+				// new FileInfo(originalImgName, changedImgName, targetLocation.toString());
 		// 이걸로 해보고 안되면 absolute path로 ? 이러면 C: 이게 들어가서 안될지도?
 		
 		// 업로드 시도

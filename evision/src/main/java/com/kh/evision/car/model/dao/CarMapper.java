@@ -3,6 +3,7 @@ package com.kh.evision.car.model.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.session.RowBounds;
 
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.vo.CarVO;
@@ -17,7 +18,7 @@ public interface CarMapper {
 	int selectTotalCount();
 	
 	// 차량 목록 조회
-	List<CarDTO> findAll();
+	List<CarDTO> findAll(RowBounds rb);
 	
 	// 차량 정보 수정
 	CarDTO updateCar(CarDTO car);

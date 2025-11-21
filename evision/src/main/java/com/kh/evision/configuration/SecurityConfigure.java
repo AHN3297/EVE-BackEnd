@@ -34,10 +34,11 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**",  /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member").authenticated();
+					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member").authenticated();
 					   // requests.requestMatchers("/admin/**").hasRole("ADMIN"); // 권한검증방법
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars/**", "/station/**","/api/**").permitAll();
 					   requests.requestMatchers(HttpMethod.PUT, "/station/**").permitAll();
+					   requests.requestMatchers(HttpMethod.POST, "/cars/**").permitAll(); // 테스트용 임시허용
 					   
 				   })
 				   .sessionManagement(manager ->

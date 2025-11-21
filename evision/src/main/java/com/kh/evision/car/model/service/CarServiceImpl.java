@@ -1,7 +1,11 @@
 package com.kh.evision.car.model.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -73,7 +77,10 @@ public class CarServiceImpl implements CarService {
 	
 	// 차량 목록 조회
 	@Override
-	public List<CarDTO> findAll(int pageNo) {
+	public Map<String, Object> findAll(int pageNo) {
+		
+		Map<String, Object> map = new HashMap();
+		List<CarDTO> cars = new ArrayList();
 		
 		// 예외처리됨?
 		log.info("불러와지나요?");
@@ -88,9 +95,20 @@ public class CarServiceImpl implements CarService {
 		int count = carMapper.selectTotalCount();
 		PageInfo pi = pagination.getPageInfo(count, pageNo, 5, 5);
 		
-		// 조회된게 없을수도 있는 예외처리
+		// 조회된게 없을수도 있는 예외처리? -> 만들어야함!
+		if(count < 1) {
+			throw new RuntimeException("조회된 내용이 없습니다.");
+		} else {
 		
-		return carMapper.findAll();
+			RowBounds rb = new RowBounds((pageNo - 1) * 5, 5);
+			cars = carMapper.findAll(rb);
+			
+			map.put("pi", pi);
+			map.put("cars", cars);
+			
+		}
+		
+		return map;
 		
 	}
 	

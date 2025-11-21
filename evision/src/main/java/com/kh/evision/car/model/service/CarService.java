@@ -1,6 +1,7 @@
 package com.kh.evision.car.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,7 +13,7 @@ public interface CarService {
 	void saveCar(CarDTO car, List<MultipartFile> files);
 	
 	// 차량 목록 조회
-	List<CarDTO> findAll(int pageNo);
+	Map<String, Object> findAll(int pageNo);
 	
 	// 차량 정보 수정
 	CarDTO updateCar(Long carNo, CarDTO car, List<MultipartFile> files);

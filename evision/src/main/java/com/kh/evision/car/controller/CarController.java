@@ -1,6 +1,7 @@
 package com.kh.evision.car.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.service.CarService;
-import com.kh.evision.util.PageInfo;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -40,6 +40,7 @@ public class CarController {
 								   // , @AuthenticationPrincipal CustomUserDetails userDetails
 								   ) {
 		// 파일 + 이미지 두개 올수있음.. 이거 다시 생각해야함! -> 리스트로 받음
+		log.info("등록메소드 호출시도");
 		
 		log.info("FE에서 넘어오는 차량 정보 : {}", car);
 		
@@ -51,15 +52,16 @@ public class CarController {
 	
 	// 차량 목록 조회
 	@GetMapping // 질문에 답변을 못하면 															== 다시
-	public ResponseEntity<List<CarDTO>> findAll(@RequestParam(name="pageNo", defaultValue="0") int pageNo) {
+	public ResponseEntity<Map<String, Object>> findAll(@RequestParam(name="pageNo", defaultValue="0") int pageNo) {
 		
 		log.info("여기 호출확인");
 		
 		// 넘기기 전에 페이징처리? ㄴㄴㄴ 서비스에서함
 		
-		List<CarDTO> cars = carService.findAll(pageNo);
+		Map<String, Object> map = carService.findAll(pageNo);
+		// 차량 조회 결과와 페이징 객체 같이 온다 -> pi, cars
 		
-		return ResponseEntity.ok(cars);
+		return ResponseEntity.ok(map);
 		
 	}
 	
