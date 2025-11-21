@@ -29,13 +29,20 @@ public class SecurityConfigure {
 				   .cors(Customizer.withDefaults())
 				   .authorizeHttpRequests(requests -> {
 					   
-					   requests.requestMatchers(HttpMethod.POST, "/member/login").permitAll();
-					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member").authenticated();
+					   requests.requestMatchers(HttpMethod.POST, "/member/login","/station/**").permitAll();
+					   requests.requestMatchers(HttpMethod.DELETE, "/station/**").permitAll();
+					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**",  /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member").authenticated();
 					   // requests.requestMatchers("/admin/**").hasRole("ADMIN"); // 권한검증방법
+<<<<<<< HEAD
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars/**", "/station").permitAll();
+=======
+					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station/**","/api/**").permitAll();
+					   requests.requestMatchers(HttpMethod.PUT, "/station/**").permitAll();
+					   
+>>>>>>> 379f10e1ca3ff3d59b02f942eef3e2653e9dfff2
 					   
 				   })
 				   .sessionManagement(manager ->
