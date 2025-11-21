@@ -1,5 +1,6 @@
 package com.kh.evision.member.model.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
@@ -32,30 +33,71 @@ public interface MemberMapper {
     int countByNickname(String nickname);
     
     /**
-     * 로그인용 - 아이디로 회원 조회
+     * 로그인용 - memberNo로 회원 조회
      */
     @Select("""
         SELECT 
-            MEMBER_NO memberNo,
-            MEMBER_NAME memberName,
-            MEMBER_ID memberId,
-            MEMBER_PWD memberPwd,
-            NICKNAME,
-            ADDRESS,
-            PHONE,
-            EMAIL,
-            ENROLL_DATE enrollDate,
-            STATUS,
-            ROLE_STATUS roleStatus
+               MEMBER_NO memberNo,
+               MEMBER_NAME memberName,
+               MEMBER_ID memberId,
+               MEMBER_PWD memberPwd,
+               NICKNAME nickname,
+               ADDRESS address,
+               PHONE phone,
+               EMAIL email,
+               ENROLL_DATE enrollDate,
+               STATUS status,
+               ROLE_STATUS roleStatus
         FROM TB_MEMBER
         WHERE MEMBER_ID = #{memberId}
     """)
     MemberDTO loadUser(String memberId);
     
+    @Select("""
+            SELECT 
+	               MEMBER_NO memberNo,
+	               MEMBER_NAME memberName,
+	               MEMBER_ID memberId,
+	               MEMBER_PWD memberPwd,
+	               NICKNAME nickname,
+	               ADDRESS address,
+	               PHONE phone,
+	               EMAIL email,
+	               ENROLL_DATE enrollDate,
+	               STATUS status,
+	               ROLE_STATUS roleStatus
+            FROM TB_MEMBER
+            WHERE MEMBER_NO = #{memberNo}
+        """)
+    MemberDTO loadByMemberNo(String memberNo);
+    
+    @Select("""
+    		SELECT 
+                   MEMBER_NO memberNo,
+	               MEMBER_NAME memberName,
+	               MEMBER_ID memberId,
+	               MEMBER_PWD memberPwd,
+	               NICKNAME nickname,
+	               ADDRESS address,
+	               PHONE phone,
+	               EMAIL email,
+	               ENROLL_DATE enrollDate,
+	               STATUS status,
+	               ROLE_STATUS roleStatus
+              FROM 
+                   TB_MEMBER
+            ORDER
+               BY
+                  MEMBER_NO DESC
+    		""")
+    List<MemberVO> memberManage();
+    
     @Update("UPDATE TB_MEMBER SET MEMBER_PWD - #{newPassword} WHERE MEMBER_NO = #{memberNo}")
     String changePassword(Map<String, Object> changeRequest);
     
-    @Update("UPDATE MEMBER SET ROLE_STATUS = #{newRole} WHERE MEMBER_NO = #{memberNo}")
-    int changeRole(ChangeRoleDTO change);;
+    @Update("UPDATE TB_MEMBER SET ROLE_STATUS = #{newRole} WHERE MEMBER_NO = #{memberNo}")
+    int changeRole(ChangeRoleDTO change);
+
+	;
 }
 

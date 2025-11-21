@@ -1,5 +1,6 @@
 package com.kh.evision.member.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.access.AccessDeniedException;
@@ -97,7 +98,9 @@ public class MemberServiceImpl implements MemberService {
 		if(!"ROLE_ADMIN".equals(actingRole)) {
 			throw new AccessDeniedException("권한이 없습니다! 관리자만 변경이 가능합니다.");
 		}
-		
+		// 1. admin을 변경할 수 없게 예외처리
+		// 2. admin 외에는 변경할 수 없음
+		// 3. 오직 user -> operator만 가능하게
 		if(!change.getNewRole().equals("ROLE_USER") && !change.getNewRole().equals("ROLE_OPERATOR")) {
 			throw new IllegalArgumentException("변경할 수 없는 권한입니다."); // 일단 지금은 이거쓰고 학원에서는 예외를 만들자
 			// 변경되는 값이 user랑 oprator임, 이거 2개 외에는 변경이 되면 안된다는뜻
@@ -105,7 +108,16 @@ public class MemberServiceImpl implements MemberService {
 		int result = memberMapper.changeRole(change);
 		
 		return result > 0;
-	} 
+	}
+
+
+	@Override
+	public List<MemberVO> memberManage() {
+		return memberMapper.memberManage();
+	}
+
+
+	
 	
 	
     

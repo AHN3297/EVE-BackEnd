@@ -40,7 +40,8 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**").authenticated();
 					   //requests.requestMatchers(HttpMethod.POST, "/operator/**").hasRole("OPERATOR"); // 권한검증방법
-					   //requests.requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN"); // 권한검증방법
+					   requests.requestMatchers(HttpMethod.GET, "/member/operator/**").hasRole("OPERATOR");
+					   requests.requestMatchers(HttpMethod.POST, "/member/admin/**").hasRole("ADMIN"); // 권한검증방법
 					   //requests.requestMatchers(HttpMethod.POST, "/user/**").hasRole("USER"); // 권한검증방법
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station").permitAll();
 

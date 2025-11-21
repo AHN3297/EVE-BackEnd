@@ -1,8 +1,11 @@
 package com.kh.evision.member.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +17,7 @@ import com.kh.evision.member.model.dto.ChangePasswordDTO;
 import com.kh.evision.member.model.dto.ChangeRoleDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.service.MemberService;
+import com.kh.evision.member.model.vo.MemberVO;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +47,13 @@ public class MemberController {
         }
     }
     
+    
+    @GetMapping("/operator/member-manage")
+    public ResponseEntity<List<MemberVO>> memberManage() {
+        List<MemberVO> members = memberService.memberManage();
+        return ResponseEntity.ok(members);
+    }
+    
     @PutMapping
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO password){
     	memberService.changePassword(password);
@@ -60,6 +71,8 @@ public class MemberController {
         return success ? ResponseEntity.ok("변경에 성공했습니다!")
                        : ResponseEntity.badRequest().body("변경에 실패했습니다...");
     }
+    
+    
 
     
 }

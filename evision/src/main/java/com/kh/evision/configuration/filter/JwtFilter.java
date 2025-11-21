@@ -5,11 +5,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.kh.evision.auth.model.vo.CustomUserDetails;
+import com.kh.evision.member.model.dao.MemberMapper;
+import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.token.util.JwtUtil;
 
 import io.jsonwebtoken.Claims;
@@ -28,6 +31,8 @@ public class JwtFilter extends OncePerRequestFilter{
 	
 	private final JwtUtil jwtUtil;
 	private final UserDetailsService userDetailsService;
+	private MemberDTO memberDto;
+	private final MemberMapper memberMapper;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -48,10 +53,15 @@ public class JwtFilter extends OncePerRequestFilter{
 			Claims claims = jwtUtil.parseJwt(token);
 			String memberNo = claims.getSubject();
 			
-
+			memberDto = memberMapper.loadByMemberNo(memberNo);
+			if(memberDto == null) throw new UsernameNotFoundException("유저없음띠 꼬우면 JwtFilter보셈ㅋ");
+			
+			String memberId = memberDto.getMemberId();
+			
+			
 			
 			CustomUserDetails user =
-					(CustomUserDetails)userDetailsService.loadUserByUsername(memberNo);
+					(CustomUserDetails)userDetailsService.loadUserByUsername(memberId);
 
 			UsernamePasswordAuthenticationToken authentication 
 				= new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

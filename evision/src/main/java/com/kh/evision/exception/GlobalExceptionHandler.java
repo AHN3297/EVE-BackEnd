@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.kh.evision.exception.custom.member.AdminException;
 import com.kh.evision.exception.custom.member.CustomAuthenticationException;
 import com.kh.evision.exception.custom.member.IdDuplicateException;
 import com.kh.evision.exception.custom.member.LoginFailException;
@@ -73,6 +74,10 @@ public class GlobalExceptionHandler {
 		Map<String, String> error = new HashMap();
 		error.put("error-message", e.getMessage());
 		return ResponseEntity.badRequest().body(error);
+	}
+	@ExceptionHandler(AdminException.class)
+	public ResponseEntity<?> handlerAdmin(AdminException e){
+		return createResponseEntity(e, HttpStatus.UNAUTHORIZED);
 	}
 
 }

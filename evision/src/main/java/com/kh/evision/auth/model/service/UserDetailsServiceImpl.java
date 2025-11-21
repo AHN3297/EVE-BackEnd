@@ -30,11 +30,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		MemberDTO user = mapper.loadUser(username);
+
 		
 		
 		log.info("이거오나요 : {}", user);
 		if(user ==null) {
-			throw new UsernameNotFoundException("로그인 실패임 ㅋㅋㄹㅃㅃ");
+			throw new UsernameNotFoundException("로그인 실패임 ㅋㅋㄹㅃㅃ" + username);
 		}
 		
 		List<GrantedAuthority> authorities = getAuthorities(user);
@@ -55,6 +56,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 관리자 권한 확인 (roleStatus가 "ADMIN"인 경우와 "OPERATOR"인 경우, "USER"인 경우)
         if ("ROLE_ADMIN".equals(user.getRoleStatus())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_OPERATOR"));
         } else if ("ROLE_OPERATOR".equals(user.getRoleStatus())) {
         	authorities.add(new SimpleGrantedAuthority("ROLE_OPERATOR"));
         } else if("ROLE_USER".equals(user.getRoleStatus())) {
