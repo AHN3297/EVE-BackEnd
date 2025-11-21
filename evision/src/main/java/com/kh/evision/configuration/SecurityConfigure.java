@@ -32,6 +32,7 @@ public class SecurityConfigure {
 				   .csrf(AbstractHttpConfigurer::disable)
 				   .cors(Customizer.withDefaults())
 				   .authorizeHttpRequests(requests -> {
+
 					   requests.requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
 					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
@@ -42,7 +43,7 @@ public class SecurityConfigure {
 					   //requests.requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN"); // 권한검증방법
 					   //requests.requestMatchers(HttpMethod.POST, "/user/**").hasRole("USER"); // 권한검증방법
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station").permitAll();
-					   
+
 				   })
 				   .sessionManagement(manager ->
 						   				manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -43,6 +43,7 @@ public class JwtFilter extends OncePerRequestFilter{
 		// 토큰검증
 		String token = authorization.split(" ")[1];
 
+
 		try {
 			Claims claims = jwtUtil.parseJwt(token);
 			String memberNo = claims.getSubject();
