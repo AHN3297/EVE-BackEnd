@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.evision.api.model.dao.ApiDAO">
+
+    <insert id="insertStation" parameterType="com.kh.evision.api.model.dto.ResponseDTO">
+        INSERT
+          INTO 
+        	   TB_STATION 
+        	   (
+        	   STATION_NO
+        	 , STATION_NAME
+        	 , STATION_ADDRESS
+        	 , STATION_TYPE
+        	 , STATION_LNG
+        	 , STATION_LAT
+        	 , STATUS
+        	   )
+       VALUES (
+       		  SEQ_SNO.NEXTVAL
+       		, #{stationName}
+       		, #{stationAddress}
+       		, #{stationType}
+       		, #{stationLng}
+       		, #{stationLat}
+       		, #{status}
+       		  )
+    </insert>
+
+</mapper>
