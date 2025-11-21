@@ -5,12 +5,13 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.evision.car.model.dto.CarCreateRequest;
 import com.kh.evision.car.model.dto.CarDTO;
 
 public interface CarService {
 	
 	// 차량 등록
-	void saveCar(CarDTO car, List<MultipartFile> files);
+	void saveCar(CarCreateRequest car, List<MultipartFile> files);
 	
 	// 차량 목록 조회
 	Map<String, Object> findAll(int pageNo);

@@ -1,21 +1,24 @@
 package com.kh.evision.file;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 public class ImgInfo {
 	
-	private int imgId;
+	private Long imgId;
+	
+	private Long carNo;
+	
 	private String originName;
 	private String changeName;
 	private String filePath;
 	
-	private MultipartFile file;
+	// private MultipartFile file;
 
 }

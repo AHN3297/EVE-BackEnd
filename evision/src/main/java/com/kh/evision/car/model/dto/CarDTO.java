@@ -18,6 +18,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CarDTO {
+	// 차량 조회용 DTO
 	
 	private Long carNo;
 	

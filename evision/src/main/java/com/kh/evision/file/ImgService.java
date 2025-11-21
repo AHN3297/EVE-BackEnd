@@ -42,7 +42,7 @@ public class ImgService {
 	}
 	
 	// 파일 업로드 메소드
-	public FileInfo store(MultipartFile file) {
+	public ImgInfo store(MultipartFile file, Long carNo) {
 		
 		// 파일명 관련작업
 		String originalImgName = file.getOriginalFilename();
@@ -51,11 +51,12 @@ public class ImgService {
 		// 파일 경로 관련작업
 		Path targetLocation = this.imgLocation.resolve(changedImgName);
 		// 객체에서 경로 필드의 자료형을 String으로 변경 후 -> targetLocation이 Path형이니 넣어줄 때 toString으로 변환
-		FileInfo fileInfo =	FileInfo.builder()
-									.originName(originalImgName)
-									.changeName(changedImgName)
-									.filePath(targetLocation.toString())
-									.build();
+		ImgInfo imgInfo = ImgInfo.builder()
+								 .carNo(carNo)
+								 .originName(originalImgName)
+								 .changeName(changedImgName)
+								 .filePath(targetLocation.toString())
+								 .build();
 				// new FileInfo(originalImgName, changedImgName, targetLocation.toString());
 		// 이걸로 해보고 안되면 absolute path로 ? 이러면 C: 이게 들어가서 안될지도?
 		
@@ -65,7 +66,7 @@ public class ImgService {
 			Files.copy(file.getInputStream(),
 					   targetLocation,
 					   StandardCopyOption.REPLACE_EXISTING);
-			return fileInfo;
+			return imgInfo;
 			
 		// 예외처리
 		} catch (IOException e) {

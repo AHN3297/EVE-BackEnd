@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.evision.car.model.dao.CarMapper;
+import com.kh.evision.car.model.dto.CarCreateRequest;
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.vo.CarVO;
 import com.kh.evision.exception.InvalidParameterException;
-import com.kh.evision.file.FileInfo;
 import com.kh.evision.file.FileService;
 import com.kh.evision.file.ImgService;
 import com.kh.evision.util.PageInfo;
@@ -35,32 +35,9 @@ public class CarServiceImpl implements CarService {
 	
 	// 차량 등록
 	@Override
-	public void saveCar(CarDTO car, List<MultipartFile> files) {
+	public void saveCar(CarCreateRequest car, List<MultipartFile> files) {
 		
 		CarVO c = null;
-		
-		// 파일존재여부 확인
-		// 있으면 업로드하고 VO에 담아서 넘기기 / 없으면 그냥 넘기기 -> 어쨌든 VO는 넘겨줘야한다 -> 파일 작업만 if로 구분
-		if(files != null && !files.isEmpty()) {
-			
-			// 파일이 여러개 있을 수 있음, 리스트에서 꺼내서
-			// 있는지 없는지 검증
-			// 있으면 이름변경, 업로드 -> 공통모듈 업로드 메소드 호출
-			// 이미지면 이미지 서비스의 메소드 / 이미지가 아니면 파일 서비스의 메소드 호출
-			
-			/*
-			 * 이미 만들어둔 이미지 서비스 클래스에서 이미지 확장자를 검증하는 방법을 재사용할 수 없을까?
-			 * -> 고민중!
-			 * 
-			 */
-			
-			// 일단 한개씩 꺼내보기
-			MultipartFile file = files.get(1);
-			
-			// 하나 이미지로 저장 시도 -> fileInfo 돌아온다
-			FileInfo fileinfo = imgService.store(file);
-			
-		}
 		
 		// 어쨌든 차량 정보는 넘겨서 저장시켜야함
 		c = CarVO.builder()
@@ -73,6 +50,50 @@ public class CarServiceImpl implements CarService {
 				.build();
 		
 		carMapper.saveCar(c);
+		
+		Long carNo = c.getCarNo();
+		log.info("차량 저장 후 PK 확인 : {}", carNo);
+		
+		// 파일존재여부 확인
+		// 있으면 업로드하고 VO에 담아서 넘기기 / 없으면 그냥 넘기기 -> 어쨌든 VO는 넘겨줘야한다 -> 파일 작업만 if로 구분
+		if(files != null && !files.isEmpty()) {
+			
+//			// 파일이 여러개 있을 수 있음, 리스트에서 꺼내서
+//			// 있는지 없는지 검증
+//			// 있으면 이름변경, 업로드 -> 공통모듈 업로드 메소드 호출
+//			// 이미지면 이미지 서비스의 메소드 / 이미지가 아니면 파일 서비스의 메소드 호출
+//			
+//			/*
+//			 * 이미 만들어둔 이미지 서비스 클래스에서 이미지 확장자를 검증하는 방법을 재사용할 수 없을까?
+//			 * -> 고민중!
+//			 * 
+//			 */
+//			
+//			// 일단 한개씩 꺼내보기
+//			MultipartFile file = files.get(1);
+//			
+//			file.getContentType();
+//			
+//			// 하나 이미지로 저장 시도 -> fileInfo 돌아온다
+//			FileInfo fileinfo = imgService.store(file);
+			
+			// MultipartFile에 이미지 파일인지 확인하는 메소드가 있음
+			for(MultipartFile file : files) {
+				
+				// 어떤건지 확인하고 -> 이미지나 파일에 맞게 ImgService, FileService 호출
+				String fileType = file.getContentType();
+				
+				if(fileType != null && fileType.startsWith("image/")) {
+					imgService.store(file, carNo);
+				} else {
+					fileService.store(file, carNo);
+				}
+				
+				// 업로드 다 하면?
+				
+			}
+			
+		}
 		
 	}
 	
@@ -122,7 +143,7 @@ public class CarServiceImpl implements CarService {
 		
 		if(files != null && !files.isEmpty()) {
 			
-			fileService.store(null);
+			// fileService.store(null);
 			
 		}
 		

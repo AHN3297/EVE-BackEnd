@@ -17,8 +17,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CarCreateRequest {
+	// 차량 등록 / 수정용 DTO
 	
-	private Long carNo;
+	// private Long carNo;
 	
 	@NotBlank
 	private String carName;
@@ -26,12 +27,9 @@ public class CarCreateRequest {
 	private String carPlate;
 	private int maxPassenger;
 	private String color;
-	private String status;
-	private Date registerDate;
+	// private String status;
+	// private Date registerDate;
 	private String carLocation;
 	private String carBrand;
-	
-	private MultipartFile img;
-	private MultipartFile file;
 
 }
