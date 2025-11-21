@@ -13,6 +13,6 @@ public class ImgInfo {
 	
 	private String originName;
 	private String changeName;
-	private Path filePath;
+	private String filePath;
 
 }

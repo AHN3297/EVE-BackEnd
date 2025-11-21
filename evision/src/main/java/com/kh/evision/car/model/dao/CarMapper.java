@@ -13,6 +13,9 @@ public interface CarMapper {
 	// 차량 등록
 	void saveCar(CarVO car);
 	
+	// 차량 전체 개수 조회
+	int selectTotalCount();
+	
 	// 차량 목록 조회
 	List<CarDTO> findAll();
 	

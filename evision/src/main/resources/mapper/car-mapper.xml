@@ -55,6 +55,16 @@
 	
 	<!-- sql 태그, resultMap(+ resultSet), selectKey 쓰는거 생각하기 -->
 	
+	<select id="selectTotalCount"
+			resultType="_int">
+		SELECT
+		       COUNT(*)
+		  FROM
+		       TB_CAR
+		 WHERE
+		       STATUS = 'Y'
+	</select>
+	
 	<select id="findAll"
 			resultType="CarDTO">
 		SELECT
@@ -85,16 +95,16 @@
 		<result column="registerDate" property="registerDate" />
 		<result column="carLocation" property="carLocation" />
 		<result column="carBrand" property="carBrand" />
-		<collection property="imgs" ofType="ImgInfo">
+		<association property="img" javaType="ImgInfo">
 			<id column="imgId" property="imgId" />
 			<result column="imgOriginName" property="originName" />
 			<result column="imgChangeName" property="changeName" />
-		</collection>
-		<collection property="files" ofType="FileInfo">
+		</association>
+		<association property="file" javaType="FileInfo">
 			<id column="fileId" property="fileId" />
 			<result column="fileOriginName" property="originName" />
 			<result column="fileChangeName" property="changeName" />
-		</collection>
+		</association>
 	</resultMap>
 	
 	<select id="findByCarNo"

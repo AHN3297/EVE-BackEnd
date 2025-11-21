@@ -11,6 +11,8 @@ import com.kh.evision.car.model.vo.CarVO;
 import com.kh.evision.exception.InvalidParameterException;
 import com.kh.evision.file.FileService;
 import com.kh.evision.file.ImgService;
+import com.kh.evision.util.PageInfo;
+import com.kh.evision.util.Pagination;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ public class CarServiceImpl implements CarService {
 	
 	private final CarMapper carMapper;
 	
+	private final Pagination pagination;
 	private final FileService fileService;
 	private final ImgService imgService;
 	
@@ -70,7 +73,7 @@ public class CarServiceImpl implements CarService {
 	
 	// 차량 목록 조회
 	@Override
-	public List<CarDTO> findAll(Long pageNo) {
+	public List<CarDTO> findAll(int pageNo) {
 		
 		// 예외처리됨?
 		log.info("불러와지나요?");
@@ -82,7 +85,10 @@ public class CarServiceImpl implements CarService {
 		}
 		
 		// 페이징처리 고민!
-		// int count carMapper.
+		int count = carMapper.selectTotalCount();
+		PageInfo pi = pagination.getPageInfo(count, pageNo, 5, 5);
+		
+		// 조회된게 없을수도 있는 예외처리
 		
 		return carMapper.findAll();
 		
@@ -115,6 +121,7 @@ public class CarServiceImpl implements CarService {
 	// 차량 상세 조회
 	@Override
 	public CarDTO findByCarNo(Long carNo) {
+		log.info("왜이렇게 열받지? {} :", carNo);
 		return carMapper.findByCarNo(carNo);
 	}
 	

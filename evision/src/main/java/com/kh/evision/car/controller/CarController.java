@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.service.CarService;
+import com.kh.evision.util.PageInfo;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -49,10 +50,15 @@ public class CarController {
 	}
 	
 	// 차량 목록 조회
-	@GetMapping
-	public ResponseEntity<List<CarDTO>> findAll(@RequestParam(name="pageNo", defaultValue="0") Long pageNo) {
+	@GetMapping // 질문에 답변을 못하면 															== 다시
+	public ResponseEntity<List<CarDTO>> findAll(@RequestParam(name="pageNo", defaultValue="0") int pageNo) {
 		
 		log.info("여기 호출확인");
+		
+		// 넘기기 전에 페이징처리
+		PageInfo pi = PageInfo.getPageInfo();
+		
+		// 페이징 처리 끝난 것을 보내야한다
 		
 		List<CarDTO> cars = carService.findAll(pageNo);
 		
@@ -68,7 +74,7 @@ public class CarController {
 										  // , @AuthenticationPrincipal CustomUserDetails userDetails
 										  ) {
 		
-		CarDTO c = carService.updateCar(carNo, car, files);
+		carService.updateCar(carNo, car, files);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 		
@@ -81,6 +87,8 @@ public class CarController {
 		log.info("FE에서 넘어오는 차량 번호 : {}", carNo);
 		
 		CarDTO car = carService.findByCarNo(carNo);
+		
+		log.info("조회는 끝남?");
 		
 		return ResponseEntity.ok(car);
 		
