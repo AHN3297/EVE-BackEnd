@@ -1,7 +1,5 @@
 package com.kh.evision.file;
 
-import java.nio.file.Path;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ImgInfo {
 	
+	private int imgId;
 	private String originName;
 	private String changeName;
 	private String filePath;

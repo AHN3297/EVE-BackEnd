@@ -121,7 +121,7 @@ public class CarServiceImpl implements CarService {
 	// 차량 상세 조회
 	@Override
 	public CarDTO findByCarNo(Long carNo) {
-		log.info("왜이렇게 열받지? {} :", carNo);
+		log.info("컨트롤러에서 서비스로 차량 번호 넘어오는지 : {}", carNo);
 		return carMapper.findByCarNo(carNo);
 	}
 	
