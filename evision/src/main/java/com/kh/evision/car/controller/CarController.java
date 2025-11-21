@@ -55,10 +55,7 @@ public class CarController {
 		
 		log.info("여기 호출확인");
 		
-		// 넘기기 전에 페이징처리
-		PageInfo pi = PageInfo.getPageInfo();
-		
-		// 페이징 처리 끝난 것을 보내야한다
+		// 넘기기 전에 페이징처리? ㄴㄴㄴ 서비스에서함
 		
 		List<CarDTO> cars = carService.findAll(pageNo);
 		
