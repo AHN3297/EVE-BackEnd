@@ -47,6 +47,13 @@ public class MemberController {
         }
     }
     
+    @GetMapping("/info")
+    public ResponseEntity<MemberDTO> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String memberNo = userDetails.getUsername(); // JWT subject = memberNo
+        MemberDTO member = memberService.getMemberInfo(memberNo);
+        return ResponseEntity.ok(member);
+    }
+
     
     @GetMapping("/operator/member-manage")
     public ResponseEntity<List<MemberVO>> memberManage() {

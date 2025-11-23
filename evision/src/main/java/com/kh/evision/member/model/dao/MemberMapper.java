@@ -70,6 +70,7 @@ public interface MemberMapper {
             WHERE MEMBER_NO = #{memberNo}
         """)
     MemberDTO loadByMemberNo(String memberNo);
+
     
     @Select("""
     		SELECT 
@@ -92,8 +93,8 @@ public interface MemberMapper {
     		""")
     List<MemberVO> memberManage();
     
-    @Update("UPDATE TB_MEMBER SET MEMBER_PWD - #{newPassword} WHERE MEMBER_NO = #{memberNo}")
-    String changePassword(Map<String, Object> changeRequest);
+    @Update("UPDATE TB_MEMBER SET MEMBER_PWD = #{newPassword} WHERE MEMBER_NO = #{memberNo}")
+    int changePassword(Map<String, Object> changeRequest);
     
     @Update("UPDATE TB_MEMBER SET ROLE_STATUS = #{newRole} WHERE MEMBER_NO = #{memberNo}")
     int changeRole(ChangeRoleDTO change);

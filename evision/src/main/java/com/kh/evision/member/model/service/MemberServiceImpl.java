@@ -66,6 +66,22 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 
     }
+    
+    @Override
+    public MemberDTO getMemberInfo(String memberNo) {
+        // memberNo 기준으로 조회
+        MemberDTO member = memberMapper.loadByMemberNo(memberNo);
+
+        if (member == null) {
+            throw new RuntimeException("회원 정보가 존재하지 않습니다.");
+        }
+
+        // 비밀번호 제외
+        member.setMemberPwd(null);
+
+        return member;
+    }
+
 
 
 	@Override

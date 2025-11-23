@@ -12,6 +12,8 @@ public interface MemberService {
     int signUp(MemberDTO member);
     
     void changePassword(ChangePasswordDTO password);
+    
+    MemberDTO getMemberInfo(String memberNo);
 
     List<MemberVO> memberManage();
     
