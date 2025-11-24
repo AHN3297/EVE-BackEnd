@@ -10,9 +10,10 @@ import com.kh.evision.report.model.dto.ReportDTO;
 public interface ReportMapper {
 	
 	int save(ReportDTO report);
-	ReportDTO  findMyReports(Long boardNo);
 	List<ReportDTO> findAll();
-	ReportDTO findByReportNo(Long reportNo);
+	ReportDTO findByKeyword(String keyword);
+	List<ReportDTO> findMyReports(Long memberNo);
+	int deleteReport(Long reportNo);
 	
 }
 

@@ -29,14 +29,14 @@ public class SecurityConfigure {
 				   .cors(Customizer.withDefaults())
 				   .authorizeHttpRequests(requests -> {
 					   
-					   requests.requestMatchers(HttpMethod.POST, "/member/login","/station/**").permitAll();
-					   requests.requestMatchers(HttpMethod.DELETE, "/station/**").permitAll();
+					   requests.requestMatchers(HttpMethod.POST, "/member/login","/station/**", "/reports").permitAll();
+					   requests.requestMatchers(HttpMethod.DELETE, "/station/**","reports/**").permitAll();
 					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**",  /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member").authenticated();
 					   // requests.requestMatchers("/admin/**").hasRole("ADMIN"); // 권한검증방법
-					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station/**","/api/**").permitAll();
+					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station/**","/api/**","/reports/**").permitAll();
 					   requests.requestMatchers(HttpMethod.PUT, "/station/**").permitAll();
 					   
 					   

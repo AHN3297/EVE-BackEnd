@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.evision.report.model.dao.ReportMapper;
 import com.kh.evision.report.model.dto.ReportDTO;
+import com.kh.evision.report.model.vo.ReportVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,35 +15,38 @@ import lombok.RequiredArgsConstructor;
 public class ReportServiceImpl implements ReportService {
 	private final ReportMapper mapper;
 	
-//	@Override
-//	int save(ReportDTO report, CustomUserDetails userDetails) {
-//		Report r = Report.builder()
-//					  	 .memberNo(userDetails.getMemberNo())
-//					  	 .boardNo(report.getBoardNo())
-//					  	 .reportCategory(report.getReportCategory())
-//					  	 .retportTitle(report.getRetportTitle())
-//					  	 .reportContent(report.getReportContent())
-//					  	 .status(report.getStatus())
-//					  	 .build();
-//		
-//		return mapper.save(report);
-//	}
-//
-//	@Override
-//	public List<ReportDTO> findAll() {
-//		return mapper.findAll();
-//	}
-//
-//
-//	@Override
-//	public ReportDTO findByReportNo(Long reportNo) {
-//		// TODO Auto-generated method stub
-//		return mapper.findByReportNo(reportNo);
-//	}
-//
-//	@Override
-//	public List<ReportDTO> findMyReports(CustomUserDetails userDetails) {
-//		String memberNo = userDetails.getMemberNo();
-//		return mapper.findMyReports(memberNo);
-//	}
+	@Override
+	public int save(ReportDTO report) {
+		ReportVO r = ReportVO.builder()
+						 .memberNo(report.getMemberNo())
+					  	 .boardNo(report.getBoardNo())
+					  	 .reportCategory(report.getReportCategory())
+					  	 .reportTitle(report.getReportTitle())
+					  	 .reportContent(report.getReportContent())
+					  	 .status(report.getStatus())
+					  	 .build();
+		
+		return mapper.save(report);
+	}
+
+	@Override
+	public List<ReportDTO> findAll() {
+		return mapper.findAll();
+	}
+
+
+	@Override
+	public ReportDTO findByKeyword(String keyword) {
+		// TODO Auto-generated method stub
+		return mapper.findByKeyword(keyword);
+	}
+
+	@Override
+	public List<ReportDTO> findMyReports(Long memberNo) {
+		return mapper.findMyReports(memberNo);
+	}
+	@Override
+	public 	int deleteReport(Long reportNo) {
+		return mapper.deleteReport(reportNo);
+	}
 }

@@ -5,8 +5,10 @@ import java.util.List;
 import com.kh.evision.report.model.dto.ReportDTO;
 
 public interface ReportService {
-//	int save(ReportDTO report, CustomUserDetails userDetails);
-//	List<ReportDTO> findMyReports(CustomUserDetails userDetails);
-//	List<ReportDTO> findAll();
-//	ReportDTO findByReportNo(Long reportNo);
+
+	int save(ReportDTO report);
+	List<ReportDTO> findAll();
+	ReportDTO findByKeyword(String keyword);
+	List<ReportDTO> findMyReports(Long memberNo);
+	int deleteReport(Long reportNo);
 }
