@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.evision.member.model.dto.ChangeRoleDTO;
+import com.kh.evision.member.model.dto.LicenseDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.vo.MemberVO;
 
@@ -95,10 +97,57 @@ public interface MemberMapper {
     
     @Update("UPDATE TB_MEMBER SET MEMBER_PWD = #{newPassword} WHERE MEMBER_NO = #{memberNo}")
     int changePassword(Map<String, Object> changeRequest);
+    /**
+     * mybatis에서 동적 SQl로 null이 아닌 컬럼만 DB에 보내기위해서 사용
+     * set은 null이 아닌 필드만 자동으로 updateset문에 포함시켜줌, 콤마 제거는 덤
+     * 
+     * 
+     */
+    @Update("""
+    	    <script>
+    	        UPDATE TB_MEMBER
+    	        <set>
+    	            <if test="nickname != null">NICKNAME = #{nickname},</if>
+    	            <if test="address != null">ADDRESS = #{address},</if>
+    	            <if test="phone != null">PHONE = #{phone},</if>
+    	            <if test="email != null">EMAIL = #{email},</if>
+    	        </set>
+    	        WHERE MEMBER_NO = #{memberNo}
+    	    </script>
+    	""")
+    int updateMemberInfo(Map<String, Object> params);
     
     @Update("UPDATE TB_MEMBER SET ROLE_STATUS = #{newRole} WHERE MEMBER_NO = #{memberNo}")
     int changeRole(ChangeRoleDTO change);
-
-	;
+    
+    @Update("UPDATE TB_MEMBER SET STATUS = 'N' WHERE MEMBER_NO = #{memberNo}")
+    int softDelete(String memberNo);
+    
+    
+    @Insert("""
+    		INSERT 
+    		  INTO 
+    		       TB_LICENSE 
+    		       (
+    		       LICENSE_ID,
+    		       MEMBER_NO,
+    		       LICENSE_NO,
+    		       RENEW_DATE,
+    		       ISSUING_AGENCY,
+    		       LICENSE_CLASS
+    		       )
+    	    VALUES (
+    	           SEQ_LID.NEXTVAL,
+    	           #{memberNo}, 
+    	           #{licenseDTO.licenseNo},
+    	           #{licenseDTO.renewDate}, 
+    	           #{licenseDTO.issuingAgency},
+    	           #{licenseDTO.licenseClass}
+    	           )
+    	           
+    			
+    		""")
+	void insertLicense(@Param("memberNo")String memberNo, @Param("licenseDTO")LicenseDTO licenseDTO);
+	    
 }
 

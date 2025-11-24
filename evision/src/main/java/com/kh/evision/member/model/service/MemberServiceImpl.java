@@ -1,5 +1,6 @@
 package com.kh.evision.member.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,9 @@ import com.kh.evision.exception.custom.member.NicknameDuplicateException;
 import com.kh.evision.member.model.dao.MemberMapper;
 import com.kh.evision.member.model.dto.ChangePasswordDTO;
 import com.kh.evision.member.model.dto.ChangeRoleDTO;
+import com.kh.evision.member.model.dto.LicenseDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
+import com.kh.evision.member.model.dto.UpdateMemberDTO;
 import com.kh.evision.member.model.vo.MemberVO;
 import com.kh.evision.token.model.dao.TokenMapper;
 
@@ -132,6 +135,68 @@ public class MemberServiceImpl implements MemberService {
 		return memberMapper.memberManage();
 	}
 
+	@Override
+	public void updateMemberInfo(String memberNo, UpdateMemberDTO updateDto) {
+		// DTO에서 null 아닌 필드만 Map으로 변환 모든 필드를 담으면 null값을 update문에 써야함 null인값은 Map에 안들어감 ㅋㅋ 그래서 SQL에도 안들어감
+		// 그래서 sql문보면  if != null일때만 업데이트가 됨
+        Map<String, Object> params = new HashMap<>();
+        
+        params.put("memberNo", memberNo);
+        
+        if (updateDto.getNewName() != null) params.put("nickname", updateDto.getNewName());
+        if (updateDto.getNewNickname() != null) params.put("nickname", updateDto.getNewNickname());
+        if (updateDto.getNewAddress() != null) params.put("address", updateDto.getNewAddress());
+        if (updateDto.getNewPhone() != null) params.put("phone", updateDto.getNewPhone());
+        if (updateDto.getNewEmail() != null) params.put("email", updateDto.getNewEmail());
+
+        
+        memberMapper.updateMemberInfo(params);
+		
+	}
+
+	@Override
+	public void deleteMyAccount(String memberNo, String password) {
+		MemberDTO member = memberMapper.loadByMemberNo(memberNo);
+
+	    if (member == null) {
+	        throw new RuntimeException("회원 정보가 존재하지 않습니다.");
+	    }
+
+	    // 비밀번호 검증
+	    if (!passwordEncoder.matches(password, member.getMemberPwd())) {
+	        throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+	    }
+
+	    memberMapper.softDelete(memberNo);
+		
+	}
+
+	@Override
+	public void deleteMemberByAdmin(String memberNo, String actingRole, String actingMemberNo) {
+		MemberDTO target = memberMapper.loadByMemberNo(memberNo);
+	    if (target == null) {
+	        throw new RuntimeException("회원 정보가 존재하지 않습니다.");
+	    }
+
+	    // USER는 다른 사람 삭제 불가
+	    if ("ROLE_USER".equals(actingRole)) {
+	        throw new AccessDeniedException("권한이 없습니다.");
+	    }
+
+	    // OPERATOR가 ADMIN 삭제 못하도록 제한
+	    if ("ROLE_OPERATOR".equals(actingRole) && "ROLE_ADMIN".equals(target.getRoleStatus())) {
+	        throw new AccessDeniedException("관리자를 삭제할 권한이 없습니다.");
+	    }
+
+	    memberMapper.softDelete(memberNo);
+		
+	}
+
+	@Override
+	public void verifyLicense(String memberNo, LicenseDTO licenseDTO) {
+		
+		memberMapper.insertLicense(memberNo, licenseDTO);
+	}
 
 	
 	

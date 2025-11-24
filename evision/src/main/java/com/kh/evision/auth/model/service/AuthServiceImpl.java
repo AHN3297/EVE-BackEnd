@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
 		log.info("인증에 성공한 사용자의 정보 : {}", user);
 		
 		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername());
-		loginResponse.put("memberNo", user.getUsername());
+		loginResponse.put("memberNo", user.getUsername()); 
 		loginResponse.put("memberName", user.getMemberName());
 		loginResponse.put("role", user.getAuthorities().toString());
 		
