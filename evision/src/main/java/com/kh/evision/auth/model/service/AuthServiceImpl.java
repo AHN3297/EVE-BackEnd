@@ -1,6 +1,7 @@
 package com.kh.evision.auth.model.service;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,7 +41,11 @@ public class AuthServiceImpl implements AuthService {
 		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername());
 		loginResponse.put("memberNo", user.getUsername()); 
 		loginResponse.put("memberName", user.getMemberName());
-		loginResponse.put("role", user.getAuthorities().toString());
+		String roles = user.getAuthorities().stream()
+                .map(autho -> autho.getAuthority())
+                .collect(Collectors.joining(",")); // 여러 권한이면 "ROLE_USER,ROLE_ADMIN"로 보내짐
+		loginResponse.put("role", roles);
+
 		
 		return loginResponse;
 		

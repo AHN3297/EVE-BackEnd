@@ -33,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		
 		
-		log.info("이거오나요 : ", user);
+		log.info("이거오나요 : {}", user);
 		if(user ==null) {
 			throw new UsernameNotFoundException("로그인 실패임 ㅋㅋㄹㅃㅃ" + username);
 		}
