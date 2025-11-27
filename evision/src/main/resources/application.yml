@@ -2,7 +2,7 @@ spring:
   application:
     name: evision
   datasource:
-    url: jdbc:oracle:thin:@115.90.212.20:10000:XE
+    url: jdbc:oracle:thin:@192.168.140.17:1521:XE
     username: C##dlqmdl133
     password: dlqmdl1331234
     driver-class-name: oracle.jdbc.driver.OracleDriver

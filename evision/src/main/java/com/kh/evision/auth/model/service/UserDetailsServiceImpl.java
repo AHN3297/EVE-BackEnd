@@ -33,14 +33,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		
 		
-		log.info("이거오나요 : {}", user);
+		log.info("이거오나요 : ", user);
 		if(user ==null) {
 			throw new UsernameNotFoundException("로그인 실패임 ㅋㅋㄹㅃㅃ" + username);
 		}
 		
 		List<GrantedAuthority> authorities = getAuthorities(user);
 		
-		
+		log.info("dd :{}", authorities);
 		return CustomUserDetails.builder().username(String.valueOf(user.getMemberNo()))
 				                          .password(user.getMemberPwd())
 				                          .memberName(user.getMemberName())
