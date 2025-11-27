@@ -1,9 +1,5 @@
 package com.kh.evision.car.model.dto;
 
-import java.sql.Date;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CarCreateRequest {
+public class CarCreateDTO {
 	// 차량 등록 / 수정용 DTO
 	
 	// private Long carNo;

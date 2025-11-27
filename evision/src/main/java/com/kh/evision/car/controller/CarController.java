@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.kh.evision.car.model.dto.CarCreateRequest;
+import com.kh.evision.car.model.dto.CarCreateDTO;
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.service.CarService;
 
@@ -36,7 +36,7 @@ public class CarController {
 	
 	// 차량 등록 -> 관리자/운영자용 기능, 이미지첨부, 파일첨부
 	@PostMapping
-	public ResponseEntity<?> saveCar(@Valid CarCreateRequest car
+	public ResponseEntity<?> saveCar(@Valid CarCreateDTO car
 								   , @RequestParam(name="file", required=false) List<MultipartFile> files
 								   // , @AuthenticationPrincipal CustomUserDetails userDetails
 								   ) {

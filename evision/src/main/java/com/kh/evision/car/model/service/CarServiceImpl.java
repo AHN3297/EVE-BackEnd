@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.evision.car.model.dao.CarMapper;
-import com.kh.evision.car.model.dto.CarCreateRequest;
+import com.kh.evision.car.model.dto.CarCreateDTO;
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.vo.CarVO;
 import com.kh.evision.exception.InvalidParameterException;
@@ -35,7 +35,7 @@ public class CarServiceImpl implements CarService {
 	
 	// 차량 등록
 	@Override
-	public void saveCar(CarCreateRequest car, List<MultipartFile> files) {
+	public void saveCar(CarCreateDTO car, List<MultipartFile> files) {
 		
 		CarVO c = null;
 		
