@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
 		loginResponse.put("memberName", user.getMemberName());
 		String role = user.getAuthorities().stream()
                 .map(autho -> autho.getAuthority())
-                .collect(Collectors.joining(",")); // 여러 권한이면 "ROLE_USER,ROLE_ADMIN"로 보내짐
+                .collect(Collectors.joining(",")); // 여러 권한이면 "ROLE_USER,ROLE_ADMIN"로 보내짐 권한 두개 가능
 		loginResponse.put("role", role);
 		
 
