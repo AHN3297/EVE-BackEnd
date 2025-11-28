@@ -83,7 +83,7 @@ public class ImgService {
 		
 		// 접두규칙 -> 이미지용
 		StringBuilder sb = new StringBuilder();
-		sb.append("Evision_Img");
+		sb.append("Evision_Img_");
 		
 		// 년월일시분초
 		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());

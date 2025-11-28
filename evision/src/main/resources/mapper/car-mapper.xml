@@ -3,15 +3,21 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.evision.car.model.dao.CarMapper">
+
 	
 	<insert id="saveCar"
 			parameterType="CarVO">
+	
+	<selectKey keyProperty="carNo" resultType="long" order="BEFORE">
+		SELECT SEQ_CNO.NEXTVAL FROM DUAL
+	</selectKey>
+	
 		INSERT
 		  INTO
 		       TB_CAR
 		VALUES
 		       (
-		       SEQ_CNO.NEXTVAL
+		       #{carNo}
 		     , #{carName}
 		     , #{carPlate}
 		     , #{maxPassenger}
@@ -25,12 +31,17 @@
 	
 	<insert id="saveCarImg"
 			parameterType="ImgInfo">
+				
+	<selectKey keyProperty="imgId" resultType="long" order="BEFORE">
+		SELECT SEQ_CINO.NEXTVAL FROM DUAL
+	</selectKey>
+			
 		INSERT
 		  INTO
 		       TB_CAR_IMG
 		VALUES
 		       (
-		       SEQ_CINO.NEXTVAL
+		       #{imgId}
 		     , #{carNo}
 		     , #{originName}
 		     , #{changeName}
@@ -40,12 +51,17 @@
 	
 	<insert id="saveCarFile"
 			parameterType="FileInfo">
+				
+	<selectKey keyProperty="fileId" resultType="long" order="BEFORE">
+		SELECT SEQ_CFNO.NEXTVAL FROM DUAL
+	</selectKey>
+			
 		INSERT
 		  INTO
 		       TB_CAR_FILE
 		VALUES
 		       (
-		       SEQ_CFNO.NEXTVAL
+		       #{fileId}
 		     , #{carNo}
 		     , #{originName}
 		     , #{changeName}

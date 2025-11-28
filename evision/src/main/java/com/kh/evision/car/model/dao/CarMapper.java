@@ -7,6 +7,8 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.vo.CarVO;
+import com.kh.evision.file.FileInfo;
+import com.kh.evision.file.ImgInfo;
 
 @Mapper
 public interface CarMapper {
@@ -30,5 +32,11 @@ public interface CarMapper {
 	void deleteByCarNo(Long carNo);
 	
 	// 차량 검색
+	
+	// 이미지 첨부
+	void saveCarImg(ImgInfo imgInfo);
+	
+	// 파일 첨부
+	void saveCarFile(FileInfo fileInfo);
 
 }

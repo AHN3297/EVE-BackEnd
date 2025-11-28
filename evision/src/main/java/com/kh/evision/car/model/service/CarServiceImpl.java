@@ -14,7 +14,9 @@ import com.kh.evision.car.model.dto.CarCreateDTO;
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.vo.CarVO;
 import com.kh.evision.exception.InvalidParameterException;
+import com.kh.evision.file.FileInfo;
 import com.kh.evision.file.FileService;
+import com.kh.evision.file.ImgInfo;
 import com.kh.evision.file.ImgService;
 import com.kh.evision.util.PageInfo;
 import com.kh.evision.util.Pagination;
@@ -52,6 +54,7 @@ public class CarServiceImpl implements CarService {
 		carMapper.saveCar(c);
 		
 		Long carNo = c.getCarNo();
+		// 반환이 void이므로 번호를 받아올 수 없음
 		log.info("차량 저장 후 PK 확인 : {}", carNo);
 		
 		// 파일존재여부 확인
@@ -82,11 +85,23 @@ public class CarServiceImpl implements CarService {
 				
 				// 어떤건지 확인하고 -> 이미지나 파일에 맞게 ImgService, FileService 호출
 				String fileType = file.getContentType();
+				log.info("파일 타입 알려줘 : {}", fileType);
 				
 				if(fileType != null && fileType.startsWith("image/")) {
-					imgService.store(file, carNo);
+					
+					log.info("이미지로 판명났음 : {}", file);
+					ImgInfo imgInfo = imgService.store(file, carNo); // 이건 이미지 파일 자체를 서버에 저장
+					// 돌아오는거 받아서 DB에 파일 정보 저장해야함
+					carMapper.saveCarImg(imgInfo);
+					log.info("이미지 저장 완료 : {}", imgInfo.getChangeName());
+					
 				} else {
-					fileService.store(file, carNo);
+					
+					log.info("파일로 판명났음 : {}", file);
+					FileInfo fileInfo = fileService.store(file, carNo); // 이건 파일 자체를 서버에 저장
+					carMapper.saveCarFile(fileInfo);
+					log.info("파일 저장 완료 : {}", fileInfo.getChangeName());
+					
 				}
 				
 				// 업로드 다 하면?
