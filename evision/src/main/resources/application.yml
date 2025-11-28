@@ -2,7 +2,7 @@ spring:
   application:
     name: evision
   datasource:
-    url: jdbc:oracle:thin:@115.90.212.20:10000:XE
+    url: jdbc:oracle:thin:@115.90.212.18:10000:XE
     username: C##DLQMDL133
     password: dlqmdl1331234
     driver-class-name: oracle.jdbc.driver.OracleDriver
@@ -15,6 +15,9 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+file:
+  upload:
+    path: uploads/
 
 server:
   port: 8081
@@ -24,7 +27,7 @@ mybatis:
     jdbc-type-for-null: VARCHAR
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
-  type-aliases-package: com.kh.evision.vo, com.kh.evision.token.member.vo  # ⭐ 수정
+  type-aliases-package: com.kh.evision.**.vo
   mapper-locations: classpath:mapper/*.xml
   
 logging:
