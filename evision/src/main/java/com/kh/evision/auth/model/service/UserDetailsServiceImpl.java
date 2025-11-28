@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 		List<GrantedAuthority> authorities = getAuthorities(user);
 		
-		
+		log.info("dd :{}", authorities);
 		return CustomUserDetails.builder().username(String.valueOf(user.getMemberNo()))
 				                          .password(user.getMemberPwd())
 				                          .memberName(user.getMemberName())
