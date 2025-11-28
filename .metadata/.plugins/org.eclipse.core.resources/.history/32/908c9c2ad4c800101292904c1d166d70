@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.evision.report.model.dao.ReportMapper">
+	<insert id="save" parameterType="com.kh.evision.report.model.dto.ReportDTO">
+		INSERT
+	      INTO
+	      	   TB_REPORT
+	      	   (
+	      	   REPORT_NO
+	      	 , MEMBER_NO
+	      	 , BOARD_NO
+	      	 , REPORT_CATEGORY
+	      	 , REPORT_TITLE
+	      	 , REPORT_CONTENT
+	      	 , STATUS
+	      	 , REPORT_DATE
+	      	   )
+	    VALUES 
+	    	   (
+	    	   SEQ_REPORT_NO.NEXTVAL
+	    	 , #{memberNo}
+	    	 , #{boardNo}
+	    	 , #{reportCategory}
+	    	 , #{reportTitle}
+	    	 , #{reportContent}
+	    	 , DEFAULT
+	    	 , SYSDATE
+	    	   )
+	</insert>
+	
+	<select id="findMyReports" resultType="com.kh.evision.report.model.dto.ReportDTO">
+		SELECT
+			   REPORT_NO reportNo
+	      	 , MEMBER_NO memberNo	
+			 , BOARD_NO boardNo
+			 , REPORT_CATEGORY reportCategory
+			 , REPORT_TITLE reportTitle
+			 , REPORT_CONTENT reportContent
+			 , STATUS 
+			 , REPORT_DATE reportDate
+		  FROM
+		       TB_REPORT
+		 WHERE
+		       MEMBER_NO = #{memberNo}
+	     ORDER
+	        BY
+	           REPORT_NO
+	</select>
+	
+</mapper>

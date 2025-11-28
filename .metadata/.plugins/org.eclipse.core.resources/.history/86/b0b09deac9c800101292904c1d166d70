@@ -1,0 +1,51 @@
+package com.kh.evision.report.model.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.kh.evision.report.model.dao.ReportMapper;
+import com.kh.evision.report.model.dto.ReportDTO;
+import com.kh.evision.report.model.vo.ReportVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class ReportServiceImpl implements ReportService {
+	private final ReportMapper mapper;
+	
+	@Override
+	public int save(ReportDTO report) {
+		ReportVO r = ReportVO.builder()
+					  	 .boardNo(report.getBoardNo())
+					  	 .reportCategory(report.getReportCategory())
+					  	 .retportTitle(report.getRetportTitle())
+					  	 .reportContent(report.getReportContent())
+					  	 .status(report.getStatus())
+					  	 .build();
+		
+		return mapper.save(report);
+	}
+
+	@Override
+	public List<ReportDTO> findAll() {
+		return mapper.findAll();
+	}
+
+
+	@Override
+	public ReportDTO findByReportNo(Long reportNo) {
+		// TODO Auto-generated method stub
+		return mapper.findByReportNo(reportNo);
+	}
+
+	@Override
+	public List<ReportDTO> findMyReports() {
+		return mapper.findMyReports(memberNo);
+	}
+	@Override
+	public 	ReportDTO deleteReport(Long reportNo) {
+		return mapper.deleteReport(reportNo);
+	}
+}
