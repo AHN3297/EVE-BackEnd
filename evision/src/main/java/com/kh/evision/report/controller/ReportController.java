@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.evision.report.model.dto.ReportDTO;
 import com.kh.evision.report.model.service.ReportService;
-import com.kh.evision.report.model.vo.ReportVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class ReportController {
 	}
 	
 	
-	// 관리자
+	// 관리자(admin)
 	@GetMapping
 	public ResponseEntity<List<ReportDTO>> findAll(){
 		return ResponseEntity.ok(reportService.findAll());
@@ -51,16 +51,28 @@ public class ReportController {
 		return ResponseEntity.ok(reportService.findByKeyword(keyword));
 		
 	}
-	// 사용자
+	// 사용자(user)
 	@GetMapping(params = "memberNo")
 	public ResponseEntity<List<ReportDTO>> findMyReports(@RequestParam(name="memberNo") Long memberNo) {
 		return ResponseEntity.ok(reportService.findMyReports(memberNo));
 		
 	}
+	
+	// 상태 변경
+	@PutMapping
+	public ResponseEntity<?> updateStatus(@RequestBody ReportDTO report) {
+	    int result = reportService.updateStatus(report);
+	    log.info("나 호출됨?");
+	    if (result > 0) {
+	        return ResponseEntity.ok("상태 변경 성공");
+	    } else {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("상태 변경 실패");
+	    }
+	}
+	// 신고 삭제
 	@DeleteMapping(params="reportNo")
 	public ResponseEntity<?> deleteReport(@RequestParam(name="reportNo") Long reportNo){
 		int result = reportService.deleteReport(reportNo);
-		log.info("나 실행?");
 		if(result>0) {
 			 return ResponseEntity.status(HttpStatus.CREATED).body("신고 삭제 성공");
 		} else {
