@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.evision.car.model.dao.CarMapper">
+	
+	<insert id="saveCar"
+			parameterType="CarVO">
+	
+	<selectKey keyProperty="carNo" resultType="long" order="BEFORE">
+		SELECT SEQ_CNO.NEXTVAL FROM DUAL
+	</selectKey>
+	
+		INSERT
+		  INTO
+		       TB_CAR
+		VALUES
+		       (
+		       #{carNo}
+		     , #{carName}
+		     , #{carPlate}
+		     , #{maxPassenger}
+		     , #{color}
+		     , DEFAULT
+		     , SYSDATE
+		     , #{carLocation}
+		     , #{carBrand}
+		       )
+	</insert>
+	
+	<insert id="saveCarImg"
+			parameterType="ImgInfo">
+				
+	<selectKey keyProperty="imgId" resultType="long" order="BEFORE">
+		SELECT SEQ_CINO.NEXTVAL FROM DUAL
+	</selectKey>
+			
+		INSERT
+		  INTO
+		       TB_CAR_IMG
+		VALUES
+		       (
+		       #{imgId}
+		     , #{carNo}
+		     , #{originName}
+		     , #{changeName}
+		     , DEFAULT
+		       )
+	</insert>
+	
+	<insert id="saveCarFile"
+			parameterType="FileInfo">
+				
+	<selectKey keyProperty="fileId" resultType="long" order="BEFORE">
+		SELECT SEQ_CFNO.NEXTVAL FROM DUAL
+	</selectKey>
+			
+		INSERT
+		  INTO
+		       TB_CAR_FILE
+		VALUES
+		       (
+		       #{fileId}
+		     , #{carNo}
+		     , #{originName}
+		     , #{changeName}
+		     , DEFAULT
+		       )
+	</insert>
+	
+	<!-- sql 태그, resultMap(+ resultSet), selectKey 쓰는거 생각하기 -->
+	
+	<select id="selectTotalCount"
+			resultType="_int">
+		SELECT
+		       COUNT(*)
+		  FROM
+		       TB_CAR
+		 WHERE
+		       STATUS = 'Y'
+	</select>
+	
+	<select id="findAll"
+			resultType="CarDTO">
+		SELECT
+		       CAR_NO carNo
+		     , CAR_NAME carName
+		     , CAR_PLATE carPlate
+		     , MAX_PASSENGER maxPassenger
+		     , COLOR color
+		     , STATUS status
+		     , REGISTER_DATE registerDate
+		     , CAR_LOCATION carLocation
+		     , CAR_BRAND carBrand
+		  FROM
+		       TB_CAR
+		 WHERE
+		       STATUS = 'Y'
+		 ORDER
+		    BY
+		       REGISTER_DATE DESC
+	</select>
+	
+	<resultMap id="carResultSet" type="CarDTO" autoMapping="false">
+		<id column="carNo" property="carNo" />
+		<result column="carName" property="carName" />
+		<result column="carPlate" property="carPlate" />
+		<result column="maxPassenger" property="maxPassenger" />
+		<result column="color" property="color" />
+		<result column="registerDate" property="registerDate" />
+		<result column="carLocation" property="carLocation" />
+		<result column="carBrand" property="carBrand" />
+		<association property="img" javaType="ImgInfo">
+			<id column="imgId" property="imgId" />
+			<result column="originName" property="originName" />
+			<result column="changeName" property="changeName" />
+		</association>
+		<association property="file" javaType="FileInfo">
+			<id column="fileId" property="fileId" />
+			<result column="originName" property="originName" />
+			<result column="changeName" property="changeName" />
+		</association>
+	</resultMap>
+	
+	<select id="findByCarNo"
+			resultMap="carResultSet"
+			parameterType="long">
+		SELECT
+		       C.CAR_NO carNo
+		     , C.CAR_NAME carName
+		     , C.CAR_PLATE carPlate
+		     , C.MAX_PASSENGER maxPassenger
+		     , C.COLOR color
+		     , C.REGISTER_DATE registerDate
+		     , C.CAR_LOCATION carLocation
+		     , C.CAR_BRAND carBrand
+		     , I.IMG_ID imgId
+		     , I.ORIGIN_NAME originName
+		     , I.CHANGE_NAME changeName
+		     , F.FILE_ID AS FILEID
+		     , F.ORIGIN_NAME originName
+		     , F.CHANGE_NAME changeName
+		  FROM
+		       TB_CAR C
+		  LEFT
+		  JOIN
+		       TB_CAR_IMG I ON C.CAR_NO = I.CAR_NO
+		   AND
+		       I.STATUS = 'Y'
+		  LEFT
+		  JOIN
+		       TB_CAR_FILE F ON C.CAR_NO = F.CAR_NO
+		   AND
+		       F.STATUS = 'Y'
+		 WHERE
+		       C.STATUS = 'Y'
+		   AND
+		       C.CAR_NO = #{carNo}
+	</select>
+	
+	<update id="updateCar"
+			parameterType="CarDTO">
+		UPDATE
+		       TB_CAR
+		   SET
+		       CAR_NAME = #{carName}
+		     , CAR_PLATE = #{carPlate}
+		     , MAX_PASSENGER = #{maxPassenger}
+		     , COLOR = #{color}
+		     , CAR_LOCATION = #{carLocation}
+		     , CAR_BRAND = #{carBrand}
+		 WHERE
+		       CAR_NO = #{carNo}
+		   AND
+		       STATUS = 'Y'
+	</update>
+	
+	<update id="updateCarImg"
+			parameterType="ImgInfo">
+		UPDATE
+		       TB_CAR_IMG
+		   SET
+		       ORIGIN_NAME = #{originName}
+		     , CHANGE_NAME = #{changeName}
+		 WHERE
+		       CAR_NO = #{carNo}
+		   AND
+		       STATUS = 'Y'
+	</update>
+	
+	<update id="updateCarFile"
+			parameterType="FileInfo">
+		UPDATE
+		       TB_CAR_FILE
+		   SET
+		       ORIGIN_NAME = #{originName}
+		     , CHANGE_NAME = #{changeName}
+		 WHERE
+		       CAR_NO = #{carNo}
+		   AND
+		       STATUS = 'Y'
+	</update>
+	
+	<delete id="deleteByCarNo"
+			parameterType="long">
+		UPDATE
+		       TB_CAR
+		   SET
+		       STATUS = 'N'
+		 WHERE
+		       CAR_NO = #{carNo}
+	</delete>
+	
+</mapper>
