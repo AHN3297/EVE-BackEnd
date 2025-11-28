@@ -44,4 +44,13 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+
 }
+springBoot {
+    mainClass = 'com.kh.evision.EvisionApplication'
+}
+
+
+
+
+

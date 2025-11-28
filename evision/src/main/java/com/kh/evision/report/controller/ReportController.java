@@ -69,6 +69,7 @@ public class ReportController {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("상태 변경 실패");
 	    }
 	}
+	
 	// 신고 삭제
 	@DeleteMapping(params="reportNo")
 	public ResponseEntity<?> deleteReport(@RequestParam(name="reportNo") Long reportNo){
