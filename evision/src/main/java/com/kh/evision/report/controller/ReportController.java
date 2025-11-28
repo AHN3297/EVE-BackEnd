@@ -1,14 +1,13 @@
 package com.kh.evision.report.controller;
 
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,30 +25,59 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ReportController {
 	private final ReportService reportService;
-
-//	@PostMapping
-//	public ResponseEntity<?> save(@RequestBody ReportDTO report,
-//								  @AuthenticationPrincipal CustomUserDetails userDetails){
-//		Report r = reportService.save(report, userDetails);
-//		return ResponseEntity.status(HttpStatus.CREATED).body(r);
-//	}
-//	
-//	// 사용자
-//	@GetMapping(params = "memberNo")
-//	public ResponseEntity<List<ReportDTO>> findMyReports(@AuthenticationPrincipal CustomUserDetails userDetails) {
-//	    log.info("내 신고/문의 목록 조회 - 사용자: {}", userDetails.getUsername());
-//	    return ResponseEntity.ok(reportService.findByMemberNo(userDetails.getMemberNo()));
-//	}
-//	
-//	// 관리자
-//	@GetMapping
-//	public ResponseEntity<List<ReportDTO>> findAll(){
-//		return ResponseEntity.ok(reportService.findAll());
-//	}
-//	
-//	@GetMapping(params = "reportNo")
-//	public ResponseEntity<ReportDTO> findByReportNo(@RequestParam(name="reportNo") Long reportNo) {
-//		return ResponseEntity.ok(reportService.findByReportNo(reportNo));
-//		
-//	}
+	
+	// 신고 등록
+	@PostMapping
+	public ResponseEntity<?> save(@RequestBody ReportDTO report){
+		int result = reportService.save(report);
+		log.info("나 실행?");
+		if(result>0) {
+			 return ResponseEntity.status(HttpStatus.CREATED).body("신고 등록 성공");
+		} else {
+			 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("신고 등록에 실패");
+		}
+	}
+	
+	
+	// 관리자(admin)
+	@GetMapping
+	public ResponseEntity<List<ReportDTO>> findAll(){
+		return ResponseEntity.ok(reportService.findAll());
+	}
+	
+	// 키워드로 검색
+	@GetMapping(params = "keyword")
+	public ResponseEntity<ReportDTO> findByReportNo(@RequestParam(name="keyword") String keyword) {
+		return ResponseEntity.ok(reportService.findByKeyword(keyword));
+		
+	}
+	// 사용자(user)
+	@GetMapping(params = "memberNo")
+	public ResponseEntity<List<ReportDTO>> findMyReports(@RequestParam(name="memberNo") Long memberNo) {
+		return ResponseEntity.ok(reportService.findMyReports(memberNo));
+		
+	}
+	
+	// 상태 변경
+	@PutMapping
+	public ResponseEntity<?> updateStatus(@RequestBody ReportDTO report) {
+	    int result = reportService.updateStatus(report);
+	    log.info("나 호출됨?");
+	    if (result > 0) {
+	        return ResponseEntity.ok("상태 변경 성공");
+	    } else {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("상태 변경 실패");
+	    }
+	}
+	// 신고 삭제
+	@DeleteMapping(params="reportNo")
+	public ResponseEntity<?> deleteReport(@RequestParam(name="reportNo") Long reportNo){
+		int result = reportService.deleteReport(reportNo);
+		if(result>0) {
+			 return ResponseEntity.status(HttpStatus.CREATED).body("신고 삭제 성공");
+		} else {
+			 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("신고 삭제 실패");
+		}
+	}
+	
 }

@@ -4,23 +4,23 @@ import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data                // getter, setter, toString 등 생성
-@NoArgsConstructor   // 기본 생성자 - Jackson 필수!
+
+@NoArgsConstructor
+@Getter
 @AllArgsConstructor
 @Builder
-//@Value
 public class StationVO {
 	private Long stationNo;
 	private String stationName;
 	private String stationAddress;
 	private String stationType;
-	private Long stationLng;
-	private Long stationLat;
+	private double stationLng;
+	private double stationLat;
 	private Date registerDate;
 	private String status;
-	private Long stationCount;
-	private Long useableStation;
+	private String delStatus;
+
 }

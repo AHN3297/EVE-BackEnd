@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.kh.evision.station.model.dto.StationDTO;
 import com.kh.evision.station.model.vo.ReviewVO;
 import com.kh.evision.station.model.vo.StationVO;
 
@@ -14,21 +15,19 @@ import com.kh.evision.station.model.vo.StationVO;
 public interface StationMapper {
     
     // 충전소 검색
-    List<StationVO> searchList(@Param("stationName") String stationName, 
-                             @Param("stationAddress") String stationAddress,
-                             @Param("stationType") String stationType);
+    List<StationDTO> searchList(String keyword);
     
     // 충전소 등록
-    int save(StationVO station);
+    int save(StationDTO station);
     
     // 충전소 목록 보기
     List<StationVO> findAll();
     
     // 충전소 삭제
-    int delete(@Param("stationNo") Long stationNo);
+    int delete( Long stationNo);
     
     // 충전소 상세보기
-    StationVO stationDetail(@Param("stationNo") Long stationNo);
+    StationDTO stationDetail( Long stationNo);
     
     // 충전소 리뷰 등록
     int commentSave(ReviewVO review);
@@ -37,9 +36,9 @@ public interface StationMapper {
     int commentUpdate(ReviewVO review);
     
     // 충전소 리뷰 삭제
-    int commentDelete(@Param("reviewNo") Long reviewNo);
+    int commentDelete(Long reviewNo);
     
     // 충전소별 리뷰 목록 조회
-    List<ReviewVO> findReviewsByStationNo(@Param("stationNo") Long stationNo);
+    List<ReviewVO> findReviewsByStationNo(Long stationNo);
 }
 
