@@ -3,7 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.evision.car.model.dao.CarMapper">
-
 	
 	<insert id="saveCar"
 			parameterType="CarVO">
@@ -102,7 +101,7 @@
 		       REGISTER_DATE DESC
 	</select>
 	
-	<resultMap id="carResultSet" type="CarDTO">
+	<resultMap id="carResultSet" type="CarDTO" autoMapping="false">
 		<id column="carNo" property="carNo" />
 		<result column="carName" property="carName" />
 		<result column="carPlate" property="carPlate" />
@@ -113,13 +112,13 @@
 		<result column="carBrand" property="carBrand" />
 		<association property="img" javaType="ImgInfo">
 			<id column="imgId" property="imgId" />
-			<result column="imgOriginName" property="originName" />
-			<result column="imgChangeName" property="changeName" />
+			<result column="originName" property="originName" />
+			<result column="changeName" property="changeName" />
 		</association>
 		<association property="file" javaType="FileInfo">
 			<id column="fileId" property="fileId" />
-			<result column="fileOriginName" property="originName" />
-			<result column="fileChangeName" property="changeName" />
+			<result column="originName" property="originName" />
+			<result column="changeName" property="changeName" />
 		</association>
 	</resultMap>
 	
@@ -136,11 +135,11 @@
 		     , C.CAR_LOCATION carLocation
 		     , C.CAR_BRAND carBrand
 		     , I.IMG_ID imgId
-		     , I.ORIGIN_NAME imgOriginName
-		     , I.CHANGE_NAME imgChangeName
-		     , F.FILE_ID fileId
-		     , F.ORIGIN_NAME fileOriginName
-		     , F.CHANGE_NAME fileChangeName
+		     , I.ORIGIN_NAME originName
+		     , I.CHANGE_NAME changeName
+		     , F.FILE_ID AS FILEID
+		     , F.ORIGIN_NAME originName
+		     , F.CHANGE_NAME changeName
 		  FROM
 		       TB_CAR C
 		  LEFT

@@ -90,7 +90,7 @@ public class CarServiceImpl implements CarService {
 				if(fileType != null && fileType.startsWith("image/")) {
 					
 					log.info("이미지로 판명났음 : {}", file);
-					ImgInfo imgInfo = imgService.store(file, carNo); // 이건 이미지 파일 자체를 서버에 저장
+					ImgInfo imgInfo = imgService.store(file, carNo); // 이미지 자체를 서버에 저장
 					// 돌아오는거 받아서 DB에 파일 정보 저장해야함
 					carMapper.saveCarImg(imgInfo);
 					log.info("이미지 저장 완료 : {}", imgInfo.getChangeName());
@@ -98,7 +98,7 @@ public class CarServiceImpl implements CarService {
 				} else {
 					
 					log.info("파일로 판명났음 : {}", file);
-					FileInfo fileInfo = fileService.store(file, carNo); // 이건 파일 자체를 서버에 저장
+					FileInfo fileInfo = fileService.store(file, carNo); // 파일 자체를 서버에 저장
 					carMapper.saveCarFile(fileInfo);
 					log.info("파일 저장 완료 : {}", fileInfo.getChangeName());
 					

@@ -6,7 +6,6 @@ import com.kh.evision.file.FileInfo;
 import com.kh.evision.file.ImgInfo;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+// @AllArgsConstructor
 @ToString
 public class CarDTO {
 	// 차량 조회용 DTO
