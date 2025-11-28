@@ -37,7 +37,6 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public ReportDTO findByKeyword(String keyword) {
-		// TODO Auto-generated method stub
 		return mapper.findByKeyword(keyword);
 	}
 
@@ -45,6 +44,12 @@ public class ReportServiceImpl implements ReportService {
 	public List<ReportDTO> findMyReports(Long memberNo) {
 		return mapper.findMyReports(memberNo);
 	}
+	
+	@Override
+	public int updateStatus(ReportDTO report) {
+		return mapper.updateStatus(report);
+	}
+	
 	@Override
 	public 	int deleteReport(Long reportNo) {
 		return mapper.deleteReport(reportNo);

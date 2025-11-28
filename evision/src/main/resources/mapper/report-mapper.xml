@@ -66,9 +66,9 @@
 		 WHERE
 		 	   REPORT_STATUS = 'Y'
 		   AND
-		  	   REPORT_TITLE LIKE '%' || #{keyword} || '%'
+		  	   (REPORT_TITLE LIKE '%' || #{keyword} || '%'
             OR 
-               REPORT_CONTENT LIKE '%' || #{keyword} || '%'
+               REPORT_CONTENT LIKE '%' || #{keyword} || '%')
 		 ORDER
 	        BY
 	           REPORT_NO
@@ -94,6 +94,17 @@
 	        BY
 	           REPORT_NO
 	</select>
+	
+	<update id="updateStatus">
+    	UPDATE 
+    		   TB_REPORT
+   	 	   SET 
+   	 	       STATUS = #{status}
+    	 WHERE 
+    	 	   REPORT_STATUS = 'Y'
+    	   AND
+    	   	   REPORT_NO = #{reportNo}
+	</update>
 	
 	<update id="deleteReport">
 		UPDATE

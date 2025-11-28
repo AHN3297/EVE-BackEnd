@@ -13,6 +13,7 @@ public interface ReportMapper {
 	List<ReportDTO> findAll();
 	ReportDTO findByKeyword(String keyword);
 	List<ReportDTO> findMyReports(Long memberNo);
+	int updateStatus(ReportDTO report);
 	int deleteReport(Long reportNo);
 	
 }
