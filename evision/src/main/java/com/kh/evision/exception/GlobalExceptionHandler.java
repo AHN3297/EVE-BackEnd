@@ -79,5 +79,20 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handlerAdmin(AdminException e){
 		return createResponseEntity(e, HttpStatus.UNAUTHORIZED);
 	}
-
+	
+	@ExceptionHandler(FileUploadFailureException.class)
+	public ResponseEntity<Map<String, String>> handleFileUploadFailure(FileUploadFailureException e) {
+		return createResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(InvalidImgFormatException.class)
+	public ResponseEntity<Map<String, String>> handleInvalidImgFormat(InvalidImgFormatException e) {
+		return createResponseEntity(e, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+	}
+	
+	@ExceptionHandler(InvalidParameterException.class)
+	public ResponseEntity<Map<String, String>> handleInvalidParameter(InvalidParameterException e) {
+		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
+	
 }

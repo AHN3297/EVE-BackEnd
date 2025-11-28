@@ -37,7 +37,6 @@ public class JwtFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
 		String uri = request.getRequestURI();
 		String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if(authorization == null ||uri.equals("/auth/login")) {
@@ -47,7 +46,6 @@ public class JwtFilter extends OncePerRequestFilter{
 		}
 		// 토큰검증
 		String token = authorization.split(" ")[1];
-
 
 		try {
 			Claims claims = jwtUtil.parseJwt(token);
