@@ -49,3 +49,8 @@ replay_pid*
 *~
 .*.swp
 .*.swo
+
+# IDE files
+.metadata/
+# Eclipse/IDE Files
+.metadata/
