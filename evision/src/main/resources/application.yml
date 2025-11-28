@@ -15,6 +15,7 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+
 file:
   upload:
     path: uploads/
@@ -29,7 +30,7 @@ mybatis:
     map-underscore-to-camel-case: true
   type-aliases-package: com.kh.evision.**.vo
   mapper-locations: classpath:mapper/*.xml
-  
+
 logging:
   level:
     root: INFO
@@ -37,4 +38,4 @@ logging:
 
 jwt:
   secret: ${JWT_SECRET}
-  expiration: 86400000 
+  expiration: 86400000
