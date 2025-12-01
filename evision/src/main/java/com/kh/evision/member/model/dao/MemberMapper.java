@@ -148,6 +148,9 @@ public interface MemberMapper {
     			
     		""")
 	void insertLicense(@Param("memberNo")String memberNo, @Param("licenseDTO")LicenseDTO licenseDTO);
+    
+    @Select("SELECT COUNT(*) FROM TB_LICENSE WHERE MEMBER_NO = #{memberNo}")
+	int countLicenseByMemberNo(@Param("memberNo") String memberNo);
 	    
 }
 

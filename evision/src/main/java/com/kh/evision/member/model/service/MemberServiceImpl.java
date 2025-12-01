@@ -173,29 +173,38 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void deleteMemberByAdmin(String memberNo, String actingRole, String actingMemberNo) {
-		MemberDTO target = memberMapper.loadByMemberNo(memberNo);
+	    MemberDTO target = memberMapper.loadByMemberNo(memberNo);
 	    if (target == null) {
 	        throw new RuntimeException("회원 정보가 존재하지 않습니다.");
 	    }
 
-	    // USER는 다른 사람 삭제 불가
+	    // USER는 삭제 불가
 	    if ("ROLE_USER".equals(actingRole)) {
 	        throw new AccessDeniedException("권한이 없습니다.");
 	    }
 
-	    // OPERATOR가 ADMIN 삭제 못하도록 제한
-	    if ("ROLE_OPERATOR".equals(actingRole) && "ROLE_ADMIN".equals(target.getRoleStatus())) {
-	        throw new AccessDeniedException("관리자를 삭제할 권한이 없습니다.");
+	    // ADMIN 계정은 누구도 삭제 못함  예외던지기 해야함 내가 직접 그래서 내 메시지가 안넘어가는거임 403으로감 저거는
+	    // 그래서 앞단은 403 에러니까 그냥 오류처리하는거임
+	    if ("ROLE_ADMIN".equals(target.getRoleStatus())) {
+	        throw new AccessDeniedException("관리자 계정은 삭제할 수 없습니다.");
 	    }
 
+	    // OPERATOR가 OPERATOR 삭제는 가능하도록 유지
+	    // OPERATOR가 ADMIN 삭제는 윗 조건에서 이미 걸림
+
 	    memberMapper.softDelete(memberNo);
-		
 	}
+
 
 	@Override
 	public void verifyLicense(String memberNo, LicenseDTO licenseDTO) {
 		
 		memberMapper.insertLicense(memberNo, licenseDTO);
+	}
+
+	@Override
+	public boolean hasLicense(String memberNo) {
+		return memberMapper.countLicenseByMemberNo(memberNo) > 0;
 	}
 
 	

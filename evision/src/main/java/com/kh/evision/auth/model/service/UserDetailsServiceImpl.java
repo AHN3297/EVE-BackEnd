@@ -41,6 +41,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		List<GrantedAuthority> authorities = getAuthorities(user);
 		
 		log.info("dd :{}", authorities);
+		log.info("사용자 status: {}", user.getStatus());
+		log.info("사용자 enabled: {}", user.getStatus() == 'Y');
 		return CustomUserDetails.builder().username(String.valueOf(user.getMemberNo()))
 				                          .password(user.getMemberPwd())
 				                          .memberName(user.getMemberName())

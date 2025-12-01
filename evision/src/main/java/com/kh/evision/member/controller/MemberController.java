@@ -135,6 +135,11 @@ public class MemberController {
         memberService.verifyLicense(userDetails.getUsername(), licenseDTO);
         return ResponseEntity.ok("라이센스 인증 완료");
     }
+    @GetMapping("/hasLicense/{memberNo}")
+    public ResponseEntity<Boolean> checkLicense(@PathVariable("memberNo") String memberNo){
+    	boolean exists = memberService.hasLicense(memberNo);
+    	return ResponseEntity.ok(exists);
+    }
 
     
     

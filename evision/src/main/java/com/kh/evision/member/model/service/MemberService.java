@@ -28,6 +28,8 @@ public interface MemberService {
 	void deleteMemberByAdmin(String memberNo, String actingRole, String actingMemberNo);
 
 	void verifyLicense(String memberNo, LicenseDTO licenseDTO);
+
+	boolean hasLicense(String memberNo);
 		
 	
 	

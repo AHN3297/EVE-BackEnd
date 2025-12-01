@@ -29,29 +29,31 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public Map<String, String> login(MemberDTO member) {
-		Authentication auth = null;
-		try {
-			auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(member.getMemberId(), member.getMemberPwd()));			
-		}catch(AuthenticationException e) {
-			throw new CustomAuthenticationException("아이디 또는 비밀번호를 확인하세요.");
-		}
-		CustomUserDetails user = (CustomUserDetails)auth.getPrincipal();
-		
-		log.info("로그인이 성공");
-		log.info("인증에 성공한 사용자의 정보 : {}", user);
-		
-		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername());
-		loginResponse.put("memberNo", user.getUsername()); 
-		loginResponse.put("memberName", user.getMemberName());
-		String role = user.getAuthorities().stream()
-                .map(autho -> autho.getAuthority())
-                .collect(Collectors.joining(",")); // 여러 권한이면 "ROLE_USER,ROLE_ADMIN"로 보내짐 권한 두개 가능
-		loginResponse.put("role", role); // 이거 role한거에요 두번째 머지
-		
+	    Authentication auth = null;
+	    try {
+	        auth = authenticationManager.authenticate(
+	            new UsernamePasswordAuthenticationToken(member.getMemberId(), member.getMemberPwd())
+	        );         
+	    } catch(AuthenticationException e) {
+	        throw new CustomAuthenticationException("아이디 또는 비밀번호를 확인하세요.");
+	    }
 
-		
-		return loginResponse;
-		
+	    CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+
+
+	    log.info("로그인이 성공");
+	    log.info("인증에 성공한 사용자의 정보 : {}", user);
+
+	    Map<String, String> loginResponse = tokenService.generateToken(user.getUsername());
+	    loginResponse.put("memberNo", user.getUsername()); 
+	    loginResponse.put("memberName", user.getMemberName());
+
+	    String role = user.getAuthorities().stream()
+	                .map(autho -> autho.getAuthority())
+	                .collect(Collectors.joining(",")); 
+	    loginResponse.put("role", role);
+
+	    return loginResponse;
 	}
 
 }
