@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -98,6 +99,18 @@ public class ReserveController {
 		
 		reserveService.deleteByReserveNo(reserveNo);
 		return ResponseEntity.ok().build();
+		
+	}
+	
+	// 운영자용 예약관리
+	@PatchMapping("/operator/reserve-manage")
+	public ResponseEntity<ReserveDTO> reserveManage(@PathVariable(name="reserveNo") Long reserveNo
+												  , ReserveDTO reserve
+												  // , @AutenticationPrincipal CustomUserDetails userDetails
+												  ) {
+		
+		reserveService.reserveManage(reserveNo, reserve);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 		
 	}
 	

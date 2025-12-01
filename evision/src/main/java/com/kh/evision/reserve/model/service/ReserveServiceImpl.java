@@ -138,5 +138,16 @@ public class ReserveServiceImpl implements ReserveService {
 		reserveMapper.deleteByReserveNo(reserveNo);
 		
 	}
+
+	@Override
+	public ReserveDTO reserveManage(Long reserveNo, ReserveDTO reserve) {
+		
+		log.info("컨트롤러에서 서비스로 예약번호 넘어오는지 : {}, 예약정보 : {}", reserveNo, reserve);
+		
+		reserveMapper.reserveManage(reserveNo, reserve);
+		
+		return reserve;
+		
+	}
 	
 }

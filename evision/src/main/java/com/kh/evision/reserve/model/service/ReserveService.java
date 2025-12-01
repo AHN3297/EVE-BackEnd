@@ -15,5 +15,7 @@ public interface ReserveService {
 	ReserveDTO findByReserveNo(Long reserveNo);
 	
 	void deleteByReserveNo(Long reserveNo);
+	
+	ReserveDTO reserveManage(Long reserveNo, ReserveDTO reserve);
 
 }
