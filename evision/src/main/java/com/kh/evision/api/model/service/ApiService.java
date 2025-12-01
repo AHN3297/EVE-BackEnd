@@ -29,7 +29,7 @@ public class ApiService {
         // 기본 URL
         StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/EvCharger/getChargerInfo");
         urlBuilder.append("?" + "serviceKey=" + serviceKey);  // 인증키
-        urlBuilder.append("&" + "numOfRows=" + 10);  // 한 페이지 결과 수
+        urlBuilder.append("&" + "numOfRows=" + 1000);  // 한 페이지 결과 수
         urlBuilder.append("&" + "pageNo=" + pageNo);  // 페이지 번호
         urlBuilder.append("&" + "dataType=" + "JSON");  // 응답 데이터 타입 (JSON)
 

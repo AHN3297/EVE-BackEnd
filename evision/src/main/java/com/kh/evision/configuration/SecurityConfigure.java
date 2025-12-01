@@ -50,11 +50,25 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.POST, "/member/admin/**").hasRole("ADMIN"); // 권한검증방법
 					   //requests.requestMatchers(HttpMethod.POST, "/user/**").hasRole("USER"); // 권한검증방법
 					   
+					   
+					   
+					   requests.requestMatchers(HttpMethod.POST, "/member/login","/station/**", "/reports").permitAll();
+					   requests.requestMatchers(HttpMethod.DELETE, "/station/**","reports/**").permitAll();
+					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**",  /*"/station/**",*/ /*"/reports/**",*/ "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member").authenticated();
+					   // requests.requestMatchers("/admin/**").hasRole("ADMIN"); // 권한검증방법
+					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station/**","/api/**","/reports/**").permitAll();
+					   requests.requestMatchers(HttpMethod.PUT, "/station/**","/reports/**").permitAll();
+					   
+					   
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station", "/member/**").permitAll();
 					   requests.requestMatchers(HttpMethod.GET, "member/info").authenticated();
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/cars/**").permitAll(); // 테스트용 임시허용
 					   requests.requestMatchers(HttpMethod.GET, "/cars/**").permitAll(); // 테스트용 임시허용
+
 
 				   })
 				   .sessionManagement(manager ->
@@ -86,6 +100,5 @@ public class SecurityConfigure {
 	    return new BCryptPasswordEncoder();
 	}
 
-	
-	
+
 }

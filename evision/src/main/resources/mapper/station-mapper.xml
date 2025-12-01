@@ -72,7 +72,7 @@
            , #{stationLng}
            , #{stationLat}
            , SYSDATE
-           , #{status}
+           , DEFAULT
            , DEFAULT
              )
     </insert>
