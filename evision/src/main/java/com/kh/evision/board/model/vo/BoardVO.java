@@ -12,7 +12,7 @@ public class BoardVO {
 	private String boardTitle; 
 	private String boardWriter;
 	private String boardContent; 
-	private Long count;
+	// private Long count; (DB에서 DEFAULT 처리)
 	private String status;
 	private Date createDate;
 

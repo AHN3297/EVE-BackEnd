@@ -19,4 +19,8 @@ public class CommentDTO {
 	private Long refBno;
 	private String commentWriter;
 	private Date createDate;
+	
+    // 이미지 정보 추가
+    private String imageUrl;      // 화면 표시용
+    private String originName;    // 원본 파일명
 }

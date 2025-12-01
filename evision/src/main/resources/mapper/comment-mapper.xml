@@ -9,15 +9,21 @@
 		  INTO 
 		       TB_COMMENT
 		       (
-		       COMMENT_CONTENT
+		       COMMENT_NO
+		     , COMMENT_CONTENT
 		     , REF_BNO
 		     , COMMENT_WRITER
+		     , CREATE_DATE
+		     , STATUS
 		       )
 	    VALUES 
 	           (
-	           #{commentContent}
+	           SEQ_CNO.NEXTVAL
+	         , #{commentContent}
 	         , #{refBno}
 	         , #{commentWriter}
+	         , SYSDATE
+	         , DEFAULT
 	           )
 	</insert>
 	
@@ -34,7 +40,7 @@
 		  FROM 
 		       TB_COMMENT
 		 WHERE 
-		       COMMENT_STATUS = 'Y'
+		       STATUS = 'Y'
 		   AND 
 		       REF_BNO = #{refBno}
 		 ORDER 

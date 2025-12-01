@@ -2,9 +2,9 @@ spring:
   application:
     name: evision
   datasource:
-    url: jdbc:oracle:thin:@115.90.212.20:10000:XE
-    username: C##DLQMDL133
-    password: DLQMDL1331234
+    url: jdbc:oracle:thin:@115.90.212.18:10000:XE
+    username: C##dlqmdl133
+    password: dlqmdl1331234
     driver-class-name: oracle.jdbc.driver.OracleDriver
   mvc:
     static-path-pattern: /uploads/**

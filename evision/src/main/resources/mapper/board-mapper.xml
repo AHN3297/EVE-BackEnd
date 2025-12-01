@@ -23,7 +23,7 @@
 			 , #{boardTitle}
 			 , #{boardWriter}
 			 , #{boardContent}
-			 , #{count}
+			 , DEFAULT
 			 , DEFAULT
 			 , DEFAULT
 			   )
@@ -40,6 +40,24 @@
 		    BY 
 		       BOARD_NO DESC
 	</select>
+	
+	<!-- CLAUDE 사용 파일 첨부 버전
+	<select id="findByBoardNo" resultType="BoardDTO">
+    SELECT b.BOARD_NO boardNo
+         , b.BOARD_TITLE boardTitle
+         , b.BOARD_WRITER boardWriter
+         , b.BOARD_CONTENT boardContent
+         , b.COUNT count
+         , b.CREATE_DATE createDate
+         , i.CHANGE_NAME imageUrl
+         , i.ORIGIN_NAME originName
+      FROM TB_BOARD b
+      LEFT JOIN TB_BOARD_IMG i ON b.BOARD_NO = i.IMG_NO 
+                               AND i.STATUS = 'Y'
+     WHERE b.STATUS = 'Y'
+       AND b.BOARD_NO = #{boardNo}
+</select>
+-->
 	
 	<select id="findByBoardNo"
 			resultType="BoardDTO"
