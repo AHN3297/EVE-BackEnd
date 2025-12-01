@@ -1,5 +1,8 @@
 package com.kh.evision.reserve.model.service;
 
+import java.util.Map;
+
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import com.kh.evision.reserve.model.dao.ReserveMapper;
@@ -40,7 +43,31 @@ public class ReserveServiceImpl implements ReserveService {
 		log.info("예약 등록 후 PK 확인 : {}", reserveNo);
 		
 	}
+
+	// 차량 예약 내역 조회(사용자)
+	@Override
+	public Map<String, Object> findAllUserReserve(int pageNo
+			// CustomUserDetails userDetails
+			) {
+		
+		// 로그인한 사용자 검증
+		
+		RowBounds rb = new RowBounds(pageNo * 3, 3);
+		return reserveMapper.findAllUserReserve(rb);
+		
+	}
+
+	// 차량 예약 내역 조회(운영자)
+	@Override
+	public Map<String, Object> findAllReserve(int pageNo
+			// CustomUserDetails userDetails
+			) {
+		
+		// 운영자 권한 검증
+		
+		RowBounds rb = new RowBounds(pageNo * 3, 3);
+		return reserveMapper.findAllReserve(rb);
+	}
 	
-	// 차량 예약 내역 조회(사용자/관리자)
 
 }

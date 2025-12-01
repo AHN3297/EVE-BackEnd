@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.evision.reserve.model.dto.ReserveDTO;
@@ -46,27 +47,27 @@ public class ReserveController {
 	
 	// 차량 예약 내역 조회(사용자)
 	@GetMapping("{memberNo}")
-	public ResponseEntity<Map<String, Object>> findAllUserReserve(
+	public ResponseEntity<Map<String, Object>> findAllUserReserve(@RequestParam(name="pageNo", defaultValue="0") int pageNo
 			// @AuthenticationPrincipal CustomUserDetails userDetails
 			) {
 		
 		log.info("사용자용 차량 예약 내역 조회기능 호출");
-		Map<String, Object> map = reserveService.findAllUserReserve();
+		Map<String, Object> map = reserveService.findAllUserReserve(pageNo);
 		// 예약 내역 조회 결과 + 페이징 객체
 		
 		return ResponseEntity.ok(map);
 		
 	}
 	
-	// 차량 예약 내역 조회(관리자)
+	// 차량 예약 내역 조회(운영자)
 	@GetMapping("/operator/reserve-manage")
-	public ResponseEntity<Map<String, Object>> findAllReserve(
+	public ResponseEntity<Map<String, Object>> findAllReserve(@RequestParam(name="pageNo", defaultValue="0") int pageNo
 			// @AuthenticationPrincipal CustomUserDetails userDetails
 			) {
 		
-		log.info("관리자용 차량 예약 내역 조회기능 호출");
+		log.info("운영자용 차량 예약 내역 조회기능 호출");
 		
-		Map<String, Object> map = reserveService.findAllReserve();
+		Map<String, Object> map = reserveService.findAllReserve(pageNo);
 		
 		return ResponseEntity.ok(map);
 		
