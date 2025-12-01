@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kh.evision.reserve.model.dto.ReserveDTO;
 import com.kh.evision.reserve.model.service.ReserveService;
 
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,6 +72,20 @@ public class ReserveController {
 		Map<String, Object> map = reserveService.findAllReserve(pageNo);
 		
 		return ResponseEntity.ok(map);
+		
+	}
+	
+	// 차량 예약 내역 상세조회
+	@GetMapping("/details/{reserveNo}")
+	public ResponseEntity<ReserveDTO> findByReserveNo(@PathVariable(name="reserveNo") @Min(value=1, message="올바른 접근 경로가 아닙니다.") Long reserveNo) {
+		
+		log.info("FE에서 넘어오는 예약 번호 : {}", reserveNo);
+		
+		ReserveDTO reserve = reserveService.findByReserveNo(reserveNo);
+		
+		log.info("예약 상세 조회 끝 : {}", reserve);
+		
+		return null; // ResponseEntity.ok(reserve);
 		
 	}
 	
