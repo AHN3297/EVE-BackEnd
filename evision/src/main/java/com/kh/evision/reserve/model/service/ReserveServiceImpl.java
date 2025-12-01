@@ -40,5 +40,7 @@ public class ReserveServiceImpl implements ReserveService {
 		log.info("예약 등록 후 PK 확인 : {}", reserveNo);
 		
 	}
+	
+	// 차량 예약 내역 조회(사용자/관리자)
 
 }

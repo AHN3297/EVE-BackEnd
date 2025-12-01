@@ -1,8 +1,11 @@
 package com.kh.evision.reserve.controller;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +41,34 @@ public class ReserveController {
 		reserveService.reserveCar(reserve);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).build();
+		
+	}
+	
+	// 차량 예약 내역 조회(사용자)
+	@GetMapping("{memberNo}")
+	public ResponseEntity<Map<String, Object>> findAllUserReserve(
+			// @AuthenticationPrincipal CustomUserDetails userDetails
+			) {
+		
+		log.info("사용자용 차량 예약 내역 조회기능 호출");
+		Map<String, Object> map = reserveService.findAllUserReserve();
+		// 예약 내역 조회 결과 + 페이징 객체
+		
+		return ResponseEntity.ok(map);
+		
+	}
+	
+	// 차량 예약 내역 조회(관리자)
+	@GetMapping("/operator/reserve-manage")
+	public ResponseEntity<Map<String, Object>> findAllReserve(
+			// @AuthenticationPrincipal CustomUserDetails userDetails
+			) {
+		
+		log.info("관리자용 차량 예약 내역 조회기능 호출");
+		
+		Map<String, Object> map = reserveService.findAllReserve();
+		
+		return ResponseEntity.ok(map);
 		
 	}
 	
