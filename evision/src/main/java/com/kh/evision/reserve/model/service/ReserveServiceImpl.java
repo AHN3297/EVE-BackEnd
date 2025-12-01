@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.evision.reserve.model.dao.ReserveMapper;
 import com.kh.evision.reserve.model.dto.ReserveDTO;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ReserveServiceImpl implements ReserveService {
 	
@@ -140,13 +142,11 @@ public class ReserveServiceImpl implements ReserveService {
 	}
 
 	@Override
-	public ReserveDTO reserveManage(Long reserveNo, ReserveDTO reserve) {
+	public void reserveApprove(Long reserveNo) {
 		
-		log.info("컨트롤러에서 서비스로 예약번호 넘어오는지 : {}, 예약정보 : {}", reserveNo, reserve);
+		log.info("컨트롤러에서 서비스로 예약번호 넘어오는지 : {}, 예약정보 : {}", reserveNo);
 		
-		reserveMapper.reserveManage(reserveNo, reserve);
-		
-		return reserve;
+		reserveMapper.reserveApprove(reserveNo);
 		
 	}
 	

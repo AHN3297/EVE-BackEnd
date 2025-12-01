@@ -103,13 +103,12 @@ public class ReserveController {
 	}
 	
 	// 운영자용 예약관리
-	@PatchMapping("/operator/reserve-manage")
-	public ResponseEntity<ReserveDTO> reserveManage(@PathVariable(name="reserveNo") Long reserveNo
-												  , ReserveDTO reserve
+	@PatchMapping("/operator/reserve-manage/{reserveNo}")
+	public ResponseEntity<ReserveDTO> reserveApprove(@PathVariable(name="reserveNo") Long reserveNo
 												  // , @AutenticationPrincipal CustomUserDetails userDetails
 												  ) {
 		
-		reserveService.reserveManage(reserveNo, reserve);
+		reserveService.reserveApprove(reserveNo);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 		
 	}

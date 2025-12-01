@@ -83,4 +83,16 @@
 		       RESERVE_NO = #{reserveNo}
 	</delete>
 	
+	<update id="reserveApprove"
+			parameterType="ReserveDTO">
+		UPDATE
+		       TB_RESERVE
+		   SET
+		       APPROVE_STATUS = 'Y'
+		 WHERE
+		       RESERVE_NO = #{reserveNo}
+		   AND
+		       STATUS = 'Y'
+	</update>
+	
 </mapper>
