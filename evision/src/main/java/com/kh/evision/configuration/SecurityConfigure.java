@@ -35,10 +35,10 @@ public class SecurityConfigure {
 
 					   requests.requestMatchers(HttpMethod.POST, "/member/signup").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
-					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ "/reserve/**", "/station/**", "/reports/**", "/uploads/**").authenticated();
+					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ /*"/reserve/**",*/ "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ /*"/reserve/**",*/ "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ /*"/reserve/**",*/ "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ /*"/reserve/**",*/ "/station/**", "/reports/**", "/uploads/**").authenticated();
 					   //requests.requestMatchers(HttpMethod.POST, "/operator/**").hasRole("OPERATOR"); // 권한검증방법
 					   requests.requestMatchers(HttpMethod.GET, "/member/operator/**").hasRole("OPERATOR");
 					   requests.requestMatchers(HttpMethod.POST, "/member/admin/**").hasRole("ADMIN"); // 권한검증방법

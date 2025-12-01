@@ -2,8 +2,29 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kh.evision.car.model.dao.ReserveMapper">
+<mapper namespace="com.kh.evision.reserve.model.dao.ReserveMapper">
 	
+	<insert id="reserveCar"
+			parameterType="ReserveVO">
+			
+	<selectKey keyProperty="reserveNo" resultType="long" order="BEFORE">
+		SELECT SEQ_RSNO.NEXTVAL FROM DUAL
+	</selectKey>
 	
+		INSERT
+		  INTO
+		       TB_RESERVE
+		VALUES
+		       (
+		       #{reserveNo}
+		     , #{carNo}
+		     , #{memberNo}
+		     , DEFAULT
+		     , SYSDATE
+		     , #{rentalStartDate}
+		     , #{rentalEndDate}
+		     , DEFAULT
+		       )
+	</insert>
 	
 </mapper>

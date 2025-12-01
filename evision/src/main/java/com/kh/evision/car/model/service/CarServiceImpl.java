@@ -54,7 +54,7 @@ public class CarServiceImpl implements CarService {
 		carMapper.saveCar(c);
 		
 		Long carNo = c.getCarNo();
-		// 반환이 void이므로 번호를 받아올 수 없음
+		// 반환이 void이므로 번호를 받아올 수 없음 -> MyBatis selectKey 이용해서 받아오기
 		log.info("차량 저장 후 PK 확인 : {}", carNo);
 		
 		// 파일존재여부 확인
