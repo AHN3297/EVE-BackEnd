@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,10 +63,12 @@ public class MemberController {
 
     
     @GetMapping("/operator/member-manage")
-    public ResponseEntity<List<MemberVO>> memberManage() {
+    public ResponseEntity<List<MemberVO>> memberManage(@RequestHeader("Authorization") String token) {
+        // token 검증
         List<MemberVO> members = memberService.memberManage();
         return ResponseEntity.ok(members);
     }
+
     
     @PutMapping("/info/changePwd")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO password){
