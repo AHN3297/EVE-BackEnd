@@ -50,6 +50,15 @@ public class ReserveServiceImpl implements ReserveService {
 		Long reserveNo = r.getReserveNo();
 		log.info("예약 등록 후 PK 확인 : {}", reserveNo);
 		
+		// reserveCarStatus(r.getCarNo());
+		// 여기서 하는게 아니고 관리자가 승인하면 변경해줘야함
+		
+	}
+	
+	// 차량 예약 시 차량 정보 수정
+	@Override
+	public void reserveCarStatus(Long carNo) {
+		reserveMapper.reserveCarStatus(carNo);
 	}
 
 	// 차량 예약 내역 조회(사용자)
@@ -141,12 +150,32 @@ public class ReserveServiceImpl implements ReserveService {
 		
 	}
 
+	// 운영자가 예약 승인하기
 	@Override
 	public void reserveApprove(Long reserveNo) {
 		
 		log.info("컨트롤러에서 서비스로 예약번호 넘어오는지 : {}, 예약정보 : {}", reserveNo);
 		
 		reserveMapper.reserveApprove(reserveNo);
+		
+		// 만들어둔 예약 조회 기능 써서 차량 번호 가져오기
+		ReserveDTO reserve = reserveMapper.findByReserveNo(reserveNo);
+		Long carNo = reserve.getCarNo();
+		log.info("예약 조회해서 가져온 차량번호 : {}", carNo);
+		
+		// 차량 번호 보내서 상태 변경해주기
+		reserveCarStatus(carNo);
+		
+	}
+	
+	@Override
+	public void returnCar(Long reserveNo) {
+		
+		log.info("컨트롤러에서 서비스로 넘어오는 예약번호 : {}", reserveNo);
+		
+		reserveMapper.returnCar(reserveNo);
+		
+		log.info("차량 반납 매퍼 다녀옴");
 		
 	}
 	

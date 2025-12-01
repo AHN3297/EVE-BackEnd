@@ -113,4 +113,16 @@ public class ReserveController {
 		
 	}
 	
+	// 차량 반납
+	@PostMapping("/{reserveNo}")
+	public ResponseEntity<ReserveDTO> returnCar(@PathVariable(name="reserveNo") Long reserveNo
+											  , ReserveDTO reserve
+											  // , @AutenticationPrincipal CustomUserDetails userDetails
+			) {
+		
+		reserveService.returnCar(reserveNo);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+		
+	}
+	
 }

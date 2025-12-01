@@ -50,6 +50,7 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.GET, "/reserve/**").permitAll(); // 예약조회 테스트용 임시허용
 					   requests.requestMatchers(HttpMethod.DELETE, "/reserve/**").permitAll(); // 예약취소 테스트용 임시허용
 					   requests.requestMatchers(HttpMethod.PATCH, "/reserve/**").permitAll(); // 예약승인 테스트용 임시허용
+					   requests.requestMatchers(HttpMethod.GET, "/reserve/operator/reserve-manage/**").permitAll(); // 운영자용 예약조회 테스트 임시허용
 
 				   })
 				   .sessionManagement(manager ->

@@ -27,6 +27,15 @@
 		       )
 	</insert>
 	
+	<update id="reserveCarStatus">
+		UPDATE
+		       TB_CAR
+		   SET
+		       RENTAL_STATUS = 'Y'
+		 WHERE
+		       CAR_NO = #{carNo}
+	</update>
+	
 	<select id="selectUserTotalCount"
 			resultType="_int">
 		SELECT
@@ -46,10 +55,14 @@
 		  FROM
 		       TB_RESERVE
 		 WHERE
-		       STAUS = 'Y'
+		       STATUS = 'Y'
 	</select>
 	
 	<select id="findAllUserReserve">
+		
+	</select>
+	
+	<select id="findAllReserve">
 		
 	</select>
 	
@@ -93,6 +106,16 @@
 		       RESERVE_NO = #{reserveNo}
 		   AND
 		       STATUS = 'Y'
+	</update>
+	
+	<update id="returnCar"
+			parameterType="long">
+		UPDATE
+		       TB_CAR
+		   SET
+		       RENTAL_STATUS = 'N'
+		 WHERE
+		       CAR_NO = #{carNo}
 	</update>
 	
 </mapper>

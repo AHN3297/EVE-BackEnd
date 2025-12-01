@@ -14,6 +14,9 @@ public interface ReserveMapper {
 	// 차량 예약 등록
 	void reserveCar(ReserveVO reserve);
 	
+	// 예약하면서 차량 예약 상태 변경 -> 운영자가 예약 승인하면 변경해야함!
+	void reserveCarStatus(Long carNo);
+	
 	// 예약 전체 개수 조회(사용자용)
 	int selectUserTotalCount();
 	
@@ -32,7 +35,10 @@ public interface ReserveMapper {
 	// 예약 취소
 	void deleteByReserveNo(Long reserveNo);
 	
-	// 관리자용 예약 승인
+	// 운영자용 예약 승인
 	void reserveApprove(Long reserveNo);
+
+	// 차량 반납
+	void returnCar(Long reserveNo);
 
 }

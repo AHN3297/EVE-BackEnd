@@ -8,6 +8,8 @@ public interface ReserveService {
 	
 	void reserveCar(ReserveDTO reserve);
 	
+	void reserveCarStatus(Long carNo);
+	
 	Map<String, Object> findAllUserReserve(int pageNo);
 	
 	Map<String, Object> findAllReserve(int pageNo);
@@ -17,5 +19,7 @@ public interface ReserveService {
 	void deleteByReserveNo(Long reserveNo);
 	
 	void reserveApprove(Long reserveNo);
+	
+	void returnCar(Long reserveNo);
 
 }
