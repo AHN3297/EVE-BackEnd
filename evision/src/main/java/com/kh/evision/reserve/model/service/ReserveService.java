@@ -11,5 +11,7 @@ public interface ReserveService {
 	Map<String, Object> findAllUserReserve(int pageNo);
 	
 	Map<String, Object> findAllReserve(int pageNo);
+	
+	ReserveDTO findByReserveNo(Long reserveNo);
 
 }

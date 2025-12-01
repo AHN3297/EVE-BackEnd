@@ -53,4 +53,24 @@
 		
 	</select>
 	
+	<select id="findByReserveNo"
+			resultType="ReserveDTO"
+			parameterType="long">
+		SELECT
+		       RESERVE_NO reserveNo
+		     , CAR_NO carNo
+		     , MEMBER_NO memberNo
+		     , STATUS status
+		     , RESERVE_DATE reserveDate
+		     , RENTAL_START_DATE rentalStartDate
+		     , RENTAL_END_DATE rentalEndDate
+		     , APPROVE_STATUS approveStatus
+		  FROM
+		       TB_RESERVE
+		 WHERE
+		       STATUS = 'Y'
+		   AND
+		       RESERVE_NO = #{reserveNo}
+	</select>
+	
 </mapper>

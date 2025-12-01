@@ -1,7 +1,6 @@
 package com.kh.evision.reserve.model.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
@@ -26,5 +25,8 @@ public interface ReserveMapper {
 
 	// 예약 목록 조회(운영자용)
 	List<ReserveDTO> findAllReserve(RowBounds rb);
+	
+	// 예약 상세 조회
+	ReserveDTO findByReserveNo(Long reserveNo);
 
 }

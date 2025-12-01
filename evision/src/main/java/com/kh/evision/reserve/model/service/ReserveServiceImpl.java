@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
-import com.kh.evision.auth.model.vo.CustomUserDetails;
 import com.kh.evision.reserve.model.dao.ReserveMapper;
 import com.kh.evision.reserve.model.dto.ReserveDTO;
 import com.kh.evision.reserve.model.vo.ReserveVO;
@@ -116,6 +115,19 @@ public class ReserveServiceImpl implements ReserveService {
 		}
 		
 		return map;
+	}
+
+	@Override
+	public ReserveDTO findByReserveNo(Long reserveNo) {
+		
+		log.info("컨트롤러에서 서비스로 예약 번호 넘어오나요 : {}", reserveNo);
+		
+		ReserveDTO reserve = reserveMapper.findByReserveNo(reserveNo);
+		
+		log.info("서비스에서 매퍼 다녀오고 가져온것 : {}", reserve);
+		
+		return reserve;
+		
 	}
 	
 }
