@@ -46,7 +46,7 @@ public class ReserveController {
 	}
 	
 	// 차량 예약 내역 조회(사용자)
-	@GetMapping("{memberNo}")
+	@GetMapping("/{memberNo}")
 	public ResponseEntity<Map<String, Object>> findAllUserReserve(@RequestParam(name="pageNo", defaultValue="0") int pageNo
 			// @AuthenticationPrincipal CustomUserDetails userDetails
 			) {

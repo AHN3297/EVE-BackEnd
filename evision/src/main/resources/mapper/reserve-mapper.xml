@@ -27,4 +27,30 @@
 		       )
 	</insert>
 	
+	<select id="selectUserTotalCount"
+			resultType="_int">
+		SELECT
+		       COUNT(*)
+		  FROM
+		       TB_RESERVE
+		 WHERE
+		       STATUS = 'Y'
+		   AND
+		       MEMBER_NO = #{memberNo}
+	</select>
+	
+	<select id="selectTotalCount"
+			resultType="_int">
+		SELECT
+		       COUNT(*)
+		  FROM
+		       TB_RESERVE
+		 WHERE
+		       STAUS = 'Y'
+	</select>
+	
+	<select id="findAllUserReserve">
+		
+	</select>
+	
 </mapper>
