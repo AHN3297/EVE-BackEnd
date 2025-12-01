@@ -48,6 +48,7 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.GET, "/cars/**").permitAll(); // 테스트용 임시허용
 					   requests.requestMatchers(HttpMethod.POST, "/reserve/**").permitAll(); // 테스트용 임시허용
 					   requests.requestMatchers(HttpMethod.GET, "/reserve/**").permitAll(); // 테스트용 임시허용
+					   requests.requestMatchers(HttpMethod.DELETE, "/reserve/**").permitAll(); // 테스트용 임시허용
 
 				   })
 				   .sessionManagement(manager ->

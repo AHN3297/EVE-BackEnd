@@ -130,4 +130,13 @@ public class ReserveServiceImpl implements ReserveService {
 		
 	}
 	
+	// 예약 취소
+	@Override
+	public void deleteByReserveNo(Long reserveNo) {
+		
+		log.info("컨트롤러에서 서비스로 예약 번호 넘어오나요 : {}", reserveNo);
+		reserveMapper.deleteByReserveNo(reserveNo);
+		
+	}
+	
 }

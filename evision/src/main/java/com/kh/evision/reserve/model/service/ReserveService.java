@@ -13,5 +13,7 @@ public interface ReserveService {
 	Map<String, Object> findAllReserve(int pageNo);
 	
 	ReserveDTO findByReserveNo(Long reserveNo);
+	
+	void deleteByReserveNo(Long reserveNo);
 
 }

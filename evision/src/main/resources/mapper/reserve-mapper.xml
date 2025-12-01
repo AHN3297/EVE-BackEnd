@@ -73,4 +73,14 @@
 		       RESERVE_NO = #{reserveNo}
 	</select>
 	
+	<delete id="deleteByReserveNo"
+			parameterType="long">
+		UPDATE
+		       TB_RESERVE
+		   SET
+		       STATUS = 'N'
+		 WHERE
+		       RESERVE_NO = #{reserveNo}
+	</delete>
+	
 </mapper>

@@ -28,5 +28,8 @@ public interface ReserveMapper {
 	
 	// 예약 상세 조회
 	ReserveDTO findByReserveNo(Long reserveNo);
+	
+	// 예약 취소
+	void deleteByReserveNo(Long reserveNo);
 
 }
