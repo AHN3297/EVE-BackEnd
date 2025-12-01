@@ -10,7 +10,7 @@ public interface ReserveService {
 	
 	void reserveCarStatus(Long carNo);
 	
-	Map<String, Object> findAllUserReserve(int pageNo);
+	Map<String, Object> findAllUserReserve(int pageNo, Long memberNo);
 	
 	Map<String, Object> findAllReserve(int pageNo);
 	

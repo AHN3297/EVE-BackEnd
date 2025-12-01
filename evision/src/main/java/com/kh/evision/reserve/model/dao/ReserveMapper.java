@@ -18,7 +18,7 @@ public interface ReserveMapper {
 	void reserveCarStatus(Long carNo);
 	
 	// 예약 전체 개수 조회(사용자용)
-	int selectUserTotalCount();
+	int selectUserTotalCount(Long memberNo);
 	
 	// 예약 전체 개수 조회(운영자용)
 	int selectTotalCount();

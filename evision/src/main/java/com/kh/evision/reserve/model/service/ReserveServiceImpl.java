@@ -64,19 +64,20 @@ public class ReserveServiceImpl implements ReserveService {
 	// 차량 예약 내역 조회(사용자)
 	@Override
 	public Map<String, Object> findAllUserReserve(int pageNo
+			, Long memberNo
 			// CustomUserDetails userDetails
 			) {
 		
-		log.info("사용자용 예약내역 조회 메소드 호출");
+		log.info("사용자용 예약내역 조회 메소드 호출 : {}", memberNo);
 		
 		Map<String, Object> map = new HashMap();
 		List<ReserveDTO> reserveList = new ArrayList();
 		
 		// 로그인한 사용자 검증, 조회 요청한 사용자 검증 -> 임시작성해둔거 고쳐야함!
 		// Long memberNo = userDetails.get();
-		Long memberNo = 1L;
+		memberNo = 1L;
 		
-		int count = reserveMapper.selectUserTotalCount();
+		int count = reserveMapper.selectUserTotalCount(memberNo);
 		PageInfo pi = pagination.getPageInfo(count, pageNo, 5, 5);
 		
 		// 조회 없을 때의 예외처리 생성 후 차량 조회에도 적용해야함

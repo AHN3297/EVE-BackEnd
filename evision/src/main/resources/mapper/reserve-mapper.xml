@@ -59,11 +59,41 @@
 	</select>
 	
 	<select id="findAllUserReserve">
-		
+		SELECT
+		       RESERVE_NO reserveNo
+		     , CAR_NO carNo
+		     , MEMBER_NO memberNo
+		     , RESERVE_DATE reserveDate
+		     , RENTAL_START_DATE rentalStartDate
+		     , RENTAL_END_DATE rentalEndDate
+		     , APPROVE_STATUS approveStatus
+		  FROM
+		       TB_RESERVE
+		 WHERE
+		       STATUS = 'Y'
+		   AND
+		       MEMBER_NO = #{memberNo}
+		 ORDER
+		    BY
+		       RESERVE_DATE DESC
 	</select>
 	
 	<select id="findAllReserve">
-		
+		SELECT
+		       RESERVE_NO reserveNo
+		     , CAR_NO carNo
+		     , MEMBER_NO memberNo
+		     , RESERVE_DATE reserveDate
+		     , RENTAL_START_DATE rentalStartDate
+		     , RENTAL_END_DATE rentalEndDate
+		     , APPROVE_STATUS approveStatus
+		  FROM
+		       TB_RESERVE
+		 WHERE
+		       STATUS = 'Y'
+		 ORDER
+		    BY
+		       RESERVE_DATE DESC
 	</select>
 	
 	<select id="findByReserveNo"

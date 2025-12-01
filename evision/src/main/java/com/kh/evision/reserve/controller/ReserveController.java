@@ -52,11 +52,12 @@ public class ReserveController {
 	// 차량 예약 내역 조회(사용자)
 	@GetMapping("/{memberNo}")
 	public ResponseEntity<Map<String, Object>> findAllUserReserve(@RequestParam(name="pageNo", defaultValue="0") int pageNo
+			, @PathVariable(name="memberNo") Long memberNo
 			// @AuthenticationPrincipal CustomUserDetails userDetails
 			) {
 		
-		log.info("사용자용 차량 예약 내역 조회기능 호출");
-		Map<String, Object> map = reserveService.findAllUserReserve(pageNo);
+		log.info("사용자용 차량 예약 내역 조회기능 호출 : {}", memberNo);
+		Map<String, Object> map = reserveService.findAllUserReserve(pageNo, memberNo);
 		// 예약 내역 조회 결과 + 페이징 객체
 		
 		return ResponseEntity.ok(map);
