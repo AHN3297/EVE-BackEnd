@@ -1,8 +1,11 @@
 package com.kh.evision.member.controller;
 
+
+
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -126,15 +129,29 @@ public class MemberController {
 
         return ResponseEntity.ok("관리자에 의해 회원이 삭제되었습니다.");
     }
-    
-    @PostMapping("/license")
-    public ResponseEntity<String> verifyLicense(
+
+
+    @PostMapping("/infoLicense")
+    public ResponseEntity<String> infoVefyLicense(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody LicenseDTO licenseDTO
-    ) {
-        memberService.verifyLicense(userDetails.getUsername(), licenseDTO);
-        return ResponseEntity.ok("라이센스 인증 완료");
+            @RequestBody LicenseDTO licenseDTO) {
+
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .body("로그인이 필요합니다.");
+        }
+
+        try {
+            String memberNo = userDetails.getUsername();
+            memberService.infoVeryfyLicense(licenseDTO, memberNo);
+            return ResponseEntity.status(HttpStatus.CREATED).body("운전면허 인증 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("운전면허 인증 실패: " + e.getMessage());
+        }
     }
+
+    
     @GetMapping("/hasLicense/{memberNo}")
     public ResponseEntity<Boolean> checkLicense(@PathVariable("memberNo") String memberNo){
     	boolean exists = memberService.hasLicense(memberNo);

@@ -1,5 +1,6 @@
 package com.kh.evision.member.model.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import com.kh.evision.member.model.dto.ChangeRoleDTO;
 import com.kh.evision.member.model.dto.LicenseDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.dto.UpdateMemberDTO;
+import com.kh.evision.member.model.vo.LicenseVO;
 import com.kh.evision.member.model.vo.MemberVO;
 import com.kh.evision.token.model.dao.TokenMapper;
 
@@ -195,17 +197,33 @@ public class MemberServiceImpl implements MemberService {
 	    memberMapper.softDelete(memberNo);
 	}
 
+	
 
 	@Override
-	public void verifyLicense(String memberNo, LicenseDTO licenseDTO) {
-		
-		memberMapper.insertLicense(memberNo, licenseDTO);
+	public void infoVeryfyLicense(LicenseDTO licenseDTO, String memberNo) {
+		Date renewDate = java.sql.Date.valueOf(licenseDTO.getRenewDate());
+	    try {
+	        // DTO → VO 변환
+	        LicenseVO licenseVO = LicenseVO.builder()
+	                .memberNo(Long.parseLong(memberNo)) // 로그인된 회원 번호
+	                .licenseNo(licenseDTO.getLicenseNo()) // 문자열로 받았다면 parse
+	                .renewDate(renewDate)
+	                .issuingAgency(licenseDTO.getIssuingAgency())
+	                .LicenseClass(licenseDTO.getLicenseClass())
+	                .build();
+
+	        // DB insert
+	        memberMapper.insertLicense(licenseVO);
+	    } catch (NumberFormatException e) {
+	        throw new IllegalArgumentException("번호 형식이 올바르지 않습니다.", e);
+	    }
 	}
 
 	@Override
 	public boolean hasLicense(String memberNo) {
 		return memberMapper.countLicenseByMemberNo(memberNo) > 0;
 	}
+
 
 	
 	
