@@ -12,7 +12,10 @@ import com.kh.evision.board.model.dao.BoardMapper;
 import com.kh.evision.board.model.dto.BoardDTO;
 import com.kh.evision.board.model.vo.BoardVO;
 import com.kh.evision.exception.CustomAuthenticationException;
+import com.kh.evision.file.FileInfo;
 import com.kh.evision.file.FileService;
+import com.kh.evision.file.ImgInfo;
+import com.kh.evision.file.ImgService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardServiceImpl implements BoardService {
 	
 	private final BoardMapper boardMapper;
+	private final ImgService imgService;
 	private final FileService fileService;
 	
 	@Override
@@ -33,15 +37,32 @@ public class BoardServiceImpl implements BoardService {
 			.boardContent(board.getBoardContent())
 			.boardWriter(username);
 		
-		// 파일이 있으면 저장
-		if(file != null && !file.isEmpty()) {
-			String filePath = fileService.store(file);
-			log.info("파일 저장 완료: {}", filePath);
-			// 필요하면 파일 정보를 BoardVO에 추가
-		}
-		
 		BoardVO b = builder.build();
 		boardMapper.save(b);
+		
+		Long boardNo = b.getBoardNo();
+		
+//		 파일이 있으면 저장
+		if(file != null && !file.isEmpty()) {
+			// 필요하면 파일 정보를 BoardVO에 추가
+			log.info("board{}", board.toString());
+			log.info("file{}",file);
+			// 어떤건지 확인하고 -> 이미지나 파일에 맞게 ImgService, FileService 호출
+			String fileType = file.getContentType();
+			log.info("파일 타입 알려줘 : {}", fileType);
+			
+			if(fileType != null && fileType.startsWith("image/")) {
+				
+				log.info("이미지로 판명났음 : {}", file);
+				ImgInfo imgInfo = imgService.store(file, boardNo); // 이미지 자체를 서버에 저장
+				// 돌아오는거 받아서 DB에 파일 정보 저장해야함
+				boardMapper.saveBoardImg(imgInfo); // 매퍼에 이미지 저장 메소드 만들어서 호출
+				log.info("이미지 저장 완료 : {}", imgInfo.getChangeName());
+			}
+		}else {
+			log.info("파일은 없음");
+		}
+				
 	}
 
 	@Override
@@ -76,8 +97,8 @@ public class BoardServiceImpl implements BoardService {
 		// 3. 새로운 파일이 첨부되었는가
 		board.setBoardNo(boardNo);
 		if(file != null && !file.isEmpty()) {
-			String filePath = fileService.store(file);
-			log.info("파일 업데이트 완료: {}", filePath);
+			FileInfo fileInfo = fileService.store(file, boardNo);
+			log.info("파일 업데이트 완료: {}", fileInfo);
 			// board.setFileUrl(filePath); // 필요시 추가
 		}
 		
@@ -98,6 +119,8 @@ public class BoardServiceImpl implements BoardService {
 		validateBoard(boardNo, userDetails);
 		boardMapper.deleteByBoardNo(boardNo);
 	}
+	
+	
 	
 }
 

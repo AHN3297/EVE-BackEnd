@@ -8,13 +8,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.Builder;
 import lombok.Value;
 
-
-@Value // AllargsConstructor, Getter, ToString 
+@Value
 @Builder
 public class CustomUserDetails implements UserDetails {
-		private String username; // MEMBER_ID컬럼값 담는 용도
-		private String password;
-		private String memberName;
-		private Collection<? extends GrantedAuthority> authorities;
+	private String username; // 이거 안쓰면 안됨..	
+	private String password;
+	private String memberName;	
+	private Collection<? extends GrantedAuthority> authorities;
+	private Boolean enabled;
 
 }

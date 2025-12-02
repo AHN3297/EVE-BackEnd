@@ -14,12 +14,17 @@
 	
 		<insert id="save" 
 			parameterType="BoardVO">
+			
+		<selectKey keyProperty="boardNo" resultType="long" order="BEFORE">
+			SELECT SEQ_BNO.NEXTVAL FROM DUAL
+		</selectKey>
+			
 		INSERT 
 		  INTO 
 		       TB_BOARD
 		VALUES 
 			   (
-			   SEQ_BNO.NEXTVAL
+			   #{boardNo}
 			 , #{boardTitle}
 			 , #{boardWriter}
 			 , #{boardContent}
@@ -32,18 +37,24 @@
 		<select id="findAll"
 			resultType="BoardDTO">
 		<include refid="boardColumn" />
-		  FROM 
-		       TB_BOARD
-		 WHERE 
-		       STATUS = 'Y'
-		 ORDER 
-		    BY 
-		       BOARD_NO DESC
+		      , M.MEMBER_NAME memberName
+    	   FROM 
+        	    TB_BOARD B
+    	   JOIN 
+        	    TB_MEMBER M
+        	 ON 
+        	 	B.BOARD_WRITER = M.MEMBER_NO
+    	  WHERE 
+        	    B.STATUS = 'Y'
+    	  ORDER 
+    	  	 BY 
+        	    B.BOARD_NO DESC
 	</select>
 	
 	<!-- CLAUDE 사용 파일 첨부 버전
 	<select id="findByBoardNo" resultType="BoardDTO">
-    SELECT b.BOARD_NO boardNo
+    SELECT 
+           b.BOARD_NO boardNo
          , b.BOARD_TITLE boardTitle
          , b.BOARD_WRITER boardWriter
          , b.BOARD_CONTENT boardContent
@@ -51,11 +62,19 @@
          , b.CREATE_DATE createDate
          , i.CHANGE_NAME imageUrl
          , i.ORIGIN_NAME originName
-      FROM TB_BOARD b
-      LEFT JOIN TB_BOARD_IMG i ON b.BOARD_NO = i.IMG_NO 
-                               AND i.STATUS = 'Y'
-     WHERE b.STATUS = 'Y'
-       AND b.BOARD_NO = #{boardNo}
+      FROM 
+           TB_BOARD b
+      LEFT 
+      JOIN 
+           TB_BOARD_IMG i 
+        ON 
+           b.BOARD_NO = i.IMG_NO 
+       AND 
+           i.STATUS = 'Y'
+     WHERE 
+           b.STATUS = 'Y'
+       AND 
+           b.BOARD_NO = #{boardNo}
 </select>
 -->
 	
@@ -94,6 +113,39 @@
 		       STATUS = 'N'
 		 WHERE 
 		       BOARD_NO = #{boardNo}
+		       
 	</update>
+	
+	<insert id="saveBoardImg"
+			parameterType="ImgInfo">
+				
+	<selectKey keyProperty="imgId" resultType="long" order="BEFORE">
+		SELECT SEQ_BINO.NEXTVAL FROM DUAL
+	</selectKey>
+			
+		INSERT
+		  INTO
+		       TB_BOARD_IMG
+		VALUES
+		       (
+		       #{imgId}
+		     , SEQ_BINO.NEXTVAL
+		     , #{originName}
+		     , #{changeName}
+		     , DEFAULT
+		       )
+	</insert>
+	
+	<!-- 조회수 증가 -->
+<update id="incrementViewCount">
+    UPDATE 
+    	   TB_BOARD
+       SET 
+     	   COUNT = COUNT + 1
+     WHERE 
+           BOARD_NO = #{boardNo}
+       AND 
+       	   STATUS = 'Y'
+</update>
 		
 </mapper>

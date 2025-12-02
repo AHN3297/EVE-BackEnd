@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,9 +37,11 @@ public class BoardController {
 	
 	// 게시글 작성
 	@PostMapping
-	public ResponseEntity<?> save(@Valid BoardDTO board,
+	public ResponseEntity<?> save(@Valid @RequestBody BoardDTO board,
+			//@RequestParam(name="boardTitle") String boardTitle,
 		@RequestParam(name="file", required=false) MultipartFile file,
 		@AuthenticationPrincipal CustomUserDetails userDetails){
+		log.info("board{}", board);
 		
 		boardService.save(board, file, userDetails.getUsername());
 		return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -56,10 +59,11 @@ public class BoardController {
 	// GET /boards/PrimaryKey
 	@GetMapping("/{boardNo}")
 	public ResponseEntity<BoardDTO> findByBoardNo(@PathVariable(name="boardNo") 
-												  @Min(value=1, message="너무 작습니다.")Long boardNo){
+												  @Min(value=1, message="올바른 주소가 아닙니다.")Long boardNo){
 		BoardDTO board = boardService.findByBoardNo(boardNo);
 		return ResponseEntity.ok(board);
 	}
+	@GetMapping("/")
 	
 	@PutMapping("/{boardNo}")
 	public ResponseEntity<BoardDTO> update(@PathVariable(name="boardNo") Long boardNo,

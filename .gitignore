@@ -49,3 +49,35 @@ replay_pid*
 *~
 .*.swp
 .*.swo
+
+
+# 환경 설정
+application.yml
+application.properties
+application-*.yml
+application-*.properties
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build
+target/
+build/
+*.class
+*.jar
+*.war
+
+# Maven
+.m2/
+
+# Database
+*.db
+*.sqlite
+
+# OS
+.DS_Store
+Thumbs.db
+

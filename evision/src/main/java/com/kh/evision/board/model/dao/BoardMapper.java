@@ -7,6 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.evision.board.model.dto.BoardDTO;
 import com.kh.evision.board.model.vo.BoardVO;
+import com.kh.evision.file.ImgInfo;
 
 @Mapper
 public interface BoardMapper {
@@ -20,4 +21,7 @@ public interface BoardMapper {
 	void update(BoardDTO board);
 	
 	void deleteByBoardNo(Long boardNo);
+	
+	//이미지 첨부
+	void saveBoardImg(ImgInfo imgInfo);
 }
