@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.evision.board.model.dao.CommentMapper">
+	
+	<insert id="save">
+		INSERT 
+		  INTO 
+		       TB_COMMENT
+		       (
+		       COMMENT_NO
+		     , COMMENT_CONTENT
+		     , REF_BNO
+		     , COMMENT_WRITER
+		     , CREATE_DATE
+		     , STATUS
+		       )
+	    VALUES 
+	           (
+	           SEQ_CNO.NEXTVAL
+	         , #{commentContent}
+	         , #{refBno}
+	         , #{commentWriter}
+	         , SYSDATE
+	         , DEFAULT
+	           )
+	</insert>
+	
+	
+	<select id="findAll"
+			parameterType="long"
+			resultType="CommentDTO">
+		SELECT 
+		       COMMENT_NO commentNo
+		     , COMMENT_CONTENT commentContent
+		     , REF_BNO refBno
+		     , COMMENT_WRITER commentWriter
+		     , CREATE_DATE createDate
+		  FROM 
+		       TB_COMMENT
+		 WHERE 
+		       STATUS = 'Y'
+		   AND 
+		       REF_BNO = #{refBno}
+		 ORDER 
+		    BY 
+		       commentNo DESC
+	</select>
+
+		
+</mapper>
