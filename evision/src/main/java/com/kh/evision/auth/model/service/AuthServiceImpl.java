@@ -1,12 +1,14 @@
 package com.kh.evision.auth.model.service;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.evision.auth.model.vo.CustomUserDetails;
 import com.kh.evision.exception.custom.member.CustomAuthenticationException;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthServiceImpl implements AuthService {
 	
 	private final AuthenticationManager authenticationManager;
@@ -38,9 +41,14 @@ public class AuthServiceImpl implements AuthService {
 		log.info("인증에 성공한 사용자의 정보 : {}", user);
 		
 		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername());
-		loginResponse.put("memberNo", user.getUsername());
+		loginResponse.put("memberNo", user.getUsername()); 
 		loginResponse.put("memberName", user.getMemberName());
-		loginResponse.put("role", user.getAuthorities().toString());
+		String role = user.getAuthorities().stream()
+                .map(autho -> autho.getAuthority())
+                .collect(Collectors.joining(",")); // 여러 권한이면 "ROLE_USER,ROLE_ADMIN"로 보내짐 권한 두개 가능
+		loginResponse.put("role", role); // 이거 role한거에요 두번째 머지
+		
+
 		
 		return loginResponse;
 		
