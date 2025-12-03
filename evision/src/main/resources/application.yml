@@ -18,7 +18,7 @@ spring:
 
 file:
   upload:
-    path: uploads/
+    path: ./uploads/
 
 server:
   port: 8081
@@ -37,5 +37,5 @@ logging:
     com.kh.evision: INFO
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: H7oIaBujRo6fA/a0wdk09iY6STECQZbemMj8bcs5xBMzd0IYxzT+hNQd+fgXvsyz3qHF3DIwuYXUE9m7w5tkDw==
   expiration: 86400000

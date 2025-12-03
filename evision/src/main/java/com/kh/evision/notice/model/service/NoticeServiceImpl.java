@@ -216,7 +216,11 @@ public class NoticeServiceImpl implements NoticeService {
      * 이미지 파일 저장
      */
     private void saveNoticeImages(Long noticeNo, List<MultipartFile> files) {
-        File uploadDir = new File(uploadPath);
+    	log.info("=== 파일 업로드 경로 확인 ===");
+        log.info("uploadPath 설정값: {}", uploadPath);
+    	File uploadDir = new File(uploadPath);
+    	log.info("uploadDir 절대 경로: {}", uploadDir.getAbsolutePath());
+        log.info("uploadDir 존재 여부: {}", uploadDir.exists());
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
@@ -230,7 +234,7 @@ public class NoticeServiceImpl implements NoticeService {
                 String changeName = UUID.randomUUID().toString() + ext;
                 
                 // 파일 저장
-                File dest = new File(uploadDir, changeName);
+                File dest = new File(uploadDir.getAbsolutePath(), changeName);
                 file.transferTo(dest);
                 
                 // DB에 이미지 정보 저장

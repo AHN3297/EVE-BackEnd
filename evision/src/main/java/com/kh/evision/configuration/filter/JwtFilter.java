@@ -44,7 +44,18 @@ public class JwtFilter extends OncePerRequestFilter {
 		String method = request.getMethod();
 		String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 		
-		// ✅ GET 요청 예외 처리 (공지사항, 파일 등)
+		// ✅ 로그 추가 (디버깅용)
+		log.info("JwtFilter - URI: {}, Method: {}", uri, method);
+		
+		// ✅ 로그인/회원가입 예외 처리 (맨 위로!)
+		if (uri.equals("/auth/login") || uri.equals("/auth/refresh") || 
+		    uri.startsWith("/member/join")) {
+			log.info("인증 불필요 경로 - 필터 통과");
+			filterChain.doFilter(request, response);
+			return;
+		}
+		
+		// ✅ GET 요청 예외 처리
 		if ("GET".equals(method)) {
 			if (uri.startsWith("/notice") || uri.startsWith("/uploads") || 
 			    uri.startsWith("/boards") || uri.startsWith("/cars") || 
@@ -54,8 +65,9 @@ public class JwtFilter extends OncePerRequestFilter {
 			}
 		}
 		
-		// ✅ 로그인 요청 예외 처리
-		if (authorization == null || uri.equals("/auth/login") || uri.startsWith("/member/join")) {
+		// ✅ Authorization 헤더 없으면 통과
+		if (authorization == null) {
+			log.info("토큰 없음 - 필터 통과");
 			filterChain.doFilter(request, response);
 			return;
 		}
