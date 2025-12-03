@@ -35,7 +35,7 @@ public class FileService {
 		Path targetLocation = this.fileLocation.resolve(changedFileName);
 		// 객체에서 경로 필드의 자료형을 String으로 변경 후 -> targetLocation이 Path형이니 넣어줄 때 toString으로 변환
 		FileInfo fileInfo = FileInfo.builder()
-									.carNo(carNo)
+									.primaryKeyNo(carNo)
 									.originName(originalFileName)
 									.changeName(changedFileName)
 									.filePath(targetLocation.toString())

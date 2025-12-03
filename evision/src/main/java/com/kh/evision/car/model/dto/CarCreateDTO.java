@@ -27,5 +27,7 @@ public class CarCreateDTO {
 	// private Date registerDate;
 	private String carLocation;
 	private String carBrand;
+	
+	private String rentalStatus;
 
 }

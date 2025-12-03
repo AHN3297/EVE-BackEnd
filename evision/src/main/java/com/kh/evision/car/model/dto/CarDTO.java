@@ -31,6 +31,8 @@ public class CarDTO {
 	private String carLocation;
 	private String carBrand;
 	
+	private String rentalStatus;
+	
 	private ImgInfo img;
 	private FileInfo file;
 
