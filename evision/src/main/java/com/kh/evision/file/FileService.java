@@ -25,7 +25,7 @@ public class FileService {
 	}
 	
 	// 파일 업로드 메소드
-	public FileInfo store(MultipartFile file, Long carNo) {
+	public FileInfo store(MultipartFile file, Long primaryKeyNo) {
 		
 		// 파일명 관련작업
 		String originalFileName = file.getOriginalFilename();
@@ -35,7 +35,7 @@ public class FileService {
 		Path targetLocation = this.fileLocation.resolve(changedFileName);
 		// 객체에서 경로 필드의 자료형을 String으로 변경 후 -> targetLocation이 Path형이니 넣어줄 때 toString으로 변환
 		FileInfo fileInfo = FileInfo.builder()
-									.primaryKeyNo(carNo)
+									.primaryKeyNo(primaryKeyNo)
 									.originName(originalFileName)
 									.changeName(changedFileName)
 									.filePath(targetLocation.toString())
