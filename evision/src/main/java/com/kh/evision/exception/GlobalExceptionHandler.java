@@ -15,6 +15,7 @@ import com.kh.evision.exception.custom.member.CustomAuthenticationException;
 import com.kh.evision.exception.custom.member.IdDuplicateException;
 import com.kh.evision.exception.custom.member.LoginFailException;
 import com.kh.evision.exception.custom.member.NicknameDuplicateException;
+import com.kh.evision.exception.custom.member.NotUserException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,6 +94,10 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(InvalidParameterException.class)
 	public ResponseEntity<Map<String, String>> handleInvalidParameter(InvalidParameterException e) {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(NotUserException.class)
+	public ResponseEntity<String> handleNotUser(NotUserException e) {
+		 return ResponseEntity.badRequest().body(e.getMessage());
 	}
 	
 }

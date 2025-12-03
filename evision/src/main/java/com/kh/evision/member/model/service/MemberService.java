@@ -22,6 +22,8 @@ public interface MemberService {
 	boolean changeRole(ChangeRoleDTO change, String actingRole);
 
 	void updateMemberInfo(String memberNo, UpdateMemberDTO updateDto);
+	
+	boolean verifyPassword(String memberNo, String password);
 
 	void deleteMyAccount(String memberNo, String password);
 

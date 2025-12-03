@@ -16,6 +16,7 @@ import com.kh.evision.auth.model.vo.CustomUserDetails;
 import com.kh.evision.exception.custom.member.CustomAuthenticationException;
 import com.kh.evision.exception.custom.member.IdDuplicateException;
 import com.kh.evision.exception.custom.member.NicknameDuplicateException;
+import com.kh.evision.exception.custom.member.NotUserException;
 import com.kh.evision.member.model.dao.MemberMapper;
 import com.kh.evision.member.model.dto.ChangePasswordDTO;
 import com.kh.evision.member.model.dto.ChangeRoleDTO;
@@ -87,18 +88,49 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
+    @Override
+    public boolean verifyPassword(String memberNo, String password) {
+    	MemberDTO member = memberMapper.loadByMemberNo(memberNo);
+        return passwordEncoder.matches(password, member.getMemberPwd());
+    }
 
 
-	@Override
-	public void changePassword(ChangePasswordDTO password) {
-		CustomUserDetails user = validatePassword(password.getCurrentPassword());
-		String newPassword = passwordEncoder.encode(password.getNewPassword());
-		Map<String, Object> changeRequest = Map.of("memberNo", user.getUsername(),
-												   "newPassword", newPassword);
-	
-		memberMapper.changePassword(changeRequest);
-	
-	}
+    @Override
+    public void changePassword(ChangePasswordDTO password) {
+        
+        // 새 비밀번호 확인 검증
+        if (!password.getNewPassword().equals(password.getConfirmPassword())) {
+            throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
+        }
+        
+        // 현재 로그인한 사용자 정보
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails user = (CustomUserDetails)auth.getPrincipal();
+        String memberNo = user.getUsername();
+        
+        // DB에서 회원 정보 조회
+        MemberDTO member = memberMapper.loadByMemberNo(memberNo);
+        
+        System.out.println("===== changePassword =====");
+        System.out.println("회원 번호: " + memberNo);
+        System.out.println("입력한 현재 비밀번호: " + password.getCurrentPassword());
+        System.out.println("DB 비밀번호: " + member.getMemberPwd());
+        System.out.println("매칭 결과: " + passwordEncoder.matches(password.getCurrentPassword(), member.getMemberPwd()));
+        
+        // 현재 비밀번호 검증
+        if(!passwordEncoder.matches(password.getCurrentPassword(), member.getMemberPwd())) {
+            throw new CustomAuthenticationException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        
+        // 새 비밀번호 암호화 및 업데이트
+        String newPassword = passwordEncoder.encode(password.getNewPassword());
+        Map<String, Object> changeRequest = Map.of(
+            "memberNo", memberNo,
+            "newPassword", newPassword
+        );
+
+        memberMapper.changePassword(changeRequest);
+    }
     
 	
 	private CustomUserDetails validatePassword(String password) {
@@ -116,20 +148,38 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public boolean changeRole(ChangeRoleDTO change, String actingRole) {
-		if(!"ROLE_ADMIN".equals(actingRole)) {
-			throw new AccessDeniedException("권한이 없습니다! 관리자만 변경이 가능합니다.");
-		}
-		// 1. admin을 변경할 수 없게 예외처리
-		// 2. admin 외에는 변경할 수 없음
-		// 3. 오직 user -> operator만 가능하게
-		if(!change.getNewRole().equals("ROLE_USER") && !change.getNewRole().equals("ROLE_OPERATOR")) {
-			throw new IllegalArgumentException("변경할 수 없는 권한입니다."); // 일단 지금은 이거쓰고 학원에서는 예외를 만들자
-			// 변경되는 값이 user랑 oprator임, 이거 2개 외에는 변경이 되면 안된다는뜻
-		}
-		int result = memberMapper.changeRole(change);
-		
-		return result > 0;
+
+	    // 1) acting admin 체크
+	    if (!"ROLE_ADMIN".equals(actingRole)) {
+	        throw new AccessDeniedException("권한이 없습니다! 관리자만 변경이 가능합니다.");
+	    }
+
+	    // 2) 🔥 비활성화 계정이면 여기서 즉시 차단 (중요!)
+	    if (!"Y".equals(change.getStatus())) {
+	        throw new NotUserException("활성화된 계정이 아닙니다.");
+	    }
+
+	    // 3) ROLE_USER만 operator로 변경 가능
+	    String currentRole = change.getCurrentRole();
+	    if (!"ROLE_USER".equals(currentRole)) {
+	        throw new NotUserException("ROLE_USER 계정만 OPERATOR로 변경 가능합니다.");
+	    }
+
+	    // 4) newRole 제한
+	    if (!"ROLE_OPERATOR".equals(change.getNewRole())) {
+	        throw new NotUserException("OPERATOR로만 변경 가능 합니다.");
+	    }
+
+	    // 5) mapper 실행
+	    int result = memberMapper.changeRole(change.getMemberNo(), change.getNewRole());
+
+	    if (result == 0) {
+	        throw new NotUserException("역할 변경에 실패했습니다.");
+	    }
+
+	    return true;
 	}
+
 
 
 	@Override
@@ -145,7 +195,8 @@ public class MemberServiceImpl implements MemberService {
         
         params.put("memberNo", memberNo);
         
-        if (updateDto.getNewName() != null) params.put("nickname", updateDto.getNewName());
+        
+        if (updateDto.getNewName() != null) params.put("memberName", updateDto.getNewName());
         if (updateDto.getNewNickname() != null) params.put("nickname", updateDto.getNewNickname());
         if (updateDto.getNewAddress() != null) params.put("address", updateDto.getNewAddress());
         if (updateDto.getNewPhone() != null) params.put("phone", updateDto.getNewPhone());
@@ -223,6 +274,7 @@ public class MemberServiceImpl implements MemberService {
 	public boolean hasLicense(String memberNo) {
 		return memberMapper.countLicenseByMemberNo(memberNo) > 0;
 	}
+
 
 
 	

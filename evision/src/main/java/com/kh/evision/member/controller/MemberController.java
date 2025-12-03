@@ -2,6 +2,7 @@ package com.kh.evision.member.controller;
 
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,7 +65,26 @@ public class MemberController {
         MemberDTO member = memberService.getMemberInfo(memberNo);
         return ResponseEntity.ok(member);
     }
-
+    
+    @PostMapping("/verify-password")
+    public ResponseEntity<Map<String, Boolean>> verifyPassword(
+            @RequestBody Map<String, String> request,
+            @AuthenticationPrincipal UserDetails userDetails) {  // 또는 Principal principal
+        
+        // memberNo 가져오는 방법 확인
+        String memberNo = userDetails.getUsername(); // 또는 적절한 방법으로
+        
+        System.out.println("Controller - memberNo: " + memberNo);
+        System.out.println("Controller - request: " + request);
+        
+        String password = request.get("password");
+        boolean isValid = memberService.verifyPassword(memberNo, password);
+        
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("success", isValid);
+        
+        return ResponseEntity.ok(response);
+    }
     
     @GetMapping("/operator/member-manage")
     public ResponseEntity<List<MemberVO>> memberManage(@RequestHeader("Authorization") String token) {
@@ -73,10 +94,16 @@ public class MemberController {
     }
 
     
-    @PutMapping("/info/changePwd")
-    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO password){
-    	memberService.changePassword(password);
-    	return ResponseEntity.ok("확인되었습니다.");
+    @PutMapping("/changePwd")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+        try {
+            memberService.changePassword(changePasswordDTO);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("비밀번호 변경에 실패했습니다.");
+        }
     }
     
     
@@ -90,12 +117,26 @@ public class MemberController {
         return ResponseEntity.ok("회원정보가 수정되었습니다.");
     }
     
+    @DeleteMapping("/info/delete")
+    public ResponseEntity<?> deleteMyAccount(
+    		@AuthenticationPrincipal CustomUserDetails userDetails,
+    		@RequestBody Map<String, String> request
+    		) {
+    	String memberNo = userDetails.getUsername();
+    	String password = request.get("password");
+    	
+    	memberService.deleteMyAccount(memberNo, password);
+    	
+    	return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+    }
     
-    @PostMapping("/admin/change-role/{memberNo}")
+    @PutMapping("/admin/change-role/{memberNo}")
     public ResponseEntity<?> changeRole(
+    		@PathVariable("memberNo") Long memberNo,
             @RequestBody ChangeRoleDTO change,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+    	change.setMemberNo(memberNo);
         String actingRole = userDetails.getAuthorities().iterator().next().getAuthority();
         boolean success = memberService.changeRole(change, actingRole);
 
@@ -103,18 +144,6 @@ public class MemberController {
                        : ResponseEntity.badRequest().body("변경에 실패했습니다...");
     }
     
-    @DeleteMapping("/info/delete")
-    public ResponseEntity<?> deleteMyAccount(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody Map<String, String> request
-    ) {
-        String memberNo = userDetails.getUsername();
-        String password = request.get("password");
-
-        memberService.deleteMyAccount(memberNo, password);
-
-        return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
-    }
     
     @DeleteMapping("/operator/member-manage/{memberNo}")
     @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")

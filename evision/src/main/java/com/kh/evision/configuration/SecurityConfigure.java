@@ -38,6 +38,7 @@ public class SecurityConfigure {
 				   .cors(Customizer.withDefaults())
 				   .authorizeHttpRequests(requests -> {
 
+					   requests.requestMatchers(HttpMethod.PUT, "/member/changePwd").authenticated();
 					   requests.requestMatchers(HttpMethod.POST, "/member/join").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/member/**").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();

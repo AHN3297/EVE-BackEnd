@@ -107,18 +107,20 @@ public interface MemberMapper {
     	    <script>
     	        UPDATE TB_MEMBER
     	        <set>
+    		        <if test="memberName != null">MEMBER_NAME = #{memberName},</if>
     	            <if test="nickname != null">NICKNAME = #{nickname},</if>
     	            <if test="address != null">ADDRESS = #{address},</if>
     	            <if test="phone != null">PHONE = #{phone},</if>
-    	            <if test="email != null">EMAIL = #{email},</if>
+    	            <if test="email != null">EMAIL = #{email}</if>
     	        </set>
     	        WHERE MEMBER_NO = #{memberNo}
     	    </script>
     	""")
     int updateMemberInfo(Map<String, Object> params);
     
-    @Update("UPDATE TB_MEMBER SET ROLE_STATUS = #{newRole} WHERE MEMBER_NO = #{memberNo}")
-    int changeRole(ChangeRoleDTO change);
+    @Update("UPDATE TB_MEMBER SET ROLE_STATUS = #{newRole} WHERE MEMBER_NO = #{memberNo} AND STATUS = 'Y'")
+    int changeRole(@Param("memberNo") Long memberNo, @Param("newRole") String newRole);
+
     
     @Update("UPDATE TB_MEMBER SET STATUS = 'N' WHERE MEMBER_NO = #{memberNo}")
     int softDelete(String memberNo);
