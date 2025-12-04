@@ -51,9 +51,11 @@ public class SecurityConfigure {
 					   // 인증 필요 - 내 신고 목록 조회
 					   requests.requestMatchers(HttpMethod.GET, "/reports/my").authenticated();
 					   
+
 					   // 인증 필요 - 충전소 등록/삭제
 					   requests.requestMatchers(HttpMethod.POST, "/station/**").authenticated();
 					   requests.requestMatchers(HttpMethod.DELETE, "/station/**").authenticated();
+
 					   
 					   // 인증 필요 - 리뷰 등록/수정/삭제
 					   requests.requestMatchers(HttpMethod.POST, "/station/reviews").authenticated();
@@ -113,6 +115,40 @@ public class SecurityConfigure {
 	public PasswordEncoder passwordEncoder() {
 	    return new BCryptPasswordEncoder();
 	}
+	/*
+	// CORS 설정 Bean
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		
+		// 허용할 출처
+		configuration.setAllowedOrigins(Arrays.asList(
+			"http://localhost:5175",
+			"http://localhost:5173", 
+			"http://localhost:3000"
+		));
+		
+		// 허용할 HTTP 메소드
+		configuration.setAllowedMethods(Arrays.asList(
+			"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
+		));
+		
+		// 허용할 헤더
+		configuration.setAllowedHeaders(Arrays.asList("*"));
+		
+		// 인증 정보 허용
+		configuration.setAllowCredentials(true);
+		
+		// preflight 요청 캐시 시간
+		configuration.setMaxAge(3600L);
+		
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		
+		return source;
+		
+	}
+	*/
 
 
 }
