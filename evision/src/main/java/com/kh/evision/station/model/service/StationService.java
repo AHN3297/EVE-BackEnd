@@ -32,7 +32,7 @@ public interface StationService {
     int commentUpdate(ReviewVO review);
     
     // 충전소 리뷰 삭제
-    int commentDelete(Long reviewNo);
+    int commentDelete(ReviewVO review);
     
     // 충전소별 리뷰 조회
     List<ReviewVO> findReviewsByStationNo(Long stationNo);

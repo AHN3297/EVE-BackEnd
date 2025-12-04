@@ -55,8 +55,8 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public int commentDelete(Long reviewNo) {
-        return stationMapper.commentDelete(reviewNo);
+    public int commentDelete(ReviewVO review) {
+        return stationMapper.commentDelete(review);
     }
     
     @Override

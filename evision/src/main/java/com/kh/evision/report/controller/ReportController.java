@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.evision.auth.model.vo.CustomUserDetails;
 import com.kh.evision.report.model.dto.ReportDTO;
 import com.kh.evision.report.model.service.ReportService;
 
@@ -28,7 +30,9 @@ public class ReportController {
 	
 	// 신고 등록
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody ReportDTO report){
+	public ResponseEntity<?> save(@RequestBody ReportDTO report,
+								  @AuthenticationPrincipal CustomUserDetails userDetails){
+		report.setMemberNo(Long.parseLong(userDetails.getUsername()));
 		int result = reportService.save(report);
 		log.info("나 실행?");
 		if(result>0) {
@@ -52,8 +56,9 @@ public class ReportController {
 		
 	}
 	// 사용자(user)
-	@GetMapping(params = "memberNo")
-	public ResponseEntity<List<ReportDTO>> findMyReports(@RequestParam(name="memberNo") Long memberNo) {
+	@GetMapping("/my")
+	public ResponseEntity<List<ReportDTO>> findMyReports(@AuthenticationPrincipal CustomUserDetails userDetails) {
+		Long memberNo = Long.parseLong(userDetails.getUsername());
 		return ResponseEntity.ok(reportService.findMyReports(memberNo));
 		
 	}

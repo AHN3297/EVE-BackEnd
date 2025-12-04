@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.evision.auth.model.vo.CustomUserDetails;
 import com.kh.evision.station.model.dto.StationDTO;
 import com.kh.evision.station.model.service.StationService;
 import com.kh.evision.station.model.vo.ReviewVO;
@@ -79,7 +81,9 @@ public class StationController {
 
     // 충전소 리뷰 등록
     @PostMapping("/reviews")
-    public ResponseEntity<String> commentSave(@RequestBody ReviewVO review) {
+    public ResponseEntity<String> commentSave(@RequestBody ReviewVO review,
+                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
+        review.setMemberNo(Long.parseLong(userDetails.getUsername()));
         int result = stationService.commentSave(review);
         if (result > 0) {
             return ResponseEntity.status(HttpStatus.CREATED).body("리뷰가 등록되었습니다.");
@@ -90,11 +94,12 @@ public class StationController {
 
     // 충전소 리뷰 수정
     @PutMapping("/reviews")
-    public ResponseEntity<String> commentUpdate(@RequestBody ReviewVO review) {
+    public ResponseEntity<String> commentUpdate(@RequestBody ReviewVO review,
+                                                @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (review.getReviewNo() == null || review.getStationNo() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("리뷰 번호와 충전소 번호가 필요합니다.");
         }
-
+        review.setMemberNo(Long.parseLong(userDetails.getUsername()));
         int result = stationService.commentUpdate(review);
         if (result > 0) {
             return ResponseEntity.ok("리뷰가 수정되었습니다.");
@@ -105,8 +110,13 @@ public class StationController {
 
     // 충전소 리뷰 삭제
     @DeleteMapping("/reviews/{reviewNo}")
-    public ResponseEntity<String> commentDelete(@PathVariable("reviewNo") Long reviewNo) {
-        int result = stationService.commentDelete(reviewNo);
+    public ResponseEntity<String> commentDelete(@PathVariable("reviewNo") Long reviewNo,
+                                                @AuthenticationPrincipal CustomUserDetails userDetails) {
+        ReviewVO review = ReviewVO.builder()
+                .reviewNo(reviewNo)
+                .memberNo(Long.parseLong(userDetails.getUsername()))
+                .build();
+        int result = stationService.commentDelete(review);
         if (result > 0) {
             return ResponseEntity.ok("리뷰가 삭제되었습니다.");
         } else {

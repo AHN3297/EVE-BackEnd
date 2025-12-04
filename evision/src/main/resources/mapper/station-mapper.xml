@@ -174,13 +174,15 @@
     </update>
 
     <!-- 충전소 리뷰 삭제 (논리 삭제) -->
-    <update id="commentDelete" parameterType="Long">
+    <update id="commentDelete" parameterType="com.kh.evision.station.model.vo.ReviewVO">
         UPDATE 
         	   TB_REVIEW
            SET 
                STATUS = 'N'
          WHERE 
                REVIEW_NO = #{reviewNo}
+           AND 
+               MEMBER_NO = #{memberNo}
     </update>
 
     <!-- 충전소별 리뷰 목록 조회 -->
