@@ -25,7 +25,7 @@ public interface MemberService {
 	
 	boolean verifyPassword(String memberNo, String password);
 
-	void deleteMyAccount(String memberNo, String password);
+	void deleteMyAccount(String memberNo);
 
 	void deleteMemberByAdmin(String memberNo, String actingRole, String actingMemberNo);
 

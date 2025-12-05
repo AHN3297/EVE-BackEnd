@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
 	            new UsernamePasswordAuthenticationToken(member.getMemberId(), member.getMemberPwd())
 	        );         
 	    } catch(AuthenticationException e) {
-	        throw new CustomAuthenticationException("아이디 또는 비밀번호를 확인하세요.");
+	        throw new CustomAuthenticationException("아이디 또는 비밀번호를 확인하시고 관리자에게 문의해주세요");
 	    }
 
 	    CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();

@@ -47,7 +47,7 @@ public class MemberController {
     
     // 회원가입 엔드포인트
     @PostMapping("/join")
-    public ResponseEntity<String> signUp(@Validated @RequestBody MemberDTO member) {
+    public ResponseEntity<String> signUp(@Valid @RequestBody MemberDTO member) {
         log.info("회원가입 요청 수신: {}", member);
         int result = memberService.signUp(member);
         if (result > 0) {
@@ -123,9 +123,9 @@ public class MemberController {
     		@RequestBody Map<String, String> request
     		) {
     	String memberNo = userDetails.getUsername();
-    	String password = request.get("password");
     	
-    	memberService.deleteMyAccount(memberNo, password);
+    	
+    	memberService.deleteMyAccount(memberNo);
     	
     	return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
     }
