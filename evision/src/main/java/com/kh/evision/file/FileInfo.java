@@ -15,7 +15,7 @@ public class FileInfo {
 	
 	private Long fileId;
 	
-	private Long carNo;
+	private Long primaryKeyNo;
 	
 	private String originName;
 	private String changeName;

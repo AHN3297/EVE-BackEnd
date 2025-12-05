@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.evision.comment.model.dao.CommentMapper">
+	
+	<!-- 댓글 등록 -->
+	<insert id="save" parameterType="commentVO">
+		INSERT 
+		  INTO 
+		       TB_COMMENT
+		       (
+		       COMMENT_NO
+		     , COMMENT_CONTENT
+		     , REF_BNO
+		     , COMMENT_WRITER
+		     , CREATE_DATE
+		     , STATUS
+		       )
+	    VALUES 
+	           (
+	           SEQ_CONO.NEXTVAL
+	         , #{commentContent}
+	         , #{refBno}
+	         , #{commentWriter}
+	         , SYSDATE
+	         , 'Y'
+	           )
+	</insert>
+	
+	<!-- 댓글 조회 -->
+	<select id="findAll"
+			parameterType="long"
+			resultType="CommentDTO">
+		SELECT 
+		       C.COMMENT_NO commentNo
+		     , C.COMMENT_CONTENT commentContent
+		     , C.REF_BNO refBno
+		     , M.MEMBER_NAME memberName
+		     , C.COMMENT_WRITER commentWriter
+		     , C.CREATE_DATE createDate
+		     , C.STATUS 
+		  FROM 
+		       TB_COMMENT C
+		  JOIN 
+		       TB_MEMBER M
+		    ON 
+		       M.MEMBER_NO = C.COMMENT_WRITER
+		 WHERE 
+		       C.REF_BNO = #{boardNo}
+		   AND 
+		       C.STATUS = 'Y'
+		 ORDER 
+		    BY 
+      	       C.CREATE_DATE ASC
+	</select>
+	
+	<!-- 댓글 삭제 -->
+    <update id="delete" parameterType="long">
+        UPDATE 
+        	   TB_COMMENT
+           SET 
+        	   STATUS = 'N'
+         WHERE 
+        	   COMMENT_NO = #{commentNo}
+    </update>
+
+		
+</mapper>

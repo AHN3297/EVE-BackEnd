@@ -21,7 +21,6 @@ public class StationServiceImpl implements StationService {
 
     @Override
     public List<StationDTO> searchList(String keyword) {
-    	System.out.println("나 넘어옴?");
         return stationMapper.searchList(keyword);
     }
 
