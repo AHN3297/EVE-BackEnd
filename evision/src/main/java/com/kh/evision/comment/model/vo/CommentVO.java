@@ -11,6 +11,8 @@ public class CommentVO {
 	private Long commentNo;
 	private String commentContent;
 	private Long refBno;
-	private String commentWriter;
+	private Long commentWriter;
 	private Date createDate;
+	private String status;
+
 }

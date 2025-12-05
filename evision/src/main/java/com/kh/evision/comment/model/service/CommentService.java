@@ -8,9 +8,13 @@ import com.kh.evision.comment.model.vo.CommentVO;
 
 public interface CommentService {
 
-	// 인서트 하나
+	// 댓글 작성
 	CommentVO save(CommentDTO comment, CustomUserDetails userDetails);
 	
-	// 조회 하나
+	// 댓글 조회
 	List<CommentDTO> findAll(Long boardNo);
+	
+	// 댓글 삭제
+    void delete(Long commentNo, CustomUserDetails userDetails);
+
 }

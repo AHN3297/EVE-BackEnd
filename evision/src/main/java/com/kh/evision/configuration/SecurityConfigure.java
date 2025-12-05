@@ -46,7 +46,7 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member").authenticated();
 					   // requests.requestMatchers("/admin/**").hasRole("ADMIN"); // 권한검증방법
-					   requests.requestMatchers(HttpMethod.GET, "/boards/**", "/comments", "/notice", "/cars", "/station").permitAll();
+					   requests.requestMatchers(HttpMethod.GET, "/boards/**", "/comments", "/comments/**", "/notice", "/cars", "/station").permitAll();
 //					   requests.requestMatchers("/uploads/**").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ "/reserve/**", "/station/**", "/reports/**", "/uploads/**").authenticated();
 					   //requests.requestMatchers(HttpMethod.POST, "/operator/**").hasRole("OPERATOR"); // 권한검증방법
@@ -72,6 +72,9 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/cars/**").permitAll(); // 테스트용 임시허용
 					   requests.requestMatchers(HttpMethod.GET, "/cars/**").permitAll(); // 테스트용 임시허용
+					   
+					   // 나머지 요청
+		               requests.anyRequest().permitAll(); // ✅ authenticated()에서 permitAll()로 변경
 
 
 				   })
