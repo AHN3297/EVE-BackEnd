@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.evision.car.model.dto.CarCreateDTO;
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.service.CarService;
+import com.kh.evision.exception.InvalidParameterException;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -47,6 +48,19 @@ public class CarController {
 		log.info("FE에서 넘어오는 차량 정보 : {}", car);
 		log.info("FE에서 넘어오는 파일 정보 : {}", files);
 		
+		// 파일 크기 거르기
+		if(files != null) {
+			
+			for(MultipartFile file : files) {
+				
+				if(file.getSize() > (100 * 1024 * 1024)) {
+					throw new InvalidParameterException("파일 크기는 100MB를 초과할 수 없습니다.");
+				}
+				
+			}
+			
+		}
+		
 		carService.saveCar(car, files);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -70,10 +84,10 @@ public class CarController {
 	
 	// 차량 정보 수정
 	@PutMapping("/{carNo}")
-	public ResponseEntity<CarDTO> updateCar(@PathVariable(name="carNo") Long carNo
-										  , CarDTO car
+	@PreAuthorize("hasAnyRole('OPERATOR', 'ADMIN')")
+	public ResponseEntity<CarDTO> updateCar(@PathVariable(name="carNo") @Min(value=1, message="유효하지 않은 차량번호입니다.") Long carNo
+										  , @Valid CarDTO car
 										  , @RequestParam(name="file", required=false) List<MultipartFile> files
-										  // , @AuthenticationPrincipal CustomUserDetails userDetails
 										  ) {
 		
 		carService.updateCar(carNo, car, files);
@@ -98,8 +112,8 @@ public class CarController {
 	
 	// 차량 삭제
 	@DeleteMapping("/{carNo}")
+	@PreAuthorize("hasAnyRole('OPERATOR', 'ADMIN')")
 	public ResponseEntity<?> deleteByCarNo(@PathVariable(name="carNo") Long carNo
-										 // , @AuthenticationPrincipal CustomUserDetails userDetails
 										 ) {
 		
 		carService.deleteByCarNo(carNo);
