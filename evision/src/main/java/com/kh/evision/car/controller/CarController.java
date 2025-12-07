@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,9 +37,9 @@ public class CarController {
 	
 	// 차량 등록 -> 관리자/운영자용 기능, 이미지첨부, 파일첨부
 	@PostMapping
+	@PreAuthorize("hasAnyRole('OPERATOR', 'ADMIN')")
 	public ResponseEntity<?> saveCar(@Valid CarCreateDTO car
 								   , @RequestParam(name="file", required=false) List<MultipartFile> files
-								   // , @AuthenticationPrincipal CustomUserDetails userDetails
 								   ) {
 		// 파일 + 이미지 두개 올수있음.. 이거 다시 생각해야함! -> 리스트로 받음
 		log.info("등록메소드 호출시도");

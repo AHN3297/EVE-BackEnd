@@ -65,7 +65,8 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station", "/member/**").permitAll();
 					   requests.requestMatchers(HttpMethod.GET, "member/info").authenticated();
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station").permitAll();
-					   requests.requestMatchers(HttpMethod.POST, "/cars/**").permitAll(); // 테스트용 임시허용
+					   // requests.requestMatchers(HttpMethod.POST, "/cars/**").permitAll(); // 차량 등룍 테스트용 임시허용
+					   requests.requestMatchers(HttpMethod.POST, "/cars").hasAnyRole("OPERATOR", "ADMIN"); // 차량 등록 권한 부여
 					   requests.requestMatchers(HttpMethod.GET, "/cars/**").permitAll(); // 테스트용 임시허용
 					   requests.requestMatchers(HttpMethod.POST, "/reserve/**").permitAll(); // 예약 테스트용 임시허용
 					   requests.requestMatchers(HttpMethod.GET, "/reserve/**").permitAll(); // 예약조회 테스트용 임시허용
