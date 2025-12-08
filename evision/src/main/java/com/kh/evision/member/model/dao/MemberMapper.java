@@ -100,8 +100,6 @@ public interface MemberMapper {
     /**
      * mybatis에서 동적 SQl로 null이 아닌 컬럼만 DB에 보내기위해서 사용
      * set은 null이 아닌 필드만 자동으로 updateset문에 포함시켜줌, 콤마 제거는 덤
-     * 
-     * 
      */
     @Update("""
     	    <script>

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,22 +47,21 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenMapper tokenMapper; 
     
-    
+    /**
+     * 아이디 중복 확인, 닉네임 중복 확인, DTO-> VO변환
+     */
     @Override
     public int signUp(MemberDTO member) {
-        // 아이디 중복 확인
         int count = memberMapper.countByMemberId(member.getMemberId());
         if(1 == count) {
             throw new IdDuplicateException("이미 존재하는 아이디입니다.");
         }
-        
-        // 닉네임 중복 확인
+     
         int countNick = memberMapper.countByNickname(member.getNickname());
         if(1 == countNick) {
             throw new NicknameDuplicateException("이미 존재하는 닉네임입니다.");
         }
         
-        // DTO → VO 변환
         MemberVO memberVO = MemberVO.builder()
         	    .memberId(member.getMemberId())
         	    .memberPwd(passwordEncoder.encode(member.getMemberPwd()))
@@ -74,13 +74,21 @@ public class MemberServiceImpl implements MemberService {
         	    .roleStatus(member.getRoleStatus())
         	    .build();
         int result = memberMapper.signUp(memberVO);
-        log.info("사용자 등록 성공 : {}", memberVO);
+        
+        if (result == 0) {
+            log.error("회원가입 실패 - DB insert 실패: {}", member.getMemberId());
+            throw new CustomAuthenticationException("회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.");
+        }
 		return result;
 
     }
     
+    /**
+     * 
+     */
     @Override
     public MemberDTO getMemberInfo(String memberNo) {
+    	// auth로 조회
         // memberNo 기준으로 조회
         MemberDTO member = memberMapper.loadByMemberNo(memberNo);
 
@@ -112,7 +120,9 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
-
+    /**
+     * 
+     */
     @Override
     public void changePassword(ChangePasswordDTO password) {
         
@@ -270,12 +280,14 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void infoVeryfyLicense(LicenseDTO licenseDTO, String memberNo) {
-		Date renewDate = java.sql.Date.valueOf(licenseDTO.getRenewDate());
 	    try {
+	        // 날짜 변환
+	        Date renewDate = java.sql.Date.valueOf(licenseDTO.getRenewDate());
+	        
 	        // DTO → VO 변환
 	        LicenseVO licenseVO = LicenseVO.builder()
-	                .memberNo(Long.parseLong(memberNo)) // 로그인된 회원 번호
-	                .licenseNo(licenseDTO.getLicenseNo()) // 문자열로 받았다면 parse
+	                .memberNo(Long.parseLong(memberNo))
+	                .licenseNo(licenseDTO.getLicenseNo())
 	                .renewDate(renewDate)
 	                .issuingAgency(licenseDTO.getIssuingAgency())
 	                .LicenseClass(licenseDTO.getLicenseClass())
@@ -283,23 +295,24 @@ public class MemberServiceImpl implements MemberService {
 
 	        // DB insert
 	        memberMapper.insertLicense(licenseVO);
+	        
 	    } catch (NumberFormatException e) {
-	        throw new IllegalArgumentException("번호 형식이 올바르지 않습니다.", e);
+	        throw new IllegalArgumentException("회원 번호 형식이 올바르지 않습니다.", e);
+	    } catch (IllegalArgumentException e) {
+	        // Date.valueOf()에서 발생할 수 있는 예외
+	        throw new IllegalArgumentException("날짜 형식이 올바르지 않습니다. (YYYY-MM-DD)", e);
+	    } catch (DataAccessException e) {
+	        // DB 관련 예외
+	        throw new RuntimeException("운전면허 정보 저장 중 오류가 발생했습니다.", e);
+	    } catch (Exception e) {
+	        throw new RuntimeException("운전면허 인증 처리 중 예상치 못한 오류가 발생했습니다.", e);
 	    }
 	}
 
 	@Override
 	public boolean hasLicense(String memberNo) {
-		
 		return memberMapper.countLicenseByMemberNo(memberNo) > 0;
 	}
-
-
-
-	
-	
-	
-    
     
  }
     
