@@ -10,6 +10,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.kh.evision.exception.custom.car.CarAlreadyReservedException;
+import com.kh.evision.exception.custom.car.CarNotAvailableException;
+import com.kh.evision.exception.custom.car.CarNotFoundException;
 import com.kh.evision.exception.custom.member.AdminException;
 import com.kh.evision.exception.custom.member.CustomAuthenticationException;
 import com.kh.evision.exception.custom.member.IdDuplicateException;
@@ -126,9 +129,26 @@ public class GlobalExceptionHandler {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
 	}
 	
+<<<<<<< HEAD
+	@ExceptionHandler(CarNotFoundException.class)
+	public ResponseEntity<Map<String, String>> handleCarNotFound(CarNotFoundException e) {
+		return createResponseEntity(e, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(CarAlreadyReservedException.class)
+	public ResponseEntity<Map<String, String>> handleCarAlreadyReservedException(CarAlreadyReservedException e) {
+		return createResponseEntity(e, HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(CarNotAvailableException.class)
+	public ResponseEntity<Map<String, String>> handleCarNotAvailableException(CarNotAvailableException e) {
+		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
+	
+=======
 	@ExceptionHandler(NotUserException.class)
 	public ResponseEntity<String> handleNotUser(NotUserException e) {
 		 return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> 4d5278c5e89a6f008248e912fb4a236e2d72d21a
 	}
 	
 }

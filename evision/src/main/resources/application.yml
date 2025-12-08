@@ -23,7 +23,7 @@ mybatis:
   configuration:
     jdbc-type-for-null: VARCHAR
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  type-aliases-package: com.kh.evision.board.model.vo, com.kh.evision.board.model.dto, com.kh.evision.comment.model.vo, com.kh.evision.comment.model.dto, com.kh.evision.car.model.vo, com.kh.evision.car.model.dto, com.kh.evision.file, com.kh.evision.vo, com.kh.evision.token.member.vo
+  type-aliases-package: com.kh.evision.**.vo, com.kh.evision.**.dto, com.kh.evision.file
   mapper-locations: classpath:mapper/**/*.xml
   
 logging:
