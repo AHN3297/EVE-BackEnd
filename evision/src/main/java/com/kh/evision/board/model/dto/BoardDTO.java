@@ -17,7 +17,7 @@ import lombok.ToString;
 public class BoardDTO {
 	
 	private Long boardNo; 
-//	@NotBlank
+	@NotBlank
 	private String boardTitle; 
 	private String boardWriter;
 	private String boardContent; 
@@ -25,5 +25,6 @@ public class BoardDTO {
 	private Long count; 
 	private String status;
 	private Date createDate; 
+	private String changeName;
 
 }

@@ -1,5 +1,5 @@
 package com.kh.evision.auth.model.service;
-
+  
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +41,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		List<GrantedAuthority> authorities = getAuthorities(user);
 		
 		log.info("dd :{}", authorities);
+		log.info("사용자 status: {}", user.getStatus());
+		log.info("사용자 enabled: {}", user.getStatus() == 'Y');
 		return CustomUserDetails.builder().username(String.valueOf(user.getMemberNo()))
 				                          .password(user.getMemberPwd())
 				                          .memberName(user.getMemberName())
@@ -53,7 +55,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         
         
-        // 관리자 권한 확인 (roleStatus가 "ADMIN"인 경우와 "OPERATOR"인 경우, "USER"인 경우)
+        // 관리자 권한 확인 (roleStatus가 "ROLE_ADMIN"인 경우와 "ROLE_OPERATOR"인 경우, "ROLE_USER"인 경우)
         if ("ROLE_ADMIN".equals(user.getRoleStatus())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             authorities.add(new SimpleGrantedAuthority("ROLE_OPERATOR"));

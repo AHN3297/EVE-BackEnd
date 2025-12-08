@@ -31,47 +31,78 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Override
 	public void save(BoardDTO board, MultipartFile file, String username) {
-		
-		BoardVO.BoardVOBuilder builder = BoardVO.builder()
-			.boardTitle(board.getBoardTitle())
-			.boardContent(board.getBoardContent())
-			.boardWriter(username);
-		
-		BoardVO b = builder.build();
-		boardMapper.save(b);
-		
-		Long boardNo = b.getBoardNo();
-		
-//		 파일이 있으면 저장
-		if(file != null && !file.isEmpty()) {
-			// 필요하면 파일 정보를 BoardVO에 추가
-			log.info("board{}", board.toString());
-			log.info("file{}",file);
-			// 어떤건지 확인하고 -> 이미지나 파일에 맞게 ImgService, FileService 호출
-			String fileType = file.getContentType();
-			log.info("파일 타입 알려줘 : {}", fileType);
-			
-			if(fileType != null && fileType.startsWith("image/")) {
-				
-				log.info("이미지로 판명났음 : {}", file);
-				ImgInfo imgInfo = imgService.store(file, boardNo); // 이미지 자체를 서버에 저장
-				// 돌아오는거 받아서 DB에 파일 정보 저장해야함
-				boardMapper.saveBoardImg(imgInfo); // 매퍼에 이미지 저장 메소드 만들어서 호출
-				log.info("이미지 저장 완료 : {}", imgInfo.getChangeName());
-			}
-		}else {
-			log.info("파일은 없음");
-		}
-				
-	}
+	    log.info("board{}", board);
+	    
+	    // 1. 게시글 번호 생성
+	    // Long boardNo = boardMapper.selectBoardNo();
+	    
+	    // 2. 게시글 저장
+	    BoardVO boardVO = BoardVO.builder()
+	        // .boardNo(boardNo)
+	        .boardTitle(board.getBoardTitle())
+	        .boardWriter(username)
+	        .boardContent(board.getBoardContent())
+	        .build();
+	    
+	    boardMapper.save(boardVO);
+	    
+	    Long boardNo = boardVO.getBoardNo();
+	    log.info("boardNo 가져와짐? : {}", boardNo);
+	    
+	    // 3. 파일이 있으면 이미지 저장
+	    if (file != null && !file.isEmpty()) {
+	        log.info("file{}", file);
+	        log.info("파일 타입 알려줘 : {}", file.getContentType());
 
+	        if (file.getContentType().startsWith("image/")) {
+	            log.info("이미지로 판명났음 : {}", file);
+
+	            try {
+	                // 수정된 부분
+	                ImgInfo imgInfo = imgService.store(file, boardNo);
+
+//	                BoardImgVO boardImg = BoardImgVO.builder()
+//	                    .imgNo(boardNo)
+//	                    .originName(file.getOriginalFilename())
+//	                    .changeName(imgInfo.getChangeName())
+//	                    .build();
+
+	                boardMapper.saveBoardImg(imgInfo);
+
+	            } catch (Exception e) {
+	                log.error("이미지 저장 실패", e);
+	                throw new RuntimeException("이미지 저장에 실패했습니다.", e);
+	            }
+	        }
+	    }
+	    }
+	// 유저
 	@Override
 	public List<BoardDTO> findAll(int pageNo) {
 		if(pageNo < 0) {
 			throw new InvalidParameterException("유효하지 않은 접근입니다.");
 		}
-		RowBounds rb = new RowBounds(pageNo * 3, 3);
+		RowBounds rb = new RowBounds(pageNo * 5, 5);
 		return boardMapper.findAll(rb);
+	}
+	
+	
+	// 관리자
+	@Override
+	public List<BoardDTO> findAllOperator(int pageNo) {
+		if(pageNo < 0) {
+			throw new InvalidParameterException("유효하지 않은 접근입니다.");
+		}
+		RowBounds rb = new RowBounds(pageNo * 5, 5);
+		return boardMapper.findAllOperator(rb);
+	}
+	
+	@Override
+	public void increaseCount(Long boardNo) {
+	    log.info("=== 조회수 증가 ===");
+	    log.info("boardNo: {}", boardNo);
+	    
+	    boardMapper.increaseCount(boardNo);
 	}
 
 	@Override
@@ -104,7 +135,7 @@ public class BoardServiceImpl implements BoardService {
 		
 		// 4. UPDATE
 		boardMapper.update(board);
-		return board;
+		return boardMapper.findByBoardNo(boardNo);
 	}
 	
 	private void validateBoard(Long boardNo, CustomUserDetails userDetails) {
@@ -119,10 +150,14 @@ public class BoardServiceImpl implements BoardService {
 		validateBoard(boardNo, userDetails);
 		boardMapper.deleteByBoardNo(boardNo);
 	}
+
+	
+
+	}
+
 	
 	
-	
-}
+
 
 /*
 

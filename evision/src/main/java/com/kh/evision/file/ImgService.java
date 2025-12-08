@@ -42,7 +42,7 @@ public class ImgService {
 	}
 	
 	// 파일 업로드 메소드
-	public ImgInfo store(MultipartFile file, Long carNo) {
+	public ImgInfo store(MultipartFile file, Long primaryKeyNo) {
 		
 		// 파일명 관련작업
 		String originalImgName = file.getOriginalFilename();
@@ -52,7 +52,7 @@ public class ImgService {
 		Path targetLocation = this.imgLocation.resolve(changedImgName);
 		// 객체에서 경로 필드의 자료형을 String으로 변경 후 -> targetLocation이 Path형이니 넣어줄 때 toString으로 변환
 		ImgInfo imgInfo = ImgInfo.builder()
-								 .carNo(carNo)
+								 .primaryKeyNo(primaryKeyNo)
 								 .originName(originalImgName)
 								 .changeName(changedImgName)
 								 .filePath(targetLocation.toString())

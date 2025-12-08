@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.evision.board.model.dto.BoardDTO;
+import com.kh.evision.board.model.vo.BoardImgVO;
 import com.kh.evision.board.model.vo.BoardVO;
 import com.kh.evision.file.ImgInfo;
 
@@ -14,7 +15,11 @@ public interface BoardMapper {
 	
 	void save(BoardVO b);
 	
+	// 유저
 	List<BoardDTO> findAll(RowBounds rb);
+	
+	// 관리자
+	List<BoardDTO> findAllOperator(RowBounds rb);
 	
 	BoardDTO findByBoardNo(Long boardNo);
 	
@@ -24,4 +29,12 @@ public interface BoardMapper {
 	
 	//이미지 첨부
 	void saveBoardImg(ImgInfo imgInfo);
+	
+    // 조회수 증가
+    void increaseCount(Long boardNo);
+
+
+	// Long selectBoardNo();
+
+	// void saveBoardImg(BoardImgVO boardImg);
 }

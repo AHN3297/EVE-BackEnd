@@ -54,6 +54,13 @@ public class JwtFilter extends OncePerRequestFilter{
 			memberDto = memberMapper.loadByMemberNo(memberNo);
 			if(memberDto == null) throw new UsernameNotFoundException("유저가 없습니다!");
 			
+			if (memberDto.getStatus() != 'Y') {
+			    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			    response.setContentType("text/html; charset=UTF-8");
+			    response.getWriter().write("비활성화된 계정입니다.");
+			    return;
+			}
+			
 			String memberId = memberDto.getMemberId();
 			
 			

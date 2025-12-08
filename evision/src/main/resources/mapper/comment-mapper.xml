@@ -2,9 +2,10 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kh.evision.board.model.dao.CommentMapper">
+<mapper namespace="com.kh.evision.comment.model.dao.CommentMapper">
 	
-	<insert id="save">
+	<!-- 댓글 등록 -->
+	<insert id="save" parameterType="commentVO">
 		INSERT 
 		  INTO 
 		       TB_COMMENT
@@ -18,35 +19,51 @@
 		       )
 	    VALUES 
 	           (
-	           SEQ_CNO.NEXTVAL
+	           SEQ_CONO.NEXTVAL
 	         , #{commentContent}
 	         , #{refBno}
 	         , #{commentWriter}
 	         , SYSDATE
-	         , DEFAULT
+	         , 'Y'
 	           )
 	</insert>
 	
-	
+	<!-- 댓글 조회 -->
 	<select id="findAll"
 			parameterType="long"
 			resultType="CommentDTO">
 		SELECT 
-		       COMMENT_NO commentNo
-		     , COMMENT_CONTENT commentContent
-		     , REF_BNO refBno
-		     , COMMENT_WRITER commentWriter
-		     , CREATE_DATE createDate
+		       C.COMMENT_NO commentNo
+		     , C.COMMENT_CONTENT commentContent
+		     , C.REF_BNO refBno
+		     , M.MEMBER_NAME memberName
+		     , C.COMMENT_WRITER commentWriter
+		     , C.CREATE_DATE createDate
+		     , C.STATUS 
 		  FROM 
-		       TB_COMMENT
+		       TB_COMMENT C
+		  JOIN 
+		       TB_MEMBER M
+		    ON 
+		       M.MEMBER_NO = C.COMMENT_WRITER
 		 WHERE 
-		       STATUS = 'Y'
+		       C.REF_BNO = #{boardNo}
 		   AND 
-		       REF_BNO = #{refBno}
+		       C.STATUS = 'Y'
 		 ORDER 
 		    BY 
-		       commentNo DESC
+      	       C.CREATE_DATE ASC
 	</select>
+	
+	<!-- 댓글 삭제 -->
+    <update id="delete" parameterType="long">
+        UPDATE 
+        	   TB_COMMENT
+           SET 
+        	   STATUS = 'N'
+         WHERE 
+        	   COMMENT_NO = #{commentNo}
+    </update>
 
 		
 </mapper>

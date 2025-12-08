@@ -13,6 +13,8 @@ import lombok.ToString;
 @ToString
 public class ChangeRoleDTO {
 	private Long memberNo; // Long 은 null값이 기본값이고 객체로 취급됨 어차피 null값이 될 수 없음ㅋ
+	private String status;
 	private String newRole;
+	private String currentRole;
 
 }

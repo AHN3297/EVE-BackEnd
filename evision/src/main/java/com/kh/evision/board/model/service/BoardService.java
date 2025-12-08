@@ -11,12 +11,20 @@ public interface BoardService {
 	
 	void save(BoardDTO board, MultipartFile file, String username);
 	
+	// 유저
 	List<BoardDTO> findAll(int pageNo);
+	
+	// 관리자
+	List<BoardDTO> findAllOperator(int pageNo);
 	
 	BoardDTO findByBoardNo(Long boardNo);
 	
 	BoardDTO update(BoardDTO board, MultipartFile file, Long boardNo, CustomUserDetails userDetails);
 	
 	void deleteByBoardNo(Long boardNo, CustomUserDetails userDetails);
+	
+    // 조회수 증가
+    void increaseCount(Long boardNo);
+
 	
 }
