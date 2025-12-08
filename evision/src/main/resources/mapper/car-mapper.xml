@@ -25,6 +25,7 @@
 		     , SYSDATE
 		     , #{carLocation}
 		     , #{carBrand}
+		     , DEFAULT
 		       )
 	</insert>
 	
@@ -41,7 +42,7 @@
 		VALUES
 		       (
 		       #{imgId}
-		     , #{carNo}
+		     , #{primaryKeyNo}
 		     , #{originName}
 		     , #{changeName}
 		     , DEFAULT
@@ -92,6 +93,7 @@
 		     , REGISTER_DATE registerDate
 		     , CAR_LOCATION carLocation
 		     , CAR_BRAND carBrand
+		     , RENTAL_STATUS rentalStatus
 		  FROM
 		       TB_CAR
 		 WHERE
@@ -110,6 +112,7 @@
 		<result column="registerDate" property="registerDate" />
 		<result column="carLocation" property="carLocation" />
 		<result column="carBrand" property="carBrand" />
+		<result column="rentalStatus" property="rentalStatus" />
 		<association property="img" javaType="ImgInfo">
 			<id column="imgId" property="imgId" />
 			<result column="originName" property="originName" />
@@ -134,6 +137,7 @@
 		     , C.REGISTER_DATE registerDate
 		     , C.CAR_LOCATION carLocation
 		     , C.CAR_BRAND carBrand
+		     , C.RENTAL_STATUS rentalStatus
 		     , I.IMG_ID imgId
 		     , I.ORIGIN_NAME originName
 		     , I.CHANGE_NAME changeName
