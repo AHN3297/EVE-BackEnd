@@ -4,12 +4,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class NoticeDTO {
     private Long noticeNo;
     private String noticeTitle;
@@ -17,5 +19,7 @@ public class NoticeDTO {
     private LocalDateTime createDate;
     private Long memberNo;
     private char status;
-    private List<String> imageUrls; 
+    private List<String> imageUrls;
+    private String thumbnailUrl;  // 대표 이미지 (1개)
+    private List<String> fileUrls; // 기타 첨부 파일들
 }

@@ -1,17 +1,18 @@
 package com.kh.evision.notice.model.vo;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoticeImageVO {
-    private Long imgId;
+public class NoticeFileVO {
+    private Long fileId;
     private Long noticeNo;
     private String originName;
     private String changeName;
-    private char status;
-    private String isThumbnail;
+    private String status;
 }

@@ -77,20 +77,34 @@ public class NoticeServiceImpl implements NoticeService {
     }
     
     private NoticeDTO convertToDTO(NoticeVO vo) {
-        List<String> imageUrls = noticeMapper.getNoticeImages(vo.getNoticeNo())
-                .stream()
-                .map(img -> "/uploads/" + img.getChangeName())
-                .collect(Collectors.toList());
+        // 이미지 목록
+        List<NoticeImageVO> images = noticeMapper.getNoticeImages(vo.getNoticeNo());
+        List<String> imageUrls = images.stream()
+            .map(img -> "/uploads/" + img.getChangeName())
+            .collect(Collectors.toList());
         
-        return new NoticeDTO(
-            vo.getNoticeNo(),
-            vo.getNoticeTitle(),
-            vo.getNoticeContent(),
-            vo.getCreateDate(),
-            vo.getMemberNo(),
-            vo.getStatus(),
-            imageUrls
-        );
+        // 대표 이미지
+        String thumbnailUrl = vo.getThumbnailUrl() != null 
+            ? "/uploads/" + vo.getThumbnailUrl() 
+            : null;
+        
+        // 첨부 파일 목록
+        List<String> fileUrls = noticeMapper.getNoticeFiles(vo.getNoticeNo()).stream()
+            .map(file -> "/uploads/" + file.getChangeName())
+            .collect(Collectors.toList());
+        
+        return NoticeDTO.builder()
+        	    .noticeNo(vo.getNoticeNo())
+        	    .noticeTitle(vo.getNoticeTitle())
+        	    .noticeContent(vo.getNoticeContent())
+        	    .createDate(vo.getCreateDate())
+        	    .memberNo(vo.getMemberNo())
+        	    .status(vo.getStatus())
+        	    .imageUrls(imageUrls)
+        	    .thumbnailUrl(thumbnailUrl)
+        	    .fileUrls(fileUrls)
+        	    .build();   
+        
     }
     
     /**
@@ -110,10 +124,10 @@ public class NoticeServiceImpl implements NoticeService {
         }
         
         // 2. 조회수 증가 (임시로 주석 처리)
-        // int result = noticeMapper.increaseViewCount(noticeNo);
-        // if (result > 0) {
-        //     log.debug("조회수 증가 완료 - noticeNo: {}", noticeNo);
-        // }
+         int result = noticeMapper.increaseViewCount(noticeNo);
+         if (result > 0) {
+             log.debug("조회수 증가 완료 - noticeNo: {}", noticeNo);
+         }
         
         // 3. DTO 변환 및 반환
         return convertToDTO(noticeVO);
@@ -123,7 +137,7 @@ public class NoticeServiceImpl implements NoticeService {
      */
     @Override
     @Transactional
-    public void createNotice(NoticeDTO noticeDTO, List<MultipartFile> files) {
+    public void createNotice(NoticeDTO noticeDTO, MultipartFile thumbnail, List<MultipartFile> files) {  // ✅ 수정
         log.info("공지사항 등록 - 제목: {}", noticeDTO.getNoticeTitle());
         
         // 1. NoticeVO 생성
@@ -140,9 +154,16 @@ public class NoticeServiceImpl implements NoticeService {
             throw new RuntimeException("공지사항 등록에 실패했습니다.");
         }
         
-        // 3. 파일 업로드 및 이미지 정보 저장
+        // 3. 대표 이미지 저장
+        if (thumbnail != null && !thumbnail.isEmpty()) {
+            saveNoticeImage(noticeVO.getNoticeNo(), thumbnail, true);  // ✅ 수정
+        }
+        
+        // 4. 첨부 파일 저장
         if (files != null && !files.isEmpty()) {
-            saveNoticeImages(noticeVO.getNoticeNo(), files);
+            for (MultipartFile file : files) {
+                saveNoticeImage(noticeVO.getNoticeNo(), file, false);  // ✅ 수정
+            }
         }
         
         log.info("공지사항 등록 완료 - noticeNo: {}", noticeVO.getNoticeNo());
@@ -153,7 +174,7 @@ public class NoticeServiceImpl implements NoticeService {
      */
     @Override
     @Transactional
-    public void updateNotice(NoticeDTO noticeDTO, List<MultipartFile> files) {
+    public void updateNotice(NoticeDTO noticeDTO, MultipartFile thumbnail, List<MultipartFile> files) {  // ✅ 수정
         log.info("공지사항 수정 - noticeNo: {}", noticeDTO.getNoticeNo());
         
         // 1. 기존 공지사항 확인
@@ -174,12 +195,17 @@ public class NoticeServiceImpl implements NoticeService {
             throw new RuntimeException("공지사항 수정에 실패했습니다.");
         }
         
-        // 3. 새 파일이 있으면 기존 이미지 삭제 후 새로 추가
+        // 3. 새 대표 이미지가 있으면 저장
+        if (thumbnail != null && !thumbnail.isEmpty()) {
+            // 기존 대표 이미지 삭제는 선택사항
+            saveNoticeImage(noticeDTO.getNoticeNo(), thumbnail, true);
+        }
+        
+        // 4. 새 첨부 파일이 있으면 저장
         if (files != null && !files.isEmpty()) {
-            // 기존 이미지 논리 삭제
-            noticeMapper.deleteNoticeImages(noticeDTO.getNoticeNo());
-            // 새 이미지 저장
-            saveNoticeImages(noticeDTO.getNoticeNo(), files);
+            for (MultipartFile file : files) {
+                saveNoticeImage(noticeDTO.getNoticeNo(), file, false);
+            }
         }
         
         log.info("공지사항 수정 완료 - noticeNo: {}", noticeDTO.getNoticeNo());
@@ -215,43 +241,44 @@ public class NoticeServiceImpl implements NoticeService {
     /**
      * 이미지 파일 저장
      */
-    private void saveNoticeImages(Long noticeNo, List<MultipartFile> files) {
-    	log.info("=== 파일 업로드 경로 확인 ===");
-        log.info("uploadPath 설정값: {}", uploadPath);
-    	File uploadDir = new File(uploadPath);
-    	log.info("uploadDir 절대 경로: {}", uploadDir.getAbsolutePath());
-        log.info("uploadDir 존재 여부: {}", uploadDir.exists());
+    private void saveNoticeImage(Long noticeNo, MultipartFile file, boolean isThumbnail) {  // ✅ 수정
+        File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
         
-        for (MultipartFile file : files) {
-            if (file.isEmpty()) continue;
+        if (file == null || file.isEmpty()) return;
+        
+        try {
+            String originName = file.getOriginalFilename();
+            String ext = originName.substring(originName.lastIndexOf("."));
+            String changeName = UUID.randomUUID().toString() + ext;
             
-            try {
-                String originName = file.getOriginalFilename();
-                String ext = originName.substring(originName.lastIndexOf("."));
-                String changeName = UUID.randomUUID().toString() + ext;
-                
-                // 파일 저장
-                File dest = new File(uploadDir.getAbsolutePath(), changeName);
-                file.transferTo(dest);
-                
-                // DB에 이미지 정보 저장
-                NoticeImageVO imageVO = new NoticeImageVO();
-                imageVO.setNoticeNo(noticeNo);
-                imageVO.setOriginName(originName);
-                imageVO.setChangeName(changeName);
-                imageVO.setStatus('Y');
-                
-                noticeMapper.insertNoticeImage(imageVO);
-                
-            } catch (IOException e) {
-                log.error("파일 저장 실패: {}", e.getMessage());
-                throw new RuntimeException("파일 저장에 실패했습니다.", e);
-            }
+            // 파일 저장
+            File dest = new File(uploadDir.getAbsolutePath(), changeName);
+            file.transferTo(dest);
+            
+            // DB에 이미지 정보 저장
+            NoticeImageVO imageVO = new NoticeImageVO();
+            imageVO.setNoticeNo(noticeNo);
+            imageVO.setOriginName(originName);
+            imageVO.setChangeName(changeName);
+            imageVO.setIsThumbnail(isThumbnail ? "Y" : "N");  // ✅
+            imageVO.setStatus('Y');
+            
+            log.info("=== 이미지 저장 ===");  // ✅ 추가
+            log.info("noticeNo: {}", noticeNo);
+            log.info("originName: {}", originName);
+            log.info("isThumbnail 파라미터: {}", isThumbnail);
+            log.info("IS_THUMBNAIL 설정값: {}", imageVO.getIsThumbnail());
+            
+            noticeMapper.insertNoticeImage(imageVO);
+            
+            log.info("이미지 저장 완료");
+        } catch (IOException e) {
+            throw new RuntimeException("파일 저장에 실패했습니다.", e);
         }
     }
-}
+ }
     
     

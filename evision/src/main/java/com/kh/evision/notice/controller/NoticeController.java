@@ -86,10 +86,19 @@ public class NoticeController {
     @PostMapping("/create")
     public ResponseEntity<?> createNotice(
         @RequestPart("notice") NoticeDTO noticeDTO,
-        @RequestPart(value = "files", required = false) List<MultipartFile> files,
-        @AuthenticationPrincipal CustomUserDetails userDetails  // ✅ 추가
+        @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail,  // ✅ 대표 이미지
+        @RequestPart(value = "files", required = false) List<MultipartFile> files,    // ✅ 첨부 파일
+        @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        log.info("공지사항 작성 - 제목: {}", noticeDTO.getNoticeTitle());
+        
+    	  log.info("=== 공지사항 작성 요청 ===");  // ✅ 추가
+    	    log.info("noticeDTO: {}", noticeDTO);  // ✅ 추가
+    	    log.info("noticeTitle: {}", noticeDTO.getNoticeTitle());  // ✅ 추가
+    	    log.info("noticeContent: {}", noticeDTO.getNoticeContent());  // ✅ 추가
+    	    log.info("memberNo: {}", noticeDTO.getMemberNo());  // ✅ 추가
+    	    log.info("thumbnail: {}", thumbnail != null ? thumbnail.getOriginalFilename() : "없음");  // ✅ 추가
+    	    log.info("files 개수: {}", files != null ? files.size() : 0);  // ✅ 추가
+    	log.info("공지사항 작성 - 제목: {}", noticeDTO.getNoticeTitle());
 
         try {
             // ✅ 권한 체크: 관리자 또는 운영자만
@@ -105,7 +114,7 @@ public class NoticeController {
                     .body(Map.of("message", "공지사항 작성 권한이 없습니다."));
             }
             
-            noticeService.createNotice(noticeDTO, files);
+            noticeService.createNotice(noticeDTO, thumbnail, files);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(Map.of("message", "공지사항이 등록되었습니다."));
                     
@@ -124,6 +133,7 @@ public class NoticeController {
     public ResponseEntity<?> updateNotice(
         @PathVariable("noticeNo") Long noticeNo,
         @RequestPart("notice") NoticeDTO noticeDTO,
+        @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail,  // ✅ 추가
         @RequestPart(value = "files", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
@@ -159,7 +169,7 @@ public class NoticeController {
             
             // 5. 수정 실행
             noticeDTO.setNoticeNo(noticeNo);
-            noticeService.updateNotice(noticeDTO, files);
+            noticeService.updateNotice(noticeDTO, thumbnail, files);
             log.info("공지사항 수정 완료 - noticeNo: {}", noticeNo);
             
             return ResponseEntity.ok()

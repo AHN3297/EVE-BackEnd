@@ -1,10 +1,13 @@
 package com.kh.evision.notice.model.dao;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import com.kh.evision.notice.model.vo.NoticeVO;
+
+import com.kh.evision.notice.model.vo.NoticeFileVO;
 import com.kh.evision.notice.model.vo.NoticeImageVO;
+import com.kh.evision.notice.model.vo.NoticeVO;
 
 @Mapper
 public interface NoticeMapper {
@@ -61,6 +64,9 @@ public interface NoticeMapper {
      * 공지사항 이미지 삭제 (soft delete)
      */
     int deleteNoticeImages(@Param("noticeNo") Long noticeNo);
+    
+    List<NoticeFileVO> getNoticeFiles(Long noticeNo);
+    int insertNoticeFile(NoticeFileVO noticeFile);
     
     
 }

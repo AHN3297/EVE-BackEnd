@@ -21,16 +21,18 @@ public interface NoticeService {
    NoticeDTO getNoticeDetail(Long noticeNo);
     
    //* 공지사항 등록
-   void createNotice(NoticeDTO noticeDTO, List<MultipartFile> files);
+   void createNotice(NoticeDTO noticeDTO, MultipartFile thumbnail, List<MultipartFile> files);
    
    /**
     * 공지사항 수정
     */
-   void updateNotice(NoticeDTO noticeDTO, List<MultipartFile> files);
+   
+   void updateNotice(NoticeDTO noticeDTO, MultipartFile thumbnail, List<MultipartFile> files);
    
    /**
     * 공지사항 삭제 (논리 삭제)
     */
    void deleteNotice(Long noticeNo);
     
+
 }

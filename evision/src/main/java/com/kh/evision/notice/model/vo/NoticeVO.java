@@ -17,4 +17,5 @@ public class NoticeVO {
     private LocalDateTime createDate;
     private Long memberNo;
     private char status;
+    private String thumbnailUrl;
 }
