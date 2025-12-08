@@ -22,12 +22,16 @@ public interface MemberService {
 	boolean changeRole(ChangeRoleDTO change, String actingRole);
 
 	void updateMemberInfo(String memberNo, UpdateMemberDTO updateDto);
+	
+	boolean verifyPassword(String memberNo, String password);
 
-	void deleteMyAccount(String memberNo, String password);
+	void deleteMyAccount(String memberNo);
 
 	void deleteMemberByAdmin(String memberNo, String actingRole, String actingMemberNo);
 
-	void verifyLicense(String memberNo, LicenseDTO licenseDTO);
+	boolean hasLicense(String memberNo);
+
+	void infoVeryfyLicense(LicenseDTO licenseDTO, String memberNo);
 		
 	
 	

@@ -12,20 +12,28 @@
     </insert>
     
     <select id="findByImgNo" resultType="BoardImgVO">
-        SELECT IMG_ID imgId
+        SELECT 
+               IMG_ID imgId
              , IMG_NO imgNo
              , ORIGIN_NAME originName
              , CHANGE_NAME changeName
              , STATUS status
-          FROM TB_BOARD_IMG
-         WHERE IMG_NO = #{imgNo}
-           AND STATUS = 'Y'
+          FROM 
+               TB_BOARD_IMG
+         WHERE 
+               IMG_NO = #{imgNo}
+           AND 
+               STATUS = 'Y'
     </select>
     
-    <update id="deleteByImgNo">
-        UPDATE TB_BOARD_IMG
-           SET STATUS = 'N'
-         WHERE IMG_NO = #{imgNo}
+    <update id="deleteByImgNo"
+    		parameterType="BoardImgVO">
+        UPDATE 
+               TB_BOARD_IMG
+           SET 
+               STATUS = 'N'
+         WHERE 
+               IMG_NO = #{imgNo}
     </update>
     
 </mapper>

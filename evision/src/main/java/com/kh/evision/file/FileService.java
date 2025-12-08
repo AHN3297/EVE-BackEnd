@@ -85,38 +85,5 @@ public class FileService {
 		return sb.toString();
 		
 	}
-//
-//import org.springframework.stereotype.Service;
-//import org.springframework.web.multipart.MultipartFile;
-//
-//import lombok.extern.slf4j.Slf4j;
-//
-//@Slf4j
-//@Service
-//public class FileService {
-//	
-//	private final Path fileLocation;
-//	
-//	public FileService() {
-//		this.fileLocation = Paths.get("uploads").toAbsolutePath().normalize();
-//	}
-//	
-//	public String store(MultipartFile file) {
-//		
-//		String originalFilename = file.getOriginalFilename();
-//		
-//		Path targetLocation = this.fileLocation.resolve(originalFilename);
-//		
-//		try {
-//			
-//		Files.copy(file.getInputStream(),
-//				targetLocation,
-//				StandardCopyOption.REPLACE_EXISTING);
-//		return "http://localhost:8081/uploads/" + originalFilename;
-//		} catch (IOException e) {
-//			throw new RuntimeException("정상적인 파일이 아닙니다.");
-//		}
-//	}
 
-	
 }

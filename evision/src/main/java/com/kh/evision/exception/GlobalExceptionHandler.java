@@ -18,12 +18,18 @@ import com.kh.evision.exception.custom.member.CustomAuthenticationException;
 import com.kh.evision.exception.custom.member.IdDuplicateException;
 import com.kh.evision.exception.custom.member.LoginFailException;
 import com.kh.evision.exception.custom.member.NicknameDuplicateException;
+import com.kh.evision.exception.custom.member.NoMatchPasswordException;
+import com.kh.evision.exception.custom.member.NoPasswordException;
+import com.kh.evision.exception.custom.member.NotUserException;
+import com.kh.evision.exception.custom.member.RoleException;
+import com.kh.evision.exception.custom.member.StatusException;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+	
 	private ResponseEntity< Map<String, String>> createResponseEntity(RuntimeException e, HttpStatus status) {
 		Map<String, String> error = new HashMap();
 		error.put("error-message", e.getMessage());
@@ -72,8 +78,33 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(errors);
 	}
 	
+	
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public ResponseEntity<?> handlerUsernameNotFound(UsernameNotFoundException e){
+		Map<String, String> error = new HashMap();
+		error.put("error-message", e.getMessage());
+		return ResponseEntity.badRequest().body(error);
+	}
+	@ExceptionHandler(RoleException.class)
+	public ResponseEntity<?> handlerRole(RoleException e){
+		Map<String, String> error = new HashMap();
+		error.put("error-message", e.getMessage());
+		return ResponseEntity.badRequest().body(error);
+	}
+	@ExceptionHandler(StatusException.class)
+	public ResponseEntity<?> handlerStatus(StatusException e){
+		Map<String, String> error = new HashMap();
+		error.put("error-message", e.getMessage());
+		return ResponseEntity.badRequest().body(error);
+	}
+	@ExceptionHandler(NoPasswordException.class)
+	public ResponseEntity<?> handlerNoPassword(NoPasswordException e){
+		Map<String, String> error = new HashMap();
+		error.put("error-message", e.getMessage());
+		return ResponseEntity.badRequest().body(error);
+	}
+	@ExceptionHandler(NoMatchPasswordException.class)
+	public ResponseEntity<?> hanlderNoMatchPassword(NoMatchPasswordException e){
 		Map<String, String> error = new HashMap();
 		error.put("error-message", e.getMessage());
 		return ResponseEntity.badRequest().body(error);
@@ -98,6 +129,7 @@ public class GlobalExceptionHandler {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
 	}
 	
+<<<<<<< HEAD
 	@ExceptionHandler(CarNotFoundException.class)
 	public ResponseEntity<Map<String, String>> handleCarNotFound(CarNotFoundException e) {
 		return createResponseEntity(e, HttpStatus.NOT_FOUND);
@@ -112,6 +144,11 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<Map<String, String>> handleCarNotAvailableException(CarNotAvailableException e) {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
 	
+=======
+	@ExceptionHandler(NotUserException.class)
+	public ResponseEntity<String> handleNotUser(NotUserException e) {
+		 return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> 4d5278c5e89a6f008248e912fb4a236e2d72d21a
 	}
 	
 }

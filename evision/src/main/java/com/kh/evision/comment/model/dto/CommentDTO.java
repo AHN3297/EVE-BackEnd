@@ -17,8 +17,11 @@ public class CommentDTO {
 	private Long commentNo;
 	private String commentContent;
 	private Long refBno;
-	private String commentWriter;
+	private Long commentWriter;
+	private String memberName;
 	private Date createDate;
+	private String status;
+
 	
     // 이미지 정보 추가
     private String imageUrl;      // 화면 표시용
