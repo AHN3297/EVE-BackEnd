@@ -2,6 +2,7 @@ package com.kh.evision.member.model.dto;
 
 import java.util.Date;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -31,12 +32,12 @@ public class MemberDTO {
 	@Size(min = 8, max = 20, message = "비밀번호는 최소 8자, 최대 20자 입니다.")
 	private String memberPwd;
 	
-	// 닉네임은 아무문자나 사용가능, 5~40자로 제한
-	@Pattern(regexp = "^[^\\s]+$", message = "닉네임을 한글자 이상 입력해주세요")
+	// 닉네임은 아무문자나 사용가능, 1~40자로 제한
+	@Size(min = 1, max = 40, message = "닉네임은 1자 이상, 40자 이내여야 합니다.")
 	private String nickname;
 	
 	// 주소는 아무문자나 사용가능 100자로 제한하고 한글자 이상은 입력해야함
-	@Pattern(regexp = "^.{1,100}$", message = "주소를 한 글자 이상, 100자 이내로 입력해주세요")
+	@Pattern(regexp = "^.{1,100}$", message = "주소를 한 글자 이상, 100자 이내로 입력해주세요.")
 	private String address;
 	
 	// 휴대폰 전화는 010-xxxx-xxxx 총 13자로 최소 13자 아니면 안되게 max는 15자로 제한
@@ -46,8 +47,8 @@ public class MemberDTO {
 	private String phone;
 	
 	// 이메일은 NULL이 들어와도 됨, 50자로 제한
-	@Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식이 아닙니다.")
-	@Size(max=50, message = "이메일은 50자 이내입니다!")
+	@Size(max = 50, message = "이메일은 50자 이내입니다.")
+	@Email(message = "이메일 형식이 아닙니다.")
 	private String email;
 	
 	private String roleStatus;

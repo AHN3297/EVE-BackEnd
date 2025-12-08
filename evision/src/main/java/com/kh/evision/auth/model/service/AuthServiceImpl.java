@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.evision.auth.model.vo.CustomUserDetails;
 import com.kh.evision.exception.custom.member.CustomAuthenticationException;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthServiceImpl implements AuthService {
 	
 	private final AuthenticationManager authenticationManager;
@@ -27,28 +29,31 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public Map<String, String> login(MemberDTO member) {
-		Authentication auth = null;
-		try {
-			auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(member.getMemberId(), member.getMemberPwd()));			
-		}catch(AuthenticationException e) {
-			throw new CustomAuthenticationException("아이디 또는 비밀번호를 확인하세요.");
-		}
-		CustomUserDetails user = (CustomUserDetails)auth.getPrincipal();
-		
-		log.info("로그인이 성공");
-		log.info("인증에 성공한 사용자의 정보 : {}", user);
-		
-		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername());
-		loginResponse.put("memberNo", user.getUsername()); 
-		loginResponse.put("memberName", user.getMemberName());
-		String roles = user.getAuthorities().stream()
-                .map(autho -> autho.getAuthority())
-                .collect(Collectors.joining(",")); // 여러 권한이면 "ROLE_USER,ROLE_ADMIN"로 보내짐
-		loginResponse.put("role", roles);
+	    Authentication auth = null;
+	    try {
+	        auth = authenticationManager.authenticate(
+	            new UsernamePasswordAuthenticationToken(member.getMemberId(), member.getMemberPwd())
+	        );         
+	    } catch(AuthenticationException e) {
+	        throw new CustomAuthenticationException("아이디 또는 비밀번호를 확인하시고 관리자에게 문의해주세요");
+	    }
 
-		
-		return loginResponse;
-		
+	    CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+
+
+	    log.info("로그인이 성공");
+	    log.info("인증에 성공한 사용자의 정보 : {}", user);
+
+	    Map<String, String> loginResponse = tokenService.generateToken(user.getUsername());
+	    loginResponse.put("memberNo", user.getUsername()); 
+	    loginResponse.put("memberName", user.getMemberName());
+
+	    String role = user.getAuthorities().stream()
+	                .map(autho -> autho.getAuthority())
+	                .collect(Collectors.joining(",")); 
+	    loginResponse.put("role", role);
+
+	    return loginResponse;
 	}
 
 }

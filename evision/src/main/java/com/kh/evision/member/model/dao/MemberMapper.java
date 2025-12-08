@@ -10,8 +10,8 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.evision.member.model.dto.ChangeRoleDTO;
-import com.kh.evision.member.model.dto.LicenseDTO;
 import com.kh.evision.member.model.dto.MemberDTO;
+import com.kh.evision.member.model.vo.LicenseVO;
 import com.kh.evision.member.model.vo.MemberVO;
 
 @Mapper
@@ -107,18 +107,20 @@ public interface MemberMapper {
     	    <script>
     	        UPDATE TB_MEMBER
     	        <set>
+    		        <if test="memberName != null">MEMBER_NAME = #{memberName},</if>
     	            <if test="nickname != null">NICKNAME = #{nickname},</if>
     	            <if test="address != null">ADDRESS = #{address},</if>
     	            <if test="phone != null">PHONE = #{phone},</if>
-    	            <if test="email != null">EMAIL = #{email},</if>
+    	            <if test="email != null">EMAIL = #{email}</if>
     	        </set>
     	        WHERE MEMBER_NO = #{memberNo}
     	    </script>
     	""")
     int updateMemberInfo(Map<String, Object> params);
     
-    @Update("UPDATE TB_MEMBER SET ROLE_STATUS = #{newRole} WHERE MEMBER_NO = #{memberNo}")
-    int changeRole(ChangeRoleDTO change);
+    @Update("UPDATE TB_MEMBER SET ROLE_STATUS = #{newRole} WHERE MEMBER_NO = #{memberNo} AND STATUS = 'Y'")
+    int changeRole(@Param("memberNo") Long memberNo, @Param("newRole") String newRole);
+
     
     @Update("UPDATE TB_MEMBER SET STATUS = 'N' WHERE MEMBER_NO = #{memberNo}")
     int softDelete(String memberNo);
@@ -139,15 +141,18 @@ public interface MemberMapper {
     	    VALUES (
     	           SEQ_LID.NEXTVAL,
     	           #{memberNo}, 
-    	           #{licenseDTO.licenseNo},
-    	           #{licenseDTO.renewDate}, 
-    	           #{licenseDTO.issuingAgency},
-    	           #{licenseDTO.licenseClass}
+    	           #{licenseNo},
+    	           #{renewDate}, 
+    	           #{issuingAgency},
+    	           #{licenseClass}
     	           )
     	           
     			
     		""")
-	void insertLicense(@Param("memberNo")String memberNo, @Param("licenseDTO")LicenseDTO licenseDTO);
+	void insertLicense(LicenseVO licenseVO);
+    
+    @Select("SELECT COUNT(*) FROM TB_LICENSE WHERE MEMBER_NO = #{memberNo}")
+	int countLicenseByMemberNo(@Param("memberNo") String memberNo);
 	    
 }
 

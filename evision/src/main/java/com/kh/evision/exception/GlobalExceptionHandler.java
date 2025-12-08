@@ -10,17 +10,26 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.kh.evision.exception.custom.car.CarAlreadyReservedException;
+import com.kh.evision.exception.custom.car.CarNotAvailableException;
+import com.kh.evision.exception.custom.car.CarNotFoundException;
 import com.kh.evision.exception.custom.member.AdminException;
 import com.kh.evision.exception.custom.member.CustomAuthenticationException;
 import com.kh.evision.exception.custom.member.IdDuplicateException;
 import com.kh.evision.exception.custom.member.LoginFailException;
 import com.kh.evision.exception.custom.member.NicknameDuplicateException;
+import com.kh.evision.exception.custom.member.NoMatchPasswordException;
+import com.kh.evision.exception.custom.member.NoPasswordException;
+import com.kh.evision.exception.custom.member.NotUserException;
+import com.kh.evision.exception.custom.member.RoleException;
+import com.kh.evision.exception.custom.member.StatusException;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+	
 	private ResponseEntity< Map<String, String>> createResponseEntity(RuntimeException e, HttpStatus status) {
 		Map<String, String> error = new HashMap();
 		error.put("error-message", e.getMessage());
@@ -69,8 +78,33 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(errors);
 	}
 	
+	
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public ResponseEntity<?> handlerUsernameNotFound(UsernameNotFoundException e){
+		Map<String, String> error = new HashMap();
+		error.put("error-message", e.getMessage());
+		return ResponseEntity.badRequest().body(error);
+	}
+	@ExceptionHandler(RoleException.class)
+	public ResponseEntity<?> handlerRole(RoleException e){
+		Map<String, String> error = new HashMap();
+		error.put("error-message", e.getMessage());
+		return ResponseEntity.badRequest().body(error);
+	}
+	@ExceptionHandler(StatusException.class)
+	public ResponseEntity<?> handlerStatus(StatusException e){
+		Map<String, String> error = new HashMap();
+		error.put("error-message", e.getMessage());
+		return ResponseEntity.badRequest().body(error);
+	}
+	@ExceptionHandler(NoPasswordException.class)
+	public ResponseEntity<?> handlerNoPassword(NoPasswordException e){
+		Map<String, String> error = new HashMap();
+		error.put("error-message", e.getMessage());
+		return ResponseEntity.badRequest().body(error);
+	}
+	@ExceptionHandler(NoMatchPasswordException.class)
+	public ResponseEntity<?> hanlderNoMatchPassword(NoMatchPasswordException e){
 		Map<String, String> error = new HashMap();
 		error.put("error-message", e.getMessage());
 		return ResponseEntity.badRequest().body(error);
@@ -79,5 +113,40 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handlerAdmin(AdminException e){
 		return createResponseEntity(e, HttpStatus.UNAUTHORIZED);
 	}
-
+	
+	@ExceptionHandler(FileUploadFailureException.class)
+	public ResponseEntity<Map<String, String>> handleFileUploadFailure(FileUploadFailureException e) {
+		return createResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(InvalidImgFormatException.class)
+	public ResponseEntity<Map<String, String>> handleInvalidImgFormat(InvalidImgFormatException e) {
+		return createResponseEntity(e, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+	}
+	
+	@ExceptionHandler(InvalidParameterException.class)
+	public ResponseEntity<Map<String, String>> handleInvalidParameter(InvalidParameterException e) {
+		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(CarNotFoundException.class)
+	public ResponseEntity<Map<String, String>> handleCarNotFound(CarNotFoundException e) {
+		return createResponseEntity(e, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(CarAlreadyReservedException.class)
+	public ResponseEntity<Map<String, String>> handleCarAlreadyReservedException(CarAlreadyReservedException e) {
+		return createResponseEntity(e, HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(CarNotAvailableException.class)
+	public ResponseEntity<Map<String, String>> handleCarNotAvailableException(CarNotAvailableException e) {
+		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
+		
+	@ExceptionHandler(NotUserException.class)
+	public ResponseEntity<String> handleNotUser(NotUserException e) {
+		 return ResponseEntity.badRequest().body(e.getMessage());
+	}
+	
 }

@@ -69,8 +69,7 @@ public class SecurityConfigure {
 						manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
-	}
-	
+	}		
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
@@ -93,3 +92,41 @@ public class SecurityConfigure {
 		return new BCryptPasswordEncoder();
 	}
 }
+
+	/*
+	// CORS 설정 Bean
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		
+		// 허용할 출처
+		configuration.setAllowedOrigins(Arrays.asList(
+			"http://localhost:5175",
+			"http://localhost:5173", 
+			"http://localhost:3000"
+		));
+		
+		// 허용할 HTTP 메소드
+		configuration.setAllowedMethods(Arrays.asList(
+			"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
+		));
+		
+		// 허용할 헤더
+		configuration.setAllowedHeaders(Arrays.asList("*"));
+		
+		// 인증 정보 허용
+		configuration.setAllowCredentials(true);
+		
+		// preflight 요청 캐시 시간
+		configuration.setMaxAge(3600L);
+		
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		
+		return source;
+		
+	}
+	*/
+
+
+

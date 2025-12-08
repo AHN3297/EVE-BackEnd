@@ -18,7 +18,7 @@ public class ReportDTO {
 	private Long memberNo;
 	private Long boardNo;
 	private String reportCategory;
-	private String retportTitle;
+	private String reportTitle;
 	private String reportContent;
 	private String status;
 	private Date reportDate;

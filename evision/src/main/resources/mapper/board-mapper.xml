@@ -3,4 +3,182 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.evision.board.model.dao.BoardMapper">
+	
+	<!-- 공통 -->
+	<sql id="boardColumn">
+		SELECT 
+		       BOARD_NO boardNo
+		     , BOARD_TITLE boardTitle
+		     , BOARD_WRITER boardWriter
+		     , CREATE_DATE createDate
+	</sql>
+	
+	<!-- 게시글 작성 -->
+	<insert id="save" 
+		parameterType="BoardVO">		
+	<selectKey keyProperty="boardNo" resultType="long" order="BEFORE">
+		SELECT SEQ_BNO.NEXTVAL FROM DUAL
+	</selectKey>		
+		INSERT 
+		  INTO 
+		       TB_BOARD
+		VALUES 
+			   (
+			   #{boardNo}
+			 , #{boardTitle}
+			 , #{boardWriter}
+			 , #{boardContent}
+			 , DEFAULT
+			 , DEFAULT
+			 , DEFAULT
+			   )
+	</insert>
+	
+	<!-- 게시글 전체조회 (boardList)  유저-->
+	<select id="findAll"
+			resultType="BoardDTO">
+	<include refid="boardColumn" />
+		  , B.COUNT count
+	      , M.MEMBER_NAME memberName
+	   FROM 
+    	    TB_BOARD B
+	   JOIN 
+    	    TB_MEMBER M
+    	 ON 
+    	 	B.BOARD_WRITER = M.MEMBER_NO
+	  WHERE 
+    	    B.STATUS = 'Y'
+    	AND 
+    	    M.STATUS = 'Y'
+	  ORDER 
+	  	 BY 
+    	    B.BOARD_NO DESC
+	</select>
+	
+	<!-- 게시글 전체조회 (boardList)  관리자 -->
+	<select id="findAllOperator"
+			resultType="BoardDTO">
+	<include refid="boardColumn" />
+		  , B.COUNT count
+	      , M.MEMBER_NAME memberName
+	   FROM 
+    	    TB_BOARD B
+	   JOIN 
+    	    TB_MEMBER M
+    	 ON 
+    	 	B.BOARD_WRITER = M.MEMBER_NO
+	  ORDER 
+	  	 BY 
+    	    B.BOARD_NO DESC
+	</select>
+	
+	<!-- 게시글 상세조회 + 이미지 -->
+	<select id="findByBoardNo"
+	        resultType="BoardDTO"
+	        parameterType="long">
+	    SELECT
+	           B.BOARD_NO boardNo
+	         , B.BOARD_TITLE boardTitle
+	         , B.BOARD_WRITER boardWriter
+	         , B.CREATE_DATE createDate
+	         , B.BOARD_CONTENT boardContent
+	         , B.COUNT count
+	         , I.IMG_ID imgId
+	         , I.ORIGIN_NAME originName
+	         , I.CHANGE_NAME changeName
+	         , M.MEMBER_NAME memberName
+	      FROM
+	           TB_BOARD B
+	      LEFT 
+	      JOIN 
+	           TB_BOARD_IMG I
+	        ON
+	           B.BOARD_NO = I.BOARD_NO
+	       AND 
+	       	   I.STATUS = 'Y'
+		  LEFT
+		  JOIN 
+	    	   TB_MEMBER M
+	    	ON 
+	    	   B.BOARD_WRITER = M.MEMBER_NO
+	       AND 
+	    	   M.STATUS = 'Y'	           
+	     WHERE 
+	           B.BOARD_NO = #{boardNo}
+	       AND 
+	           B.STATUS = 'Y'	           
+	     ORDER 
+	     	BY 
+	           B.BOARD_NO DESC
+	</select>
+	
+	<!-- 게시글 수정 -->
+	<update id="update"
+			parameterType="BoardDTO">
+		UPDATE 
+		       TB_BOARD
+		   SET 
+		       BOARD_TITLE = #{boardTitle}
+		     , BOARD_CONTENT = #{boardContent}
+		     , COUNT = #{count}
+		 WHERE 
+		       BOARD_NO = #{boardNo}
+		   AND 
+		       STATUS = 'Y'
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<update id="deleteByBoardNo">
+		UPDATE 
+		       TB_BOARD
+		   SET 
+		       STATUS = 'N'
+		 WHERE 
+		       BOARD_NO = #{boardNo}		       
+	</update>
+	
+	<!-- 이미지 -->
+	<insert id="saveBoardImg"
+			parameterType="ImgInfo">				
+	<selectKey keyProperty="imgId" resultType="long" order="BEFORE">
+		SELECT SEQ_BINO.NEXTVAL FROM DUAL
+	</selectKey>
+			
+		INSERT
+		  INTO
+		       TB_BOARD_IMG
+		VALUES
+		       (
+		       #{imgId}
+		     , #{primaryKeyNo}
+		     , #{originName}
+		     , #{changeName}
+		     , DEFAULT
+		       )
+	</insert>
+	
+	<!-- 조회수 조회 -->
+	<select id="selectTotalCount"
+			resultType="int">
+		SELECT 
+		       COUNT(*)
+		  FROM 
+		       TB_BOARD
+		 WHERE 
+		       STATUS = 'Y'
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="increaseCount"
+			parameterType="long">
+	    UPDATE 
+	    	   TB_BOARD
+	       SET 
+	     	   COUNT = COUNT + 1
+	     WHERE 
+	           BOARD_NO = #{boardNo}
+	       AND 
+	       	   STATUS = 'Y'
+	</update>
+		
 </mapper>

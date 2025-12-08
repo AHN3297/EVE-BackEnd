@@ -20,8 +20,8 @@ public class StationDTO {
 	private Long stationNo;
 	private String stationName;
 	private String stationAddress;
-	private Long stationLng;
-	private Long stationLat;
+	private double stationLng;
+	private double stationLat;
 	private String stationType;
 	private Date registerDate;
 	private String status;

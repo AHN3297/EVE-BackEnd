@@ -78,7 +78,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		try {
 			Claims claims = jwtUtil.parseJwt(token);
 			String memberNo = claims.getSubject();
-
+			
 			memberDto = memberMapper.loadByMemberNo(memberNo);
 			if (memberDto == null) throw new UsernameNotFoundException("유저가 없습니다!");
 

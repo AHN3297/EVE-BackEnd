@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.evision.reserve.model.dao.ReserveMapper">
+	
+	<insert id="reserveCar"
+			parameterType="ReserveVO">
+			
+	<selectKey keyProperty="reserveNo" resultType="long" order="BEFORE">
+		SELECT SEQ_RSNO.NEXTVAL FROM DUAL
+	</selectKey>
+	
+		INSERT
+		  INTO
+		       TB_RESERVE
+		VALUES
+		       (
+		       #{reserveNo}
+		     , #{carNo}
+		     , #{memberNo}
+		     , DEFAULT
+		     , SYSDATE
+		     , #{rentalStartDate}
+		     , #{rentalEndDate}
+		     , DEFAULT
+		       )
+	</insert>
+	
+	<update id="reserveCarStatus">
+		UPDATE
+		       TB_CAR
+		   SET
+		       RENTAL_STATUS = 'Y'
+		 WHERE
+		       CAR_NO = #{carNo}
+	</update>
+	
+	<select id="selectUserTotalCount"
+			resultType="_int">
+		SELECT
+		       COUNT(*)
+		  FROM
+		       TB_RESERVE
+		 WHERE
+		       STATUS = 'Y'
+		   AND
+		       MEMBER_NO = #{memberNo}
+	</select>
+	
+	<select id="selectTotalCount"
+			resultType="_int">
+		SELECT
+		       COUNT(*)
+		  FROM
+		       TB_RESERVE
+		 WHERE
+		       STATUS = 'Y'
+	</select>
+	
+	<select id="findAllUserReserve">
+		SELECT
+		       RESERVE_NO reserveNo
+		     , CAR_NO carNo
+		     , MEMBER_NO memberNo
+		     , RESERVE_DATE reserveDate
+		     , RENTAL_START_DATE rentalStartDate
+		     , RENTAL_END_DATE rentalEndDate
+		     , APPROVE_STATUS approveStatus
+		  FROM
+		       TB_RESERVE
+		 WHERE
+		       STATUS = 'Y'
+		   AND
+		       MEMBER_NO = #{memberNo}
+		 ORDER
+		    BY
+		       RESERVE_DATE DESC
+	</select>
+	
+	<select id="findAllReserve">
+		SELECT
+		       RESERVE_NO reserveNo
+		     , CAR_NO carNo
+		     , MEMBER_NO memberNo
+		     , RESERVE_DATE reserveDate
+		     , RENTAL_START_DATE rentalStartDate
+		     , RENTAL_END_DATE rentalEndDate
+		     , APPROVE_STATUS approveStatus
+		  FROM
+		       TB_RESERVE
+		 WHERE
+		       STATUS = 'Y'
+		 ORDER
+		    BY
+		       RESERVE_DATE DESC
+	</select>
+	
+	<select id="findByReserveNo"
+			resultType="ReserveDTO"
+			parameterType="long">
+		SELECT
+		       RESERVE_NO reserveNo
+		     , CAR_NO carNo
+		     , MEMBER_NO memberNo
+		     , STATUS status
+		     , RESERVE_DATE reserveDate
+		     , RENTAL_START_DATE rentalStartDate
+		     , RENTAL_END_DATE rentalEndDate
+		     , APPROVE_STATUS approveStatus
+		  FROM
+		       TB_RESERVE
+		 WHERE
+		       STATUS = 'Y'
+		   AND
+		       RESERVE_NO = #{reserveNo}
+	</select>
+	
+	<delete id="deleteByReserveNo"
+			parameterType="long">
+		UPDATE
+		       TB_RESERVE
+		   SET
+		       STATUS = 'N'
+		 WHERE
+		       RESERVE_NO = #{reserveNo}
+	</delete>
+	
+	<update id="reserveApprove"
+			parameterType="ReserveDTO">
+		UPDATE
+		       TB_RESERVE
+		   SET
+		       APPROVE_STATUS = 'Y'
+		 WHERE
+		       RESERVE_NO = #{reserveNo}
+		   AND
+		       STATUS = 'Y'
+	</update>
+	
+	<update id="returnCar"
+			parameterType="long">
+		UPDATE
+		       TB_CAR
+		   SET
+		       RENTAL_STATUS = 'N'
+		 WHERE
+		       CAR_NO = #{carNo}
+	</update>
+	
+</mapper>
