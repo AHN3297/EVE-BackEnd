@@ -38,19 +38,19 @@ Evision은 전기차 사용자들을 위한 종합 서비스 플랫폼입니다.
 ## ✨ 기능 리스트
 
 ### 🔑 인증/인가
-- [x] 회원가입
-- [x] 로그인/로그아웃
-- [x] JWT 토큰 기반 인증
-- [x] Refresh Token 관리
-- [x] 비밀번호 변경
-- [x] 회원정보 수정/삭제
-- [x] 운전면허 인증
+- [o] 회원가입
+- [o] 로그인/로그아웃
+- [o] JWT 토큰 기반 인증
+- [o] Refresh Token 관리
+- [o] 비밀번호 변경
+- [o] 회원정보 수정/삭제
+- [o] 운전면허 인증
 
 ### 👥 회원 관리
-- [x] 회원 정보 조회
-- [x] 회원 권한 관리 (USER, OPERATOR, ADMIN)
-- [x] 관리자 회원 관리
-- [x] 비밀번호 검증
+- [o] 회원 정보 조회
+- [o] 회원 권한 관리 (USER, OPERATOR, ADMIN)
+- [o] 관리자 회원 관리
+- [o] 비밀번호 검증
 
 ### 📝 게시판
 - [x] 게시글 작성/수정/삭제
@@ -111,7 +111,7 @@ cd semi-workspace/evision
 spring:
   datasource:
     url: jdbc:oracle:thin:@[호스트]:[포트]:[SID]
-    username: [사용자명]
+    username: [회원번호]
     password: [비밀번호]
 ```
 
