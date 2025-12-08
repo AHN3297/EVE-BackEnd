@@ -42,14 +42,6 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.POST, "/member/join").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/member/**").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
-<<<<<<< HEAD
-					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ /*"/reserve/**",*/ "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ /*"/reserve/**",*/ "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ /*"/reserve/**",*/ "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ /*"/reserve/**",*/ "/station/**", "/reports/**", "/uploads/**").authenticated();
-					   // requests.requestMatchers("/admin/**").hasRole("ADMIN"); // 권한검증방법
-//					   requests.requestMatchers("/uploads/**").permitAll();
-=======
 					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
 					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
@@ -60,7 +52,6 @@ public class SecurityConfigure {
 //					   requests.requestMatchers("/uploads/**").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ "/reserve/**", "/station/**", "/reports/**", "/uploads/**").authenticated();
 
->>>>>>> 4d5278c5e89a6f008248e912fb4a236e2d72d21a
 					   //requests.requestMatchers(HttpMethod.POST, "/operator/**").hasRole("OPERATOR"); // 권한검증방법
 					   requests.requestMatchers(HttpMethod.GET, "/member/operator/**").hasAnyRole("OPERATOR","ADMIN");
 					   requests.requestMatchers(HttpMethod.POST, "/member/admin/**").hasRole("ADMIN"); // 권한검증방법
@@ -79,21 +70,10 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station", "/member/**").permitAll();
 					   requests.requestMatchers(HttpMethod.GET, "/member/info","/member/hasLicense/**").authenticated();
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station").permitAll();
-					   // requests.requestMatchers(HttpMethod.POST, "/cars/**").permitAll(); // 차량 등룍 테스트용 임시허용
-					   requests.requestMatchers(HttpMethod.POST, "/cars").hasAnyRole("OPERATOR", "ADMIN"); // 차량 등록 권한 부여
-					   requests.requestMatchers(HttpMethod.GET, "/cars/**").permitAll(); // 테스트용 임시허용
-<<<<<<< HEAD
-					   requests.requestMatchers(HttpMethod.POST, "/reserve/**").permitAll(); // 예약 테스트용 임시허용
-					   requests.requestMatchers(HttpMethod.GET, "/reserve/**").permitAll(); // 예약조회 테스트용 임시허용
-					   requests.requestMatchers(HttpMethod.DELETE, "/reserve/**").permitAll(); // 예약취소 테스트용 임시허용
-					   requests.requestMatchers(HttpMethod.PATCH, "/reserve/**").permitAll(); // 예약승인 테스트용 임시허용
-					   requests.requestMatchers(HttpMethod.GET, "/reserve/operator/reserve-manage/**").permitAll(); // 운영자용 예약조회 테스트 임시허용
-=======
+					   requests.requestMatchers(HttpMethod.POST, "/cars/**").hasAnyRole("OPERATOR", "ADMIN"); // 차량 등록 권한 부여
 					   
 					   // 나머지 요청
 		               requests.anyRequest().permitAll(); // ✅ authenticated()에서 permitAll()로 변경
-
->>>>>>> 4d5278c5e89a6f008248e912fb4a236e2d72d21a
 
 				   })
 				   .sessionManagement(manager ->
@@ -158,6 +138,5 @@ public class SecurityConfigure {
 		
 	}
 	*/
-
 
 }

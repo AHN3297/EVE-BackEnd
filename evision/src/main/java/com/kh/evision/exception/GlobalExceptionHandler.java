@@ -129,7 +129,6 @@ public class GlobalExceptionHandler {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
 	}
 	
-<<<<<<< HEAD
 	@ExceptionHandler(CarNotFoundException.class)
 	public ResponseEntity<Map<String, String>> handleCarNotFound(CarNotFoundException e) {
 		return createResponseEntity(e, HttpStatus.NOT_FOUND);
@@ -143,12 +142,11 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(CarNotAvailableException.class)
 	public ResponseEntity<Map<String, String>> handleCarNotAvailableException(CarNotAvailableException e) {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
 	
-=======
 	@ExceptionHandler(NotUserException.class)
 	public ResponseEntity<String> handleNotUser(NotUserException e) {
-		 return ResponseEntity.badRequest().body(e.getMessage());
->>>>>>> 4d5278c5e89a6f008248e912fb4a236e2d72d21a
+		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 	
 }
