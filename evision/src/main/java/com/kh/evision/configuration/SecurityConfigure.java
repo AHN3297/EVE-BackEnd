@@ -71,6 +71,8 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.GET, "/member/info","/member/hasLicense/**").authenticated();
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/cars/**").hasAnyRole("OPERATOR", "ADMIN"); // 차량 등록 권한 부여
+					   requests.requestMatchers(HttpMethod.GET, "/operator/reserve-manage/**").hasAnyRole("OPERATOR", "ADMIN"); // 예약 관리 권한 부여
+					   requests.requestMatchers(HttpMethod.PATCH, "/reserve/**").hasAnyRole("OPERATOR", "ADMIN"); // 예약 승인 권한 부여
 					   
 					   // 나머지 요청
 		               requests.anyRequest().permitAll(); // ✅ authenticated()에서 permitAll()로 변경
@@ -86,7 +88,7 @@ public class SecurityConfigure {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 		configuration.setAllowCredentials(true);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();	

@@ -30,5 +30,9 @@ public class ReserveDTO {
 	@NotBlank
 	private Date rentalEndDate;
 	private String approveStatus;
+	
+	private String carName;
+	private String memberName;
+	private String memberId;
 
 }
