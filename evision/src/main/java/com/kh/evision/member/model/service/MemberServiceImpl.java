@@ -32,7 +32,6 @@ import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.member.model.dto.UpdateMemberDTO;
 import com.kh.evision.member.model.vo.LicenseVO;
 import com.kh.evision.member.model.vo.MemberVO;
-import com.kh.evision.token.model.dao.TokenMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +44,6 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
     private final PasswordEncoder passwordEncoder;
-    private final TokenMapper tokenMapper; 
     
     /**
      * 아이디 중복 확인, 닉네임 중복 확인, DTO-> VO변환
