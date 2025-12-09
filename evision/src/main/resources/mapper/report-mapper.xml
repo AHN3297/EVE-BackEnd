@@ -116,4 +116,37 @@
 		
 	</update>
 	
+	<!-- 신고 단건 조회 -->
+	<select id="findByReportNo" parameterType="Long" resultType="com.kh.evision.report.model.dto.ReportDTO">
+		SELECT
+			   REPORT_NO reportNo
+	      	 , MEMBER_NO memberNo	
+			 , BOARD_NO boardNo
+			 , REPORT_CATEGORY reportCategory
+			 , REPORT_TITLE reportTitle
+			 , REPORT_CONTENT reportContent
+			 , STATUS 
+			 , REPORT_DATE reportDate
+		  FROM
+		       TB_REPORT
+		 WHERE
+		 	   REPORT_STATUS = 'Y'
+		   AND
+		       REPORT_NO = #{reportNo}
+	</select>
+	
+	<!-- 중복 신고 확인 -->
+	<select id="existsByMemberNoAndBoardNo" resultType="int">
+		SELECT
+		       COUNT(*)
+		  FROM
+		       TB_REPORT
+		 WHERE
+		 	   REPORT_STATUS = 'Y'
+		   AND
+		       MEMBER_NO = #{param1}
+		   AND
+		       BOARD_NO = #{param2}
+	</select>
+	
 </mapper>

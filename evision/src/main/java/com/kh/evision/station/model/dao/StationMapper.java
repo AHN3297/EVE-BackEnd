@@ -40,5 +40,11 @@ public interface StationMapper {
     
     // 충전소별 리뷰 목록 조회
     List<ReviewVO> findReviewsByStationNo(Long stationNo);
+    
+    // 충전소 존재 여부 확인
+    int existsByStationNo(Long stationNo);
+    
+    // 리뷰 단건 조회
+    ReviewVO findReviewByReviewNo(Long reviewNo);
 }
 

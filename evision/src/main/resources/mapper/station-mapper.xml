@@ -205,5 +205,35 @@
             BY
                REVIEW_DATE DESC
     </select>
+    
+    <!-- 충전소 존재 여부 확인 -->
+    <select id="existsByStationNo" parameterType="Long" resultType="int">
+        SELECT 
+               COUNT(*)
+          FROM 
+               TB_STATION
+         WHERE 
+               STATION_NO = #{stationNo}
+           AND 
+               DEL_STATUS = 'Y'
+    </select>
+    
+    <!-- 리뷰 단건 조회 -->
+    <select id="findReviewByReviewNo" parameterType="Long" resultMap="ReviewResultMap">
+        SELECT 
+               REVIEW_NO
+             , STATION_NO
+             , REVIEW_TITLE
+             , REVIEW_CONTENT
+             , STATUS
+             , REVIEW_DATE
+             , MEMBER_NO
+          FROM 
+               TB_REVIEW
+         WHERE 
+               REVIEW_NO = #{reviewNo}
+           AND 
+               STATUS = 'Y'
+    </select>
 	
 </mapper>
