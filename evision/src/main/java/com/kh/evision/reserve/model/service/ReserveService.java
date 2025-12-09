@@ -1,0 +1,25 @@
+package com.kh.evision.reserve.model.service;
+
+import java.util.Map;
+
+import com.kh.evision.reserve.model.dto.ReserveDTO;
+
+public interface ReserveService {
+	
+	void reserveCar(ReserveDTO reserve);
+	
+	void reserveCarStatus(Long carNo);
+	
+	Map<String, Object> findAllUserReserve(int pageNo, Long memberNo);
+	
+	Map<String, Object> findAllReserve(int pageNo);
+	
+	ReserveDTO findByReserveNo(Long reserveNo);
+	
+	void deleteByReserveNo(Long reserveNo);
+	
+	void reserveApprove(Long reserveNo);
+	
+	void returnCar(Long reserveNo);
+
+}

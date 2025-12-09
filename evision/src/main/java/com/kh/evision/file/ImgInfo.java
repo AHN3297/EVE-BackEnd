@@ -15,8 +15,8 @@ public class ImgInfo {
 	
 	private Long imgId;
 	
-	private Long carNo;
-	private Long boardNo;
+	private Long primaryKeyNo;
+	
 	private String originName;
 	private String changeName;
 	private String filePath;

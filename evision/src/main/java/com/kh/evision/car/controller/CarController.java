@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.evision.car.model.dto.CarCreateDTO;
 import com.kh.evision.car.model.dto.CarDTO;
 import com.kh.evision.car.model.service.CarService;
+import com.kh.evision.exception.InvalidParameterException;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -36,15 +38,28 @@ public class CarController {
 	
 	// 차량 등록 -> 관리자/운영자용 기능, 이미지첨부, 파일첨부
 	@PostMapping
+	@PreAuthorize("hasAnyRole('OPERATOR', 'ADMIN')")
 	public ResponseEntity<?> saveCar(@Valid CarCreateDTO car
 								   , @RequestParam(name="file", required=false) List<MultipartFile> files
-								   // , @AuthenticationPrincipal CustomUserDetails userDetails
 								   ) {
 		// 파일 + 이미지 두개 올수있음.. 이거 다시 생각해야함! -> 리스트로 받음
 		log.info("등록메소드 호출시도");
 		
 		log.info("FE에서 넘어오는 차량 정보 : {}", car);
 		log.info("FE에서 넘어오는 파일 정보 : {}", files);
+		
+		// 파일 크기 거르기
+		if(files != null) {
+			
+			for(MultipartFile file : files) {
+				
+				if(file.getSize() > (100 * 1024 * 1024)) {
+					throw new InvalidParameterException("파일 크기는 100MB를 초과할 수 없습니다.");
+				}
+				
+			}
+			
+		}
 		
 		carService.saveCar(car, files);
 		
@@ -69,10 +84,10 @@ public class CarController {
 	
 	// 차량 정보 수정
 	@PutMapping("/{carNo}")
-	public ResponseEntity<CarDTO> updateCar(@PathVariable(name="carNo") Long carNo
-										  , CarDTO car
+	@PreAuthorize("hasAnyRole('OPERATOR', 'ADMIN')")
+	public ResponseEntity<CarDTO> updateCar(@PathVariable(name="carNo") @Min(value=1, message="유효하지 않은 차량번호입니다.") Long carNo
+										  , @Valid CarDTO car
 										  , @RequestParam(name="file", required=false) List<MultipartFile> files
-										  // , @AuthenticationPrincipal CustomUserDetails userDetails
 										  ) {
 		
 		carService.updateCar(carNo, car, files);
@@ -97,8 +112,8 @@ public class CarController {
 	
 	// 차량 삭제
 	@DeleteMapping("/{carNo}")
+	@PreAuthorize("hasAnyRole('OPERATOR', 'ADMIN')")
 	public ResponseEntity<?> deleteByCarNo(@PathVariable(name="carNo") Long carNo
-										 // , @AuthenticationPrincipal CustomUserDetails userDetails
 										 ) {
 		
 		carService.deleteByCarNo(carNo);

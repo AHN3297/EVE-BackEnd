@@ -25,7 +25,7 @@ public class FileService {
 	}
 	
 	// 파일 업로드 메소드
-	public FileInfo store(MultipartFile file, Long carNo) {
+	public FileInfo store(MultipartFile file, Long primaryKeyNo) {
 		
 		// 파일명 관련작업
 		String originalFileName = file.getOriginalFilename();
@@ -35,7 +35,7 @@ public class FileService {
 		Path targetLocation = this.fileLocation.resolve(changedFileName);
 		// 객체에서 경로 필드의 자료형을 String으로 변경 후 -> targetLocation이 Path형이니 넣어줄 때 toString으로 변환
 		FileInfo fileInfo = FileInfo.builder()
-									.carNo(carNo)
+									.primaryKeyNo(primaryKeyNo)
 									.originName(originalFileName)
 									.changeName(changedFileName)
 									.filePath(targetLocation.toString())
@@ -85,38 +85,5 @@ public class FileService {
 		return sb.toString();
 		
 	}
-//
-//import org.springframework.stereotype.Service;
-//import org.springframework.web.multipart.MultipartFile;
-//
-//import lombok.extern.slf4j.Slf4j;
-//
-//@Slf4j
-//@Service
-//public class FileService {
-//	
-//	private final Path fileLocation;
-//	
-//	public FileService() {
-//		this.fileLocation = Paths.get("uploads").toAbsolutePath().normalize();
-//	}
-//	
-//	public String store(MultipartFile file) {
-//		
-//		String originalFilename = file.getOriginalFilename();
-//		
-//		Path targetLocation = this.fileLocation.resolve(originalFilename);
-//		
-//		try {
-//			
-//		Files.copy(file.getInputStream(),
-//				targetLocation,
-//				StandardCopyOption.REPLACE_EXISTING);
-//		return "http://localhost:8081/uploads/" + originalFilename;
-//		} catch (IOException e) {
-//			throw new RuntimeException("정상적인 파일이 아닙니다.");
-//		}
-//	}
 
-	
 }

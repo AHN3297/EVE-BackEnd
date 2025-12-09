@@ -18,5 +18,6 @@ public class CarVO {
 	private Date registerDate;
 	private String carLocation;
 	private String carBrand;
+	private String rentalStatus;
 
 }
