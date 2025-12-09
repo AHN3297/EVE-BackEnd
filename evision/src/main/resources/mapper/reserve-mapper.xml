@@ -118,8 +118,6 @@
 		  FROM
 		       TB_RESERVE
 		 WHERE
-		       STATUS = 'Y'
-		   AND
 		       RESERVE_NO = #{reserveNo}
 	</select>
 	
