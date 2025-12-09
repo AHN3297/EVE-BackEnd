@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class NoticeDTO {
     private Long noticeNo;
     private String noticeTitle;

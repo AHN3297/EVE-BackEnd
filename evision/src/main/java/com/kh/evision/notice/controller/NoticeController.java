@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -83,25 +85,29 @@ public class NoticeController {
      * ✅ 공지사항 작성
      * POST /notice/create
      */
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createNotice(
-        @RequestPart("notice") NoticeDTO noticeDTO,
-        @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail,  // ✅ 대표 이미지
-        @RequestPart(value = "files", required = false) List<MultipartFile> files,    // ✅ 첨부 파일
+    	@RequestParam(value = "noticeTitle", required = true) String noticeTitle,
+    	@RequestParam(value = "noticeContent", required = true) String noticeContent,
+    	@RequestParam(value = "memberNo", required = true) Long memberNo,
+        @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail,
+        @RequestPart(value = "files", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        log.info("=== 공지사항 작성 요청 ===");
+        log.info("noticeTitle: {}", noticeTitle);
+        log.info("noticeContent: {}", noticeContent);
+        log.info("memberNo: {}", memberNo);
         
-    	  log.info("=== 공지사항 작성 요청 ===");  // ✅ 추가
-    	    log.info("noticeDTO: {}", noticeDTO);  // ✅ 추가
-    	    log.info("noticeTitle: {}", noticeDTO.getNoticeTitle());  // ✅ 추가
-    	    log.info("noticeContent: {}", noticeDTO.getNoticeContent());  // ✅ 추가
-    	    log.info("memberNo: {}", noticeDTO.getMemberNo());  // ✅ 추가
-    	    log.info("thumbnail: {}", thumbnail != null ? thumbnail.getOriginalFilename() : "없음");  // ✅ 추가
-    	    log.info("files 개수: {}", files != null ? files.size() : 0);  // ✅ 추가
-    	log.info("공지사항 작성 - 제목: {}", noticeDTO.getNoticeTitle());
-
         try {
-            // ✅ 권한 체크: 관리자 또는 운영자만
+            // DTO 생성
+            NoticeDTO noticeDTO = new NoticeDTO();
+            noticeDTO.setNoticeTitle(noticeTitle);
+            noticeDTO.setNoticeContent(noticeContent);
+            noticeDTO.setMemberNo(memberNo);
+            noticeDTO.setStatus('Y');
+            
+            // 권한 체크
             boolean isAdminOrOperator = userDetails.getAuthorities().stream()
                 .anyMatch(auth -> 
                     auth.getAuthority().equals("ROLE_ADMIN") || 
@@ -109,7 +115,6 @@ public class NoticeController {
                 );
             
             if (!isAdminOrOperator) {
-                log.warn("작성 권한 없음 - memberNo: {}", userDetails.getUsername());
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("message", "공지사항 작성 권한이 없습니다."));
             }
@@ -119,7 +124,7 @@ public class NoticeController {
                     .body(Map.of("message", "공지사항이 등록되었습니다."));
                     
         } catch (Exception e) {
-            log.error("공지사항 등록 실패: {}", e.getMessage());
+            log.error("공지사항 등록 실패: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError()
                     .body(Map.of("message", "공지사항 등록에 실패했습니다."));
         }
@@ -129,15 +134,21 @@ public class NoticeController {
      * ✅ 공지사항 수정
      * PUT /notice/{noticeNo}
      */
-    @PutMapping("/{noticeNo}")
+    @PutMapping(value = "/{noticeNo}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateNotice(
         @PathVariable("noticeNo") Long noticeNo,
-        @RequestPart("notice") NoticeDTO noticeDTO,
-        @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail,  // ✅ 추가
+        @RequestParam(value = "noticeTitle", required = true) String noticeTitle,
+        @RequestParam(value = "noticeContent", required = true) String noticeContent,
+        @RequestParam(value = "memberNo", required = true) Long memberNo,
+        @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail,
         @RequestPart(value = "files", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        log.info("공지사항 수정 - noticeNo: {}", noticeNo);
+        log.info("=== 공지사항 수정 요청 ===");
+        log.info("noticeNo: {}", noticeNo);
+        log.info("noticeTitle: {}", noticeTitle);
+        log.info("noticeContent: {}", noticeContent);
+        log.info("memberNo: {}", memberNo);
 
         try {
             // 1. 현재 사용자 memberNo
@@ -167,8 +178,14 @@ public class NoticeController {
                     .body(Map.of("message", "작성자만 수정할 수 있습니다."));
             }
             
-            // 5. 수정 실행
+            NoticeDTO noticeDTO = new NoticeDTO();
             noticeDTO.setNoticeNo(noticeNo);
+            noticeDTO.setNoticeTitle(noticeTitle);
+            noticeDTO.setNoticeContent(noticeContent);
+            noticeDTO.setMemberNo(memberNo);
+            noticeDTO.setStatus('Y');
+            
+            // 5. 수정 실행
             noticeService.updateNotice(noticeDTO, thumbnail, files);
             log.info("공지사항 수정 완료 - noticeNo: {}", noticeNo);
             

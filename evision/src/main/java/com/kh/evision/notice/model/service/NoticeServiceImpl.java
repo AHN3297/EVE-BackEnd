@@ -93,22 +93,22 @@ public class NoticeServiceImpl implements NoticeService {
             .map(file -> "/uploads/" + file.getChangeName())
             .collect(Collectors.toList());
         
-        return NoticeDTO.builder()
-        	    .noticeNo(vo.getNoticeNo())
-        	    .noticeTitle(vo.getNoticeTitle())
-        	    .noticeContent(vo.getNoticeContent())
-        	    .createDate(vo.getCreateDate())
-        	    .memberNo(vo.getMemberNo())
-        	    .status(vo.getStatus())
-        	    .imageUrls(imageUrls)
-        	    .thumbnailUrl(thumbnailUrl)
-        	    .fileUrls(fileUrls)
-        	    .build();   
-        
+        return new NoticeDTO(
+            vo.getNoticeNo(),
+            vo.getNoticeTitle(),
+            vo.getNoticeContent(),
+            vo.getCreateDate(),
+            vo.getMemberNo(),
+            vo.getStatus(),
+            imageUrls,
+            thumbnailUrl,
+            fileUrls
+        );
     }
     
+    
     /**
-     * 공지사항 상세 조회 (조회수 증가 포함)
+     * 공지사항 상세 조회
      */
     @Override
     @Transactional
@@ -123,13 +123,7 @@ public class NoticeServiceImpl implements NoticeService {
             throw new IllegalArgumentException("해당 공지사항을 찾을 수 없습니다. (noticeNo: " + noticeNo + ")");
         }
         
-        // 2. 조회수 증가 (임시로 주석 처리)
-         int result = noticeMapper.increaseViewCount(noticeNo);
-         if (result > 0) {
-             log.debug("조회수 증가 완료 - noticeNo: {}", noticeNo);
-         }
-        
-        // 3. DTO 변환 및 반환
+        // 2. DTO 변환 및 반환
         return convertToDTO(noticeVO);
     }
     /**
@@ -174,7 +168,7 @@ public class NoticeServiceImpl implements NoticeService {
      */
     @Override
     @Transactional
-    public void updateNotice(NoticeDTO noticeDTO, MultipartFile thumbnail, List<MultipartFile> files) {  // ✅ 수정
+    public void updateNotice(NoticeDTO noticeDTO, MultipartFile thumbnail, List<MultipartFile> files) {
         log.info("공지사항 수정 - noticeNo: {}", noticeDTO.getNoticeNo());
         
         // 1. 기존 공지사항 확인
@@ -197,12 +191,15 @@ public class NoticeServiceImpl implements NoticeService {
         
         // 3. 새 대표 이미지가 있으면 저장
         if (thumbnail != null && !thumbnail.isEmpty()) {
-            // 기존 대표 이미지 삭제는 선택사항
+            // ✅ 기존 대표 이미지 논리 삭제 추가
+            noticeMapper.deleteThumbnailByNoticeNo(noticeDTO.getNoticeNo());
             saveNoticeImage(noticeDTO.getNoticeNo(), thumbnail, true);
         }
         
         // 4. 새 첨부 파일이 있으면 저장
         if (files != null && !files.isEmpty()) {
+            // ✅ 기존 첨부 파일 논리 삭제 추가
+            noticeMapper.deleteFilesByNoticeNo(noticeDTO.getNoticeNo());
             for (MultipartFile file : files) {
                 saveNoticeImage(noticeDTO.getNoticeNo(), file, false);
             }

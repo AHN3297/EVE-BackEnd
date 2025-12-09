@@ -194,16 +194,21 @@
           AND STATUS = 'Y'
     </update>
     
-    <!-- 조회수 증가 (기존) -->
-    <update id="increaseViewCount">
-        <!-- 임시로 주석 처리
-        UPDATE TB_NOTICE
-        SET VIEW_COUNT = VIEW_COUNT + 1
-        WHERE NOTICE_NO = #{noticeNo}
-          AND STATUS = 'Y'
-        -->
-        SELECT 1 FROM DUAL
-    </update>
+	<!-- 특정 공지사항의 대표 이미지 삭제 -->
+<update id="deleteThumbnailByNoticeNo">
+    UPDATE TB_NOTICE_IMG
+    SET STATUS = 'N'
+    WHERE NOTICE_NO = #{noticeNo}
+      AND IS_THUMBNAIL = 'Y'
+</update>
+
+<!-- 특정 공지사항의 첨부 파일 삭제 -->
+<update id="deleteFilesByNoticeNo">
+    UPDATE TB_NOTICE_IMG
+    SET STATUS = 'N'
+    WHERE NOTICE_NO = #{noticeNo}
+      AND IS_THUMBNAIL = 'N'
+</update>
 
     <!-- ============================================ -->
     <!-- DELETE 쿼리 (논리 삭제) -->

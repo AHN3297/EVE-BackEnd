@@ -37,10 +37,6 @@ public interface NoticeMapper {
     List<NoticeImageVO> getNoticeImages(@Param("noticeNo") Long noticeNo);
     
     /**
-     * 조회수 증가
-     */
-    int increaseViewCount(@Param("noticeNo") Long noticeNo);
-    /**
      * 공지사항 등록
      */
     int insertNotice(NoticeVO noticeVO);
@@ -67,6 +63,10 @@ public interface NoticeMapper {
     
     List<NoticeFileVO> getNoticeFiles(Long noticeNo);
     int insertNoticeFile(NoticeFileVO noticeFile);
-    
+ // 특정 공지사항의 대표 이미지 삭제
+    void deleteThumbnailByNoticeNo(Long noticeNo);
+
+    // 특정 공지사항의 첨부 파일 삭제
+    void deleteFilesByNoticeNo(Long noticeNo);
     
 }
