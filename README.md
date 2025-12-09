@@ -52,12 +52,14 @@ Evision은 전기차 사용자들을 위한 종합 서비스 플랫폼입니다.
 - [o] 관리자 회원 관리
 - [o] 비밀번호 검증
 
+
 ### 🗣️ 공지사항
 - [o] 공지 목록 조회(페이징)
 - [o] 공지 상세 조회
 - [o] 공지 작성/수정/삭제(관리자 및 운영자 전용 페이지 한정 구현)
 - [o] 섬네일(대표 이미지) 설정 기능
 - [o] 파일 업로드(이미지, 비이미지 불문)
+
 
 ### 📝 게시판
 - [o] 게시글 작성/수정/삭제
@@ -118,7 +120,7 @@ cd semi-workspace/evision
 spring:
   datasource:
     url: jdbc:oracle:thin:@[호스트]:[포트]:[SID]
-    username: [사용자명]
+    username: [회원번호]
     password: [비밀번호]
 ```
 
@@ -213,6 +215,14 @@ evision/
 - `PUT /member/changePwd` - 비밀번호 변경
 - `DELETE /member/info/delete` - 회원 탈퇴
 - `POST /member/infoLicense` - 운전면허 인증
+
+#### 공지사항
+- `GET /notice/list?pageNo={pageNo}` - 공지사항 목록 조회
+- `GET /notice/search?pageNo={pageNo}&keyword={keyword}` - 공지사항 검색
+- `GET /notice/{noticeNo}` - 공지사항 상세 조회
+- `POST /notice/create` - 공지사항 작성 (관리자/운영자)
+- `PUT /notice/{noticeNo}` - 공지사항 수정 (작성자)
+- `DELETE /notice/{noticeNo}` - 공지사항 삭제 (관리자 또는 작성자)
 
 #### 게시판
 - `GET /boards` - 게시글 목록 조회
