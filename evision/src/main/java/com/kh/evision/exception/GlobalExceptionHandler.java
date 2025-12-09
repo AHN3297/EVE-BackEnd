@@ -128,7 +128,6 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<Map<String, String>> handleInvalidParameter(InvalidParameterException e) {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
 	}
-	
 
 	@ExceptionHandler(CarNotFoundException.class)
 	public ResponseEntity<Map<String, String>> handleCarNotFound(CarNotFoundException e) {
@@ -145,10 +144,10 @@ public class GlobalExceptionHandler {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
 	}
 
+		
 	@ExceptionHandler(NotUserException.class)
 	public ResponseEntity<String> handleNotUser(NotUserException e) {
 		 return ResponseEntity.badRequest().body(e.getMessage());
-
 	}
 	
 }
