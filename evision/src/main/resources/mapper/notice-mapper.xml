@@ -209,6 +209,13 @@
     WHERE NOTICE_NO = #{noticeNo}
       AND IS_THUMBNAIL = 'N'
 </update>
+<!-- 특정 첨부 파일 삭제(논리 삭제) -->
+<update id="deleteSpecificFile">
+    UPDATE TB_NOTICE_IMG
+    SET STATUS = 'N'
+    WHERE NOTICE_NO = #{noticeNo}
+      AND CHANGE_NAME = #{changeName}
+</update>
 
     <!-- ============================================ -->
     <!-- DELETE 쿼리 (논리 삭제) -->

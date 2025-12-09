@@ -63,6 +63,8 @@ public interface NoticeMapper {
     
     List<NoticeFileVO> getNoticeFiles(Long noticeNo);
     int insertNoticeFile(NoticeFileVO noticeFile);
+   // 특정 첨부파일 삭제(논리삭제)
+    void deleteSpecificFile(@Param("noticeNo") Long noticeNo, @Param("changeName") String changeName);
  // 특정 공지사항의 대표 이미지 삭제
     void deleteThumbnailByNoticeNo(Long noticeNo);
 

@@ -83,6 +83,11 @@ public class NoticeServiceImpl implements NoticeService {
             .map(img -> "/uploads/" + img.getChangeName())
             .collect(Collectors.toList());
         
+        // 원본 파일명 추가
+        List<String> originalFileNames = images.stream()
+            .map(NoticeImageVO::getOriginName)
+            .collect(Collectors.toList());
+        
         // 대표 이미지
         String thumbnailUrl = vo.getThumbnailUrl() != null 
             ? "/uploads/" + vo.getThumbnailUrl() 
@@ -101,6 +106,7 @@ public class NoticeServiceImpl implements NoticeService {
             vo.getMemberNo(),
             vo.getStatus(),
             imageUrls,
+            originalFileNames,  
             thumbnailUrl,
             fileUrls
         );
@@ -168,7 +174,7 @@ public class NoticeServiceImpl implements NoticeService {
      */
     @Override
     @Transactional
-    public void updateNotice(NoticeDTO noticeDTO, MultipartFile thumbnail, List<MultipartFile> files) {
+    public void updateNotice(NoticeDTO noticeDTO, MultipartFile thumbnail, List<MultipartFile> files, List<String> filesToDelete) {
         log.info("공지사항 수정 - noticeNo: {}", noticeDTO.getNoticeNo());
         
         // 1. 기존 공지사항 확인
@@ -187,6 +193,14 @@ public class NoticeServiceImpl implements NoticeService {
         
         if (result == 0) {
             throw new RuntimeException("공지사항 수정에 실패했습니다.");
+        }
+        
+        // 삭제할 파일 처리 (새 파일 저장 전에)
+        if (filesToDelete != null && !filesToDelete.isEmpty()) {
+            for (String url : filesToDelete) {
+                String changeName = url.replace("/uploads/", "");
+                noticeMapper.deleteSpecificFile(noticeDTO.getNoticeNo(), changeName);
+            }
         }
         
         // 3. 새 대표 이미지가 있으면 저장

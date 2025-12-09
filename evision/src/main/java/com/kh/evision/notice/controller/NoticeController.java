@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -142,6 +141,7 @@ public class NoticeController {
         @RequestParam(value = "memberNo", required = true) Long memberNo,
         @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail,
         @RequestPart(value = "files", required = false) List<MultipartFile> files,
+        @RequestParam(value = "filesToDelete", required = false) List<String> filesToDelete,
         @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         log.info("=== 공지사항 수정 요청 ===");
@@ -186,7 +186,7 @@ public class NoticeController {
             noticeDTO.setStatus('Y');
             
             // 5. 수정 실행
-            noticeService.updateNotice(noticeDTO, thumbnail, files);
+            noticeService.updateNotice(noticeDTO, thumbnail, files, filesToDelete);
             log.info("공지사항 수정 완료 - noticeNo: {}", noticeNo);
             
             return ResponseEntity.ok()

@@ -27,7 +27,7 @@ public interface NoticeService {
     * 공지사항 수정
     */
    
-   void updateNotice(NoticeDTO noticeDTO, MultipartFile thumbnail, List<MultipartFile> files);
+   void updateNotice(NoticeDTO noticeDTO, MultipartFile thumbnail, List<MultipartFile> files, List<String> filesToDelete);
    
    /**
     * 공지사항 삭제 (논리 삭제)
