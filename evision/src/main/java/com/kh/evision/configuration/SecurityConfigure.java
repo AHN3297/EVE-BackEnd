@@ -37,46 +37,55 @@ public class SecurityConfigure {
 				   .csrf(AbstractHttpConfigurer::disable)
 				   .cors(Customizer.withDefaults())
 				   .authorizeHttpRequests(requests -> {
-
-					   requests.requestMatchers(HttpMethod.PUT, "/member/changePwd").authenticated();
-					   requests.requestMatchers(HttpMethod.POST, "/member/join").permitAll();
+					   
+					   // 인증 없이 허용 (로그인, 회원가입)
+					   requests.requestMatchers(HttpMethod.POST, "/member/join", "/member/login", "/auth/login").permitAll();
 					   requests.requestMatchers(HttpMethod.POST, "/member/**").permitAll();
-					   requests.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
-					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
-
-					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member").authenticated();
-					   // requests.requestMatchers("/admin/**").hasRole("ADMIN"); // 권한검증방법
-					   requests.requestMatchers(HttpMethod.GET, "/boards/**", "/comments", "/comments/**", "/notice", "/cars", "/station").permitAll();
-//					   requests.requestMatchers("/uploads/**").permitAll();
-					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", /*"/cars/**",*/ "/reserve/**", "/station/**", "/reports/**", "/uploads/**").authenticated();
-
-					   //requests.requestMatchers(HttpMethod.POST, "/operator/**").hasRole("OPERATOR"); // 권한검증방법
-					   requests.requestMatchers(HttpMethod.GET, "/member/operator/**").hasAnyRole("OPERATOR","ADMIN");
-					   requests.requestMatchers(HttpMethod.POST, "/member/admin/**").hasRole("ADMIN"); // 권한검증방법
-					   //requests.requestMatchers(HttpMethod.POST, "/user/**").hasRole("USER"); // 권한검증방법
 					   
-					   requests.requestMatchers(HttpMethod.POST, "/member/login","/station/**", "/reports").permitAll();
-					   requests.requestMatchers(HttpMethod.DELETE, "/station/**","reports/**").permitAll();
-					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", /*"/station/**",*/ /*"/reports/**",*/ "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member/**").authenticated();
-					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", /*"/station/**",*/ "/reports/**", "/uploads/**", "/member").authenticated();
-					   // requests.requestMatchers("/admin/**").hasRole("ADMIN"); // 권한검증방법
-					   requests.requestMatchers(HttpMethod.GET, "/boards/**", "/comments", "/notice", "/cars", "/station/**","/api/**","/reports/**").permitAll();
-					   requests.requestMatchers(HttpMethod.PUT, "/station/**","/reports/**").permitAll();
+					   // 권한별 제한
+					   requests.requestMatchers(HttpMethod.GET, "/member/operator/**").hasRole("OPERATOR");
+					   requests.requestMatchers(HttpMethod.POST, "/member/admin/**").hasRole("ADMIN");
 					   
-					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station", "/member/**").permitAll();
-					   requests.requestMatchers(HttpMethod.GET, "/member/info","/member/hasLicense/**").authenticated();
-					   requests.requestMatchers(HttpMethod.GET, "/boards", "/comments", "/notice", "/cars", "/station").permitAll();
-					   requests.requestMatchers(HttpMethod.POST, "/cars/**").hasAnyRole("OPERATOR", "ADMIN"); // 차량 등록 권한 부여
-					   requests.requestMatchers(HttpMethod.GET, "/operator/reserve-manage/**").hasAnyRole("OPERATOR", "ADMIN"); // 예약 관리 권한 부여
-					   requests.requestMatchers(HttpMethod.PATCH, "/reserve/**").hasAnyRole("OPERATOR", "ADMIN"); // 예약 승인 권한 부여
+					   // 인증 필요 - 내 정보 조회
+					   requests.requestMatchers(HttpMethod.GET, "/member/info").authenticated();
 					   
-					   // 나머지 요청
-		               requests.anyRequest().permitAll(); // ✅ authenticated()에서 permitAll()로 변경
+					   // 인증 필요 - 내 신고 목록 조회
+					   requests.requestMatchers(HttpMethod.GET, "/reports/my").authenticated();
+					   
 
+					   // 인증 필요 - 충전소 등록/삭제
+					   requests.requestMatchers(HttpMethod.POST, "/station/**").authenticated();
+					   requests.requestMatchers(HttpMethod.DELETE, "/station/**").authenticated();
+
+					   
+					   // 인증 필요 - 리뷰 등록/수정/삭제
+					   requests.requestMatchers(HttpMethod.POST, "/station/reviews").authenticated();
+					   requests.requestMatchers(HttpMethod.PUT, "/station/reviews").authenticated();
+					   requests.requestMatchers(HttpMethod.DELETE, "/station/reviews/**").authenticated();
+					   
+					   // 인증 필요 - 신고 등록/삭제
+					   requests.requestMatchers(HttpMethod.POST, "/reports").authenticated();
+					   requests.requestMatchers(HttpMethod.DELETE, "/reports").authenticated();
+					   
+					   // 인증 필요 - 기타 쓰기 작업
+					   requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/reserve/**", "/uploads/**").authenticated();
+					   requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/uploads/**", "/member/**").authenticated();
+					   requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/uploads/**", "/member/**").authenticated();
+					   
+					   // 테스트용 임시허용 - cars
+					   requests.requestMatchers(HttpMethod.POST, "/cars/**").permitAll();
+					   requests.requestMatchers(HttpMethod.GET, "/cars/**").permitAll();
+					   
+					   // 인증 없이 조회 허용
+					   requests.requestMatchers(HttpMethod.GET, "/boards", "/boards/**", "/comments", "/comments/**", "/notice", "/notice/**").permitAll();
+					   requests.requestMatchers(HttpMethod.GET, "/station", "/station/**").permitAll();
+					   requests.requestMatchers(HttpMethod.GET, "/reports", "/reports/**").permitAll();
+					   requests.requestMatchers(HttpMethod.GET, "/api/**").permitAll();
+					   requests.requestMatchers(HttpMethod.GET, "/member/**").permitAll();
+					   
+					   // 신고 상태 변경 (관리자용)
+					   requests.requestMatchers(HttpMethod.PUT, "/reports").authenticated();
 				   })
 				   .sessionManagement(manager ->
 						   				manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
