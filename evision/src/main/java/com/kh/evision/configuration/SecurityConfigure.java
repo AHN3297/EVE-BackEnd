@@ -33,6 +33,7 @@ public class SecurityConfigure {
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+<<<<<<< HEAD
 		return httpSecurity.formLogin(AbstractHttpConfigurer::disable)
 				   .csrf(AbstractHttpConfigurer::disable)
 				   .cors(Customizer.withDefaults())
@@ -89,10 +90,49 @@ public class SecurityConfigure {
 				   .build();  
 	}
 	
+=======
+		return httpSecurity
+				.formLogin(AbstractHttpConfigurer::disable)
+				.csrf(AbstractHttpConfigurer::disable)
+				.cors(Customizer.withDefaults())
+				.authorizeHttpRequests(requests -> {
+					
+					// ✅ 회원가입 및 로그인 (인증 불필요)
+					requests.requestMatchers(HttpMethod.POST, "/member/join").permitAll();
+					requests.requestMatchers(HttpMethod.POST, "/member/**").permitAll();
+					requests.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
+					
+					// ✅ GET 요청 허용
+					requests.requestMatchers(HttpMethod.GET, "/notice/**").permitAll();
+					requests.requestMatchers(HttpMethod.GET, "/uploads/**").permitAll();
+					requests.requestMatchers(HttpMethod.GET, "/boards").permitAll();
+					requests.requestMatchers(HttpMethod.GET, "/comments").permitAll();
+					requests.requestMatchers(HttpMethod.GET, "/cars").permitAll();
+					requests.requestMatchers(HttpMethod.GET, "/station").permitAll();
+					requests.requestMatchers(HttpMethod.GET, "/member/**").permitAll();
+					
+					// ✅ CUD 작업 - 인증 필요
+					requests.requestMatchers(HttpMethod.POST, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**").authenticated();
+					requests.requestMatchers(HttpMethod.PUT, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
+					requests.requestMatchers(HttpMethod.DELETE, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
+					requests.requestMatchers(HttpMethod.PATCH, "/boards/**", "/comments/**", "/notice/**", "/cars/**", "/reserve/**", "/station/**", "/reports/**", "/uploads/**", "/member/**").authenticated();
+					
+					// ✅ 권한별 접근 제어
+					requests.requestMatchers(HttpMethod.GET, "/member/operator/**").hasRole("OPERATOR");
+					requests.requestMatchers(HttpMethod.POST, "/member/admin/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.GET, "/member/info").authenticated();
+					
+				})
+				.sessionManagement(manager ->
+						manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+				.build();
+	}		
+>>>>>>> f8e4f6567fdc7ef234cf8741368d2a60181eba91
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:5174"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 		configuration.setAllowCredentials(true);
@@ -100,17 +140,18 @@ public class SecurityConfigure {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
-	  
+	
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
 		return authConfig.getAuthenticationManager();
 	}
 	
-	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-	    return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();
 	}
+}
+
 	/*
 	// CORS 설정 Bean
 	@Bean
@@ -147,4 +188,4 @@ public class SecurityConfigure {
 	*/
 
 
-}
+

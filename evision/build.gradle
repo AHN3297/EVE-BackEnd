@@ -44,7 +44,10 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
 
+tasks.named('compileJava') {
+    options.compilerArgs += ['-parameters']
 }
 springBoot {
     mainClass = 'com.kh.evision.EvisionApplication'
