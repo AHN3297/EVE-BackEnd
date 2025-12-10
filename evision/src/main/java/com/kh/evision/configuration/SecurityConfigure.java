@@ -49,7 +49,7 @@ public class SecurityConfigure {
 					requests.requestMatchers(HttpMethod.GET, "/uploads/**").permitAll();
 					requests.requestMatchers(HttpMethod.GET, "/boards").permitAll();
 					requests.requestMatchers(HttpMethod.GET, "/comments").permitAll();
-					requests.requestMatchers(HttpMethod.GET, "/cars").permitAll();
+					requests.requestMatchers(HttpMethod.GET, "/cars/**").permitAll();
 					requests.requestMatchers(HttpMethod.GET, "/station").permitAll();
 					requests.requestMatchers(HttpMethod.GET, "/member/**").permitAll();
 					
@@ -63,6 +63,10 @@ public class SecurityConfigure {
 					requests.requestMatchers(HttpMethod.GET, "/member/operator/**").hasRole("OPERATOR");
 					requests.requestMatchers(HttpMethod.POST, "/member/admin/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.GET, "/member/info").authenticated();
+					requests.requestMatchers(HttpMethod.GET, "/reserve/operator/**","/reserve/details/**")
+			        .hasAnyRole("OPERATOR", "ADMIN");
+					requests.requestMatchers(HttpMethod.PATCH, "/reserve/operator/**")
+			        .hasAnyRole("OPERATOR", "ADMIN");
 					
 				})
 				.sessionManagement(manager ->

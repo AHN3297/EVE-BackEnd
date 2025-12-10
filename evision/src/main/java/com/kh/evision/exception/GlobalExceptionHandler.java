@@ -129,6 +129,10 @@ public class GlobalExceptionHandler {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
 	}
 
+
+
+	
+
 	@ExceptionHandler(CarNotFoundException.class)
 	public ResponseEntity<Map<String, String>> handleCarNotFound(CarNotFoundException e) {
 		return createResponseEntity(e, HttpStatus.NOT_FOUND);
@@ -144,10 +148,11 @@ public class GlobalExceptionHandler {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
 	}
 
-		
+	
 	@ExceptionHandler(NotUserException.class)
 	public ResponseEntity<String> handleNotUser(NotUserException e) {
-		 return ResponseEntity.badRequest().body(e.getMessage());
+		return ResponseEntity.badRequest().body(e.getMessage());
+
 	}
 	
 }

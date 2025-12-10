@@ -80,20 +80,27 @@
 	
 	<select id="findAllReserve">
 		SELECT
-		       RESERVE_NO reserveNo
-		     , CAR_NO carNo
-		     , MEMBER_NO memberNo
-		     , RESERVE_DATE reserveDate
-		     , RENTAL_START_DATE rentalStartDate
-		     , RENTAL_END_DATE rentalEndDate
-		     , APPROVE_STATUS approveStatus
+		       R.RESERVE_NO reserveNo
+		     , R.CAR_NO carNo
+		     , C.CAR_NAME carName
+		     , R.MEMBER_NO memberNo
+		     , M.MEMBER_NAME memberName
+		     , M.MEMBER_ID memberId
+		     , R.RESERVE_DATE reserveDate
+		     , R.RENTAL_START_DATE rentalStartDate
+		     , R.RENTAL_END_DATE rentalEndDate
+		     , R.APPROVE_STATUS approveStatus
 		  FROM
-		       TB_RESERVE
-		 WHERE
-		       STATUS = 'Y'
+		       TB_RESERVE R
+		  LEFT
+		  JOIN
+		       TB_MEMBER M ON R.MEMBER_NO = M.MEMBER_NO
+		  LEFT
+		  JOIN
+		       TB_CAR C ON R.CAR_NO = C.CAR_NO
 		 ORDER
 		    BY
-		       RESERVE_DATE DESC
+		       R.RESERVE_DATE DESC
 	</select>
 	
 	<select id="findByReserveNo"
@@ -111,8 +118,6 @@
 		  FROM
 		       TB_RESERVE
 		 WHERE
-		       STATUS = 'Y'
-		   AND
 		       RESERVE_NO = #{reserveNo}
 	</select>
 	
@@ -121,7 +126,7 @@
 		UPDATE
 		       TB_RESERVE
 		   SET
-		       STATUS = 'N'
+		       APPROVE_STATUS = 'N'
 		 WHERE
 		       RESERVE_NO = #{reserveNo}
 	</delete>
