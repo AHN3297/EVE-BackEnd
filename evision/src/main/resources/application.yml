@@ -10,7 +10,7 @@ spring:
     static-path-pattern: /uploads/**
   web:
     resources:
-      static-locations: file:uploads/
+      static-locations: file:${user.dir}/uploads/
   servlet:
     multipart:
       max-file-size: 100MB
