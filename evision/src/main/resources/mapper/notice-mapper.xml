@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.evision.notice.model.dao.NoticeMapper">
+
+    <!-- ============================================ -->
+    <!-- SQL Fragment (재사용 가능한 SQL 조각) -->
+    <!-- ============================================ -->
+    
+    <!-- 공지사항 기본 컬럼 -->
+    <sql id="noticeColumns">
+        NOTICE_NO,
+        NOTICE_TITLE,
+        NOTICE_CONTENT,
+        CREATE_DATE,
+        MEMBER_NO,
+        STATUS
+    </sql>
+    
+    <!-- 활성 공지사항 조건 -->
+    <sql id="activeCondition">
+        WHERE STATUS = 'Y'
+    </sql>
+    
+    <!-- 검색 조건 -->
+    <sql id="searchCondition">
+        <if test="keyword != null and keyword != ''">
+            AND (
+                NOTICE_TITLE LIKE '%' || #{keyword} || '%'
+                OR NOTICE_CONTENT LIKE '%' || #{keyword} || '%'
+            )
+        </if>
+    </sql>
+
+    <!-- ============================================ -->
+    <!-- SELECT 쿼리 -->
+    <!-- ============================================ -->
+    
+    <!-- 공지사항 목록 조회 (페이징, 검색) -->
+<select id="getNoticeList" resultType="NoticeVO">
+    SELECT * FROM (
+        SELECT ROWNUM AS RN, A.* FROM (
+            SELECT 
+                N.NOTICE_NO,
+                N.NOTICE_TITLE,
+                N.NOTICE_CONTENT,
+                N.CREATE_DATE,
+                N.MEMBER_NO,
+                N.STATUS,
+                I.CHANGE_NAME AS THUMBNAIL_URL
+            FROM TB_NOTICE N
+            LEFT JOIN TB_NOTICE_IMG I 
+                ON N.NOTICE_NO = I.NOTICE_NO 
+                AND I.STATUS = 'Y'
+                AND I.IS_THUMBNAIL = 'Y'
+            <where>
+                N.STATUS = 'Y'
+                <include refid="searchCondition"/>
+            </where>
+            ORDER BY N.NOTICE_NO DESC
+        ) A
+    )
+    WHERE RN BETWEEN #{startRow} AND #{endRow}
+</select>
+    
+    <!-- 공지사항 개수 조회 (검색 조건 포함) -->
+    <select id="getNoticeCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM TB_NOTICE
+        <include refid="activeCondition"/>
+        <include refid="searchCondition"/>
+    </select>
+    
+    <!-- 공지사항 상세 조회 -->
+    <select id="getNoticeDetail" resultType="NoticeVO">
+        SELECT 
+            <include refid="noticeColumns"/>
+        FROM TB_NOTICE
+        WHERE NOTICE_NO = #{noticeNo}
+          AND STATUS = 'Y'
+    </select>
+    
+    <!-- 공지사항 이미지 목록 조회 -->
+<select id="getNoticeImages" resultType="NoticeImageVO">
+    SELECT 
+        IMG_ID,
+        NOTICE_NO,
+        ORIGIN_NAME,
+        CHANGE_NAME,
+        IS_THUMBNAIL,
+        STATUS
+    FROM TB_NOTICE_IMG
+    WHERE NOTICE_NO = #{noticeNo}
+      AND STATUS = 'Y'
+    ORDER BY 
+        CASE WHEN IS_THUMBNAIL = 'Y' THEN 0 ELSE 1 END,
+        IMG_ID ASC
+</select>
+
+    <!-- ============================================ -->
+    <!-- UPDATE 쿼리 -->
+    <!-- ============================================ -->
+    
+
+	<insert id="insertNotice" parameterType="NoticeVO">
+        <selectKey keyProperty="noticeNo" resultType="long" order="BEFORE">
+            SELECT SEQ_NNO.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TB_NOTICE (
+            NOTICE_NO,
+            NOTICE_TITLE,
+            NOTICE_CONTENT,
+            CREATE_DATE,
+            MEMBER_NO,
+            STATUS
+        ) VALUES (
+            #{noticeNo},
+            #{noticeTitle},
+            #{noticeContent},
+            SYSDATE,
+            #{memberNo},
+            #{status}
+        )
+    </insert>
+    
+    <!-- 공지사항 이미지 등록 -->
+<insert id="insertNoticeImage" parameterType="NoticeImageVO">
+    <selectKey keyProperty="imgId" resultType="long" order="BEFORE">
+        SELECT SEQ_NINO.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO TB_NOTICE_IMG (
+        IMG_ID,
+        NOTICE_NO,
+        ORIGIN_NAME,
+        CHANGE_NAME,
+        IS_THUMBNAIL,
+        STATUS
+    ) VALUES (
+        #{imgId},
+        #{noticeNo},
+        #{originName},
+        #{changeName},
+        #{isThumbnail},
+        #{status}
+    )
+</insert>
+    
+    <insert id="insertNoticeFile" parameterType="NoticeFileVO">
+    <selectKey keyProperty="fileId" resultType="long" order="BEFORE">
+        SELECT SEQ_NFNO.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO TB_NOTICE_FILE (
+        FILE_ID,
+        NOTICE_NO,
+        ORIGIN_NAME,
+        CHANGE_NAME,
+        STATUS
+    ) VALUES (
+        #{fileId},
+        #{noticeNo},
+        #{originName},
+        #{changeName},
+        #{status}
+    )
+</insert>
+    
+    
+    <!-- 공지사항 첨부 파일 목록 조회 -->
+    
+<select id="getNoticeFiles" resultType="NoticeFileVO">
+    SELECT 
+        FILE_ID,
+        NOTICE_NO,
+        ORIGIN_NAME,
+        CHANGE_NAME,
+        STATUS
+    FROM TB_NOTICE_FILE
+    WHERE NOTICE_NO = #{noticeNo}
+      AND STATUS = 'Y'
+    ORDER BY FILE_ID ASC
+</select>
+
+    <!-- ============================================ -->
+    <!-- UPDATE 쿼리 -->
+    <!-- ============================================ -->
+    
+    <!-- 공지사항 수정 -->
+    <update id="updateNotice" parameterType="NoticeVO">
+        UPDATE TB_NOTICE
+        SET NOTICE_TITLE = #{noticeTitle},
+            NOTICE_CONTENT = #{noticeContent}
+        WHERE NOTICE_NO = #{noticeNo}
+          AND STATUS = 'Y'
+    </update>
+    
+	<!-- 특정 공지사항의 대표 이미지 삭제 -->
+<update id="deleteThumbnailByNoticeNo">
+    UPDATE TB_NOTICE_IMG
+    SET STATUS = 'N'
+    WHERE NOTICE_NO = #{noticeNo}
+      AND IS_THUMBNAIL = 'Y'
+</update>
+
+<!-- 특정 공지사항의 첨부 파일 삭제 -->
+<update id="deleteFilesByNoticeNo">
+    UPDATE TB_NOTICE_IMG
+    SET STATUS = 'N'
+    WHERE NOTICE_NO = #{noticeNo}
+      AND IS_THUMBNAIL = 'N'
+</update>
+<!-- 특정 첨부 파일 삭제(논리 삭제) -->
+<update id="deleteSpecificFile">
+    UPDATE TB_NOTICE_IMG
+    SET STATUS = 'N'
+    WHERE NOTICE_NO = #{noticeNo}
+      AND CHANGE_NAME = #{changeName}
+</update>
+
+    <!-- ============================================ -->
+    <!-- DELETE 쿼리 (논리 삭제) -->
+    <!-- ============================================ -->
+    
+    <!-- 공지사항 삭제 -->
+    <update id="deleteNotice">
+        UPDATE TB_NOTICE
+        SET STATUS = 'N'
+        WHERE NOTICE_NO = #{noticeNo}
+    </update>
+    
+    <!-- 공지사항 이미지 삭제 -->
+    <update id="deleteNoticeImages">
+        UPDATE TB_NOTICE_IMG
+        SET STATUS = 'N'
+        WHERE NOTICE_NO = #{noticeNo}
+    </update>
+	
+	
+</mapper>

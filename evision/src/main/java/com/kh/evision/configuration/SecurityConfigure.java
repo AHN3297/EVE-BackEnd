@@ -77,6 +77,28 @@ public class SecurityConfigure {
 					   requests.requestMatchers(HttpMethod.POST, "/cars/**").permitAll();
 					   requests.requestMatchers(HttpMethod.GET, "/cars/**").permitAll();
 					   
+					   // ===== 예약 관련 권한 설정 =====
+					   // 운영자/관리자용 예약 목록 조회
+					   requests.requestMatchers(HttpMethod.GET, "/reserve/operator/reserve-manage").hasAnyRole("OPERATOR", "ADMIN");
+					   
+					   // 예약 상세 조회 (운영자/관리자)
+					   requests.requestMatchers(HttpMethod.GET, "/reserve/details/**").hasAnyRole("OPERATOR", "ADMIN");
+					   
+					   // 예약 승인 (운영자/관리자)
+					   requests.requestMatchers(HttpMethod.PATCH, "/reserve/operator/reserve-manage/**").hasAnyRole("OPERATOR", "ADMIN");
+					   
+					   // 사용자별 예약 조회
+					   requests.requestMatchers(HttpMethod.GET, "/reserve/{memberNo}").authenticated();
+					   
+					   // 예약 등록
+					   requests.requestMatchers(HttpMethod.POST, "/reserve").authenticated();
+					   
+					   // 예약 취소
+					   requests.requestMatchers(HttpMethod.DELETE, "/reserve/**").authenticated();
+					   
+					   // 차량 반납 (POST /reserve/{reserveNo})
+					   requests.requestMatchers(HttpMethod.POST, "/reserve/**").authenticated();
+					   
 					   // 인증 없이 조회 허용
 					   requests.requestMatchers(HttpMethod.GET, "/boards", "/boards/**", "/comments", "/comments/**", "/notice", "/notice/**").permitAll();
 					   requests.requestMatchers(HttpMethod.GET, "/station", "/station/**").permitAll();
@@ -104,17 +126,17 @@ public class SecurityConfigure {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
-	  
+	
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
 		return authConfig.getAuthenticationManager();
 	}
 	
-	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-	    return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();
 	}
+
 	/*
 	// CORS 설정 Bean
 	@Bean
@@ -149,5 +171,5 @@ public class SecurityConfigure {
 		
 	}
 	*/
-
+	
 }

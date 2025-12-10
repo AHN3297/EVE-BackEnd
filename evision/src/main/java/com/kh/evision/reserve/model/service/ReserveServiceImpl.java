@@ -103,7 +103,7 @@ public class ReserveServiceImpl implements ReserveService {
 			// CustomUserDetails userDetails
 			) {
 		
-		log.info("운영자용 예약내역 조회 메소드 호출");
+		log.info("운영자용 예약내역 조회 메소드 호출 - pageNo : {}" , pageNo);
 		
 		Map<String, Object> map = new HashMap();
 		List<ReserveDTO> reserveList = new ArrayList();
