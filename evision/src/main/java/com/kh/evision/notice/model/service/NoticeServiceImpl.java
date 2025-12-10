@@ -88,10 +88,21 @@ public class NoticeServiceImpl implements NoticeService {
             .map(NoticeImageVO::getOriginName)
             .collect(Collectors.toList());
         
-        // 대표 이미지
-        String thumbnailUrl = vo.getThumbnailUrl() != null 
-            ? "/uploads/" + vo.getThumbnailUrl() 
-            : null;
+        // ✅ 대표 이미지 - 수정된 로직
+        String thumbnailUrl = null;
+        
+        // 1. 먼저 vo.getThumbnailUrl() 확인 (목록 조회용)
+        if (vo.getThumbnailUrl() != null) {
+            thumbnailUrl = "/uploads/" + vo.getThumbnailUrl();
+        } 
+        // 2. 없으면 images에서 IS_THUMBNAIL='Y'인 것 찾기 (상세 조회용)
+        else {
+            thumbnailUrl = images.stream()
+                .filter(img -> "Y".equals(img.getIsThumbnail()))
+                .findFirst()
+                .map(img -> "/uploads/" + img.getChangeName())
+                .orElse(null);
+        }
         
         // 첨부 파일 목록
         List<String> fileUrls = noticeMapper.getNoticeFiles(vo.getNoticeNo()).stream()
@@ -107,7 +118,7 @@ public class NoticeServiceImpl implements NoticeService {
             vo.getStatus(),
             imageUrls,
             originalFileNames,  
-            thumbnailUrl,
+            thumbnailUrl,  
             fileUrls
         );
     }
