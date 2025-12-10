@@ -31,11 +31,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 		MemberDTO user = mapper.loadUser(username);
 
-		
-		
-		log.info("이거오나요 : {}", user);
 		if(user ==null) {
-			throw new UsernameNotFoundException("로그인 실패임 ㅋㅋㄹㅃㅃ" + username);
+			throw new UsernameNotFoundException("로그인 실패" + username);
 		}
 		
 		List<GrantedAuthority> authorities = getAuthorities(user);
