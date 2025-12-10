@@ -16,5 +16,11 @@ public interface ReportMapper {
 	int updateStatus(ReportDTO report);
 	int deleteReport(Long reportNo);
 	
+	// 신고 존재 여부 확인
+	ReportDTO findByReportNo(Long reportNo);
+	
+	// 중복 신고 확인 (같은 회원이 같은 게시글을 신고했는지)
+	int existsByMemberNoAndBoardNo(Long memberNo, Long boardNo);
+	
 }
 

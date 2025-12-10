@@ -23,6 +23,12 @@ import com.kh.evision.exception.custom.member.NoPasswordException;
 import com.kh.evision.exception.custom.member.NotUserException;
 import com.kh.evision.exception.custom.member.RoleException;
 import com.kh.evision.exception.custom.member.StatusException;
+import com.kh.evision.exception.custom.report.DuplicateReportException;
+import com.kh.evision.exception.custom.report.InvalidReportStatusException;
+import com.kh.evision.exception.custom.report.ReportNotFoundException;
+import com.kh.evision.exception.custom.station.ReviewNotFoundException;
+import com.kh.evision.exception.custom.station.StationNotFoundException;
+import com.kh.evision.exception.custom.station.UnauthorizedReviewAccessException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -133,6 +139,46 @@ public class GlobalExceptionHandler {
 
 	
 
+	// ==================== Station 관련 예외 핸들러 ====================
+	
+	@ExceptionHandler(StationNotFoundException.class)
+	public ResponseEntity<Map<String, String>> handleStationNotFound(StationNotFoundException e) {
+		log.warn("충전소를 찾을 수 없음: {}", e.getMessage());
+		return createResponseEntity(e, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(ReviewNotFoundException.class)
+	public ResponseEntity<Map<String, String>> handleReviewNotFound(ReviewNotFoundException e) {
+		log.warn("리뷰를 찾을 수 없음: {}", e.getMessage());
+		return createResponseEntity(e, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(UnauthorizedReviewAccessException.class)
+	public ResponseEntity<Map<String, String>> handleUnauthorizedReviewAccess(UnauthorizedReviewAccessException e) {
+		log.warn("리뷰 접근 권한 없음: {}", e.getMessage());
+		return createResponseEntity(e, HttpStatus.FORBIDDEN);
+	}
+	
+	// ==================== Report 관련 예외 핸들러 ====================
+	
+	@ExceptionHandler(ReportNotFoundException.class)
+	public ResponseEntity<Map<String, String>> handleReportNotFound(ReportNotFoundException e) {
+		log.warn("신고를 찾을 수 없음: {}", e.getMessage());
+		return createResponseEntity(e, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(DuplicateReportException.class)
+	public ResponseEntity<Map<String, String>> handleDuplicateReport(DuplicateReportException e) {
+		log.warn("중복 신고: {}", e.getMessage());
+		return createResponseEntity(e, HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(InvalidReportStatusException.class)
+	public ResponseEntity<Map<String, String>> handleInvalidReportStatus(InvalidReportStatusException e) {
+		log.warn("유효하지 않은 신고 상태: {}", e.getMessage());
+		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(CarNotFoundException.class)
 	public ResponseEntity<Map<String, String>> handleCarNotFound(CarNotFoundException e) {
 		return createResponseEntity(e, HttpStatus.NOT_FOUND);
@@ -151,7 +197,8 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(NotUserException.class)
 	public ResponseEntity<String> handleNotUser(NotUserException e) {
-		return ResponseEntity.badRequest().body(e.getMessage());
+
+		 return ResponseEntity.badRequest().body(e.getMessage());
 
 	}
 	
