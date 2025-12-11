@@ -37,7 +37,7 @@ public class SecurityConfigure {
 				.formLogin(AbstractHttpConfigurer::disable)
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(Customizer.withDefaults())
-				.authorizeHttpRequests(requests -> {
+.authorizeHttpRequests(requests -> {
 					
 					// ✅ 회원가입 및 로그인 (인증 불필요)
 					requests.requestMatchers(HttpMethod.POST, "/member/join").permitAll();
@@ -63,6 +63,15 @@ public class SecurityConfigure {
 					requests.requestMatchers(HttpMethod.GET, "/member/operator/**").hasRole("OPERATOR");
 					requests.requestMatchers(HttpMethod.POST, "/member/admin/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.GET, "/member/info").authenticated();
+					
+					// ===== 예약 관련 권한 설정 (임시 테스트용) =====
+					requests.requestMatchers(HttpMethod.GET, "/reserve/operator/reserve-manage").hasAnyRole("OPERATOR", "ADMIN");
+					requests.requestMatchers(HttpMethod.GET, "/reserve/details/**").hasAnyRole("OPERATOR", "ADMIN");
+					requests.requestMatchers(HttpMethod.PATCH, "/reserve/operator/reserve-manage/**").hasAnyRole("OPERATOR", "ADMIN");
+					
+					// ===== 신고/문의 관련 권한 설정 (임시 테스트용) =====
+					requests.requestMatchers(HttpMethod.GET, "/reports").hasAnyRole("OPERATOR", "ADMIN");
+					requests.requestMatchers(HttpMethod.PUT, "/reports").hasAnyRole("OPERATOR", "ADMIN");
 					
 				})
 				.sessionManagement(manager ->
