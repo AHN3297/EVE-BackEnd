@@ -24,7 +24,7 @@ public class ReportServiceImpl implements ReportService {
 	private final ReportMapper mapper;
 	
 	// 유효한 신고 상태 목록
-	private static final List<String> VALID_STATUSES = Arrays.asList("접수", "처리중", "완료", "반려");
+	private static final List<String> VALID_STATUSES = Arrays.asList("PENDING", "IN_PROGRESS", "RESOLVED", "REJECTED");
 	
 	@Override
 	public int save(ReportDTO report) {
@@ -35,7 +35,7 @@ public class ReportServiceImpl implements ReportService {
 		// 중복 신고 확인 (문의가 아닌 경우, boardNo가 있을 때만)
 		if (!"INQUIRY".equals(report.getReportCategory()) && report.getBoardNo() != null) {
 			if (mapper.existsByMemberNoAndBoardNo(report.getMemberNo(), report.getBoardNo()) > 0) {
-				throw new DuplicateReportException(report.getBoardNo());
+				throw new DuplicateReportException();
 			}
 		}
 		
