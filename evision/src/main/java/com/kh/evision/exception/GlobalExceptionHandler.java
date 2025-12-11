@@ -18,20 +18,17 @@ import com.kh.evision.exception.custom.member.CustomAuthenticationException;
 import com.kh.evision.exception.custom.member.IdDuplicateException;
 import com.kh.evision.exception.custom.member.LoginFailException;
 import com.kh.evision.exception.custom.member.NicknameDuplicateException;
-<<<<<<< HEAD
 import com.kh.evision.exception.custom.report.DuplicateReportException;
 import com.kh.evision.exception.custom.report.InvalidReportStatusException;
 import com.kh.evision.exception.custom.report.ReportNotFoundException;
 import com.kh.evision.exception.custom.station.ReviewNotFoundException;
 import com.kh.evision.exception.custom.station.StationNotFoundException;
 import com.kh.evision.exception.custom.station.UnauthorizedReviewAccessException;
-=======
 import com.kh.evision.exception.custom.member.NoMatchPasswordException;
 import com.kh.evision.exception.custom.member.NoPasswordException;
 import com.kh.evision.exception.custom.member.NotUserException;
 import com.kh.evision.exception.custom.member.RoleException;
 import com.kh.evision.exception.custom.member.StatusException;
->>>>>>> eeb0645401f4e1a09508e168556b92f980509291
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -138,7 +135,6 @@ public class GlobalExceptionHandler {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
 	}
 	
-<<<<<<< HEAD
 	// ==================== Station 관련 예외 핸들러 ====================
 	
 	@ExceptionHandler(StationNotFoundException.class)
@@ -177,8 +173,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<Map<String, String>> handleInvalidReportStatus(InvalidReportStatusException e) {
 		log.warn("유효하지 않은 신고 상태: {}", e.getMessage());
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
-=======
-<<<<<<< HEAD
+	}	
 	@ExceptionHandler(CarNotFoundException.class)
 	public ResponseEntity<Map<String, String>> handleCarNotFound(CarNotFoundException e) {
 		return createResponseEntity(e, HttpStatus.NOT_FOUND);
@@ -192,13 +187,10 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(CarNotAvailableException.class)
 	public ResponseEntity<Map<String, String>> handleCarNotAvailableException(CarNotAvailableException e) {
 		return createResponseEntity(e, HttpStatus.BAD_REQUEST);
-	
-=======
+	}
 	@ExceptionHandler(NotUserException.class)
 	public ResponseEntity<String> handleNotUser(NotUserException e) {
 		 return ResponseEntity.badRequest().body(e.getMessage());
->>>>>>> 4d5278c5e89a6f008248e912fb4a236e2d72d21a
->>>>>>> eeb0645401f4e1a09508e168556b92f980509291
 	}
 	
 }
