@@ -47,7 +47,7 @@ public class SecurityConfigure {
 					// ✅ GET 요청 허용
 					requests.requestMatchers(HttpMethod.GET, "/notice/**").permitAll();
 					requests.requestMatchers(HttpMethod.GET, "/uploads/**").permitAll();
-					requests.requestMatchers(HttpMethod.GET, "/boards").permitAll();
+					requests.requestMatchers(HttpMethod.GET, "/boards/**").permitAll();  // ← 수정
 					requests.requestMatchers(HttpMethod.GET, "/comments").permitAll();
 					requests.requestMatchers(HttpMethod.GET, "/cars").permitAll();
 					requests.requestMatchers(HttpMethod.GET, "/station").permitAll();
