@@ -76,11 +76,12 @@ public class SecurityConfigure {
 
 					  
 					   // 인증 없이 조회 허용
-					   requests.requestMatchers(HttpMethod.GET, "/boards", "/boards/**", "/comments", "/comments/**", "/notice", "/notice/**").permitAll();
+					   requests.requestMatchers(HttpMethod.GET, "/boards", "/boards/**", "/comments", "/comments/**", "/notice", "/notice/**", "/uploads/**").permitAll();
 					   requests.requestMatchers(HttpMethod.GET, "/station", "/station/**").permitAll();
 					   requests.requestMatchers(HttpMethod.GET, "/reports", "/reports/**").permitAll();
 					   requests.requestMatchers(HttpMethod.GET, "/api/**").permitAll();
 					   requests.requestMatchers(HttpMethod.GET, "/member/**").permitAll();
+					 
 					  
 					   // 신고 상태 변경 (관리자용)
 					   requests.requestMatchers(HttpMethod.PUT, "/reports").authenticated();
@@ -96,7 +97,7 @@ public class SecurityConfigure {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"/*, "http://57.183.24.239"*/));
 		configuration.addAllowedOriginPattern("*");
 		configuration.setAllowedMethods(Arrays.asList(
 		    "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"

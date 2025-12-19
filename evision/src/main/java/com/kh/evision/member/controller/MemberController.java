@@ -11,17 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.evision.ResponseDTO.ResponseData;
 import com.kh.evision.auth.model.vo.CustomUserDetails;
 import com.kh.evision.member.model.dto.ChangePasswordDTO;
 import com.kh.evision.member.model.dto.ChangeRoleDTO;
@@ -47,9 +46,13 @@ public class MemberController {
     
     // 회원가입 엔드포인트
     @PostMapping("/join")
-    public ResponseEntity<String> signUp(@Valid @RequestBody MemberDTO member) {
+    public ResponseEntity<ResponseData> signUp(@Valid @RequestBody MemberDTO member) {
     	memberService.signUp(member);
-    	return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
+    	ResponseData rd = ResponseData.builder()
+    			                      .message("회원가입성공")
+    			                      .data(member)
+    			                      .build();
+    	return ResponseEntity.status(HttpStatus.CREATED).body(rd);
 		
     }
     
@@ -112,11 +115,19 @@ public class MemberController {
     public ResponseEntity<?> changeRole(@PathVariable("memberNo") Long memberNo,
                                         @RequestBody ChangeRoleDTO change,
                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
-    	change.setMemberNo(memberNo);
+        
+        change.setMemberNo(memberNo);
+        
+        String actingRole = userDetails.getAuthorities().stream()
+                .map(auth -> auth.getAuthority())
+                .filter(auth -> auth.startsWith("ROLE_"))
+                .findFirst()
+                .orElse(null);
+        
+        memberService.changeRole(change, actingRole);
+        
         return ResponseEntity.ok("변경에 성공했습니다!");
-                       
     }
-    
     
     @DeleteMapping("/operator/member-manage/{memberNo}")
     @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")

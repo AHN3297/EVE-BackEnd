@@ -24,7 +24,7 @@ public class ReportServiceImpl implements ReportService {
 	private final ReportMapper mapper;
 	
 	// 유효한 신고 상태 목록
-	private static final List<String> VALID_STATUSES = Arrays.asList("접수", "처리중", "완료", "반려");
+	private static final List<String> VALID_STATUSES = Arrays.asList("PENDING", "IN_PROGRESS", "RESOLVED", "REJECTED");
 	
 	@Override
 	public int save(ReportDTO report) {

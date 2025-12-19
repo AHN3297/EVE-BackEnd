@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +40,7 @@ public class CarController {
 	// 차량 등록 -> 관리자/운영자용 기능, 이미지첨부, 파일첨부
 	@PostMapping
 	@PreAuthorize("hasAnyRole('OPERATOR', 'ADMIN')")
-	public ResponseEntity<?> saveCar(@Valid CarCreateDTO car
+	public ResponseEntity<?> saveCar(@RequestPart("car") @Valid CarCreateDTO car
 								   , @RequestParam(name="file", required=false) List<MultipartFile> files
 								   ) {
 		// 파일 + 이미지 두개 올수있음.. 이거 다시 생각해야함! -> 리스트로 받음
