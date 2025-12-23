@@ -46,25 +46,28 @@ public class MemberController {
     
     // 회원가입 엔드포인트
     @PostMapping("/join")
-    public ResponseEntity<ResponseData> signUp(@Valid @RequestBody MemberDTO member) {
+    public ResponseEntity<ResponseData<Object>> signUp(@Valid @RequestBody MemberDTO member) {
     	memberService.signUp(member);
+    	/*
     	ResponseData rd = ResponseData.builder()
     			                      .message("회원가입성공")
     			                      .data(member)
     			                      .build();
     	return ResponseEntity.status(HttpStatus.CREATED).body(rd);
+    	*/
+    	return ResponseData.ok(member,"회원가입 성공");
 		
     }
     
     @GetMapping("/info")
-    public ResponseEntity<MemberDTO> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<ResponseData<Object>> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
         String memberNo = userDetails.getUsername();
         MemberDTO member = memberService.getMemberInfo(memberNo);
-        return ResponseEntity.ok(member);
+        return ResponseData.ok(member,"마이페이지 조회 성공");
     }
     
     @PostMapping("/verify-password")
-    public ResponseEntity<Map<String, Boolean>> verifyPassword(
+    public ResponseEntity<ResponseData<Object>> verifyPassword(
             @RequestBody Map<String, String> request,
             @AuthenticationPrincipal UserDetails userDetails) {  
         
@@ -77,42 +80,42 @@ public class MemberController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("success", isValid);
         
-        return ResponseEntity.ok(response);
+        return ResponseData.ok(response,"비밀번호 인증완료");
     }
     
     @GetMapping("/operator/member-manage")
     @PreAuthorize("hasRole('OPERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<List<MemberVO>> memberManage() {
+    public ResponseEntity<ResponseData<Object>> memberManage() {
         List<MemberVO> members = memberService.memberManage();
-        return ResponseEntity.ok(members);
+        return ResponseData.ok(members, "회원관리페이지");
     }
 
     
     @PutMapping("/changePwd")
-    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+    public ResponseEntity<ResponseData<Object>> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
     	memberService.changePassword(changePasswordDTO);
-    	return ResponseEntity.ok().build();
+    	return ResponseData.ok("비밀번호 변경 성공");
     }
     
     
     @PutMapping("/info")
-    public ResponseEntity<?> updateMember(@AuthenticationPrincipal CustomUserDetails userDetails, 
+    public ResponseEntity<ResponseData<Object>> updateMember(@AuthenticationPrincipal CustomUserDetails userDetails, 
     		                              @RequestBody UpdateMemberDTO updateDto) {
         String memberNo = userDetails.getUsername();
         memberService.updateMemberInfo(memberNo, updateDto);
-        return ResponseEntity.ok("회원정보가 수정되었습니다.");
+        return ResponseData.ok("회원정보가 수정되었습니다.");
     }
     
     @DeleteMapping("/info")
-    public ResponseEntity<?> deleteMyAccount(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<ResponseData<Object>> deleteMyAccount(@AuthenticationPrincipal CustomUserDetails userDetails,
     		                                 @RequestBody Map<String, String> request) {
     	String memberNo = userDetails.getUsername();
     	memberService.deleteMyAccount(memberNo);
-    	return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+    	return ResponseData.ok("회원 탈퇴가 완료되었습니다.");
     }
     
     @PutMapping("/admin/change-role/{memberNo}")
-    public ResponseEntity<?> changeRole(@PathVariable("memberNo") Long memberNo,
+    public ResponseEntity<ResponseData<Object>> changeRole(@PathVariable("memberNo") Long memberNo,
                                         @RequestBody ChangeRoleDTO change,
                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
         
@@ -126,37 +129,37 @@ public class MemberController {
         
         memberService.changeRole(change, actingRole);
         
-        return ResponseEntity.ok("변경에 성공했습니다!");
+        return ResponseData.ok("변경에 성공했습니다!");
     }
     
     @DeleteMapping("/operator/member-manage/{memberNo}")
     @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
-    public ResponseEntity<?> deleteMemberByAdmin(@PathVariable("memberNo") String memberNo, 
+    public ResponseEntity<ResponseData<Object>> deleteMemberByAdmin(@PathVariable("memberNo") String memberNo, 
     		                                     @AuthenticationPrincipal CustomUserDetails actingUser) {
         String actingRole = actingUser.getAuthorities().iterator().next().getAuthority();
         String actingMemberNo = actingUser.getUsername();
 
         memberService.deleteMemberByAdmin(memberNo, actingRole, actingMemberNo);
 
-        return ResponseEntity.ok("관리자에 의해 회원이 삭제되었습니다.");
+        return ResponseData.ok("관리자에 의해 회원이 삭제되었습니다.");
     }
 
 
     @PostMapping("/infoLicense")
-    public ResponseEntity<String> infoVerifyLicense(
+    public ResponseEntity<ResponseData<Object>> infoVerifyLicense(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody LicenseDTO licenseDTO) {
         
         String memberNo = userDetails.getUsername();
         memberService.infoVeryfyLicense(licenseDTO, memberNo);
-        return ResponseEntity.status(HttpStatus.CREATED).body("운전면허 인증 완료");
+        return ResponseData.ok("운전면허 인증 완료");
     }
 
     
     @GetMapping("/hasLicense/{memberNo}")
-    public ResponseEntity<Boolean> checkLicense(@PathVariable("memberNo") String memberNo){
+    public ResponseEntity<ResponseData<Object>> checkLicense(@PathVariable("memberNo") String memberNo){
     	boolean exists = memberService.hasLicense(memberNo);
-    	return ResponseEntity.ok(exists);
+    	return ResponseData.ok(exists);
     }
 
     

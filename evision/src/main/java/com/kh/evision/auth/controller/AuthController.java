@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.evision.ResponseDTO.ResponseData;
 import com.kh.evision.auth.model.service.AuthService;
 import com.kh.evision.member.model.dto.MemberDTO;
 import com.kh.evision.token.model.service.TokenService;
@@ -27,18 +28,18 @@ public class AuthController {
 	private final TokenService tokenService;
 	
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@Valid @RequestBody MemberDTO member){
+	public ResponseEntity<ResponseData<Object>> login(@Valid @RequestBody MemberDTO member){
 		
 		Map<String, String> loginResponse = authService.login(member);
 		
-		return ResponseEntity.ok(loginResponse);
+		return ResponseData.ok(loginResponse, "로그인 성공");
 	}
 	
 	@PostMapping("/refresh")
-	public ResponseEntity<?> refresh(@RequestBody Map<String, String> token) {
+	public ResponseEntity<ResponseData<Object>> refresh(@RequestBody Map<String, String> token) {
 		String refreshToken = token.get("refreshToken");
 		Map<String, String> tokens= tokenService.validateToken(refreshToken);
-		return ResponseEntity.status(HttpStatus.CREATED).body(tokens);
+		return ResponseData.ok(tokens);
 	}
 
 }
