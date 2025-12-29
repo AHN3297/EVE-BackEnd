@@ -23,6 +23,10 @@ file:
 server:
   port: 8081
 
+# CORS 설정 추가 (SecurityConfigure에서 사용)
+cors:
+  allowed-origins: http://3.27.74.208
+
 mybatis:
   configuration:
     jdbc-type-for-null: VARCHAR
@@ -30,7 +34,6 @@ mybatis:
     map-underscore-to-camel-case: true
   type-aliases-package: com.kh.evision.**.vo, com.kh.evision.**.dto, com.kh.evision.file
   mapper-locations: classpath:mapper/**/*.xml
-  
 
 logging:
   level:

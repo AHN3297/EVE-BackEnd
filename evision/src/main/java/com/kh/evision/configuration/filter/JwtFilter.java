@@ -40,10 +40,15 @@ public class JwtFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
+		
 		String uri = request.getRequestURI();
 		String method = request.getMethod();
 		String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 		
+		if ("OPTIONS".equalsIgnoreCase(method)) {
+		    filterChain.doFilter(request, response);
+		    return;
+		}
 		// ✅ 로그 추가 (디버깅용)
 		log.info("JwtFilter - URI: {}, Method: {}", uri, method);
 		
