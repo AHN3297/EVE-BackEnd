@@ -3,29 +3,38 @@ spring:
     name: evision
   datasource:
     url: jdbc:oracle:thin:@115.90.212.18:10000:XE
-    username: C##dlqmdl133
+    username: C##DLQMDL133
     password: dlqmdl1331234
     driver-class-name: oracle.jdbc.driver.OracleDriver
   mvc:
     static-path-pattern: /uploads/**
   web:
     resources:
-      static-locations: file:uploads/
+      static-locations: file:${user.dir}/uploads/
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
 
+file:
+  upload:
+    path: ./uploads/
+
 server:
   port: 8081
+
+# CORS 설정 추가 (SecurityConfigure에서 사용)
+cors:
+  allowed-origins: http://3.27.74.208
 
 mybatis:
   configuration:
     jdbc-type-for-null: VARCHAR
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
   type-aliases-package: com.kh.evision.**.vo, com.kh.evision.**.dto, com.kh.evision.file
   mapper-locations: classpath:mapper/**/*.xml
-  
+
 logging:
   level:
     root: INFO
@@ -33,4 +42,4 @@ logging:
 
 jwt:
   secret: H7oIaBujRo6fA/a0wdk09iY6STECQZbemMj8bcs5xBMzd0IYxzT+hNQd+fgXvsyz3qHF3DIwuYXUE9m7w5tkDw==
-  expiration: 86400000 
+  expiration: 86400000

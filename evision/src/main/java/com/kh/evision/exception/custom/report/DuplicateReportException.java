@@ -6,8 +6,8 @@ public class DuplicateReportException extends RuntimeException {
         super(message);
     }
     
-    public DuplicateReportException(Long boardNo) {
-        super("이미 해당 게시글을 신고하셨습니다. 게시글 번호: " + boardNo);
+    public DuplicateReportException() {
+        super("이미 해당 게시글을 신고하셨습니다.  ");
     }
 }
 

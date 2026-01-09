@@ -131,17 +131,21 @@ public class MemberController {
     }
     
     @PutMapping("/admin/change-role/{memberNo}")
-    public ResponseEntity<?> changeRole(
-    		@PathVariable("memberNo") Long memberNo,
-            @RequestBody ChangeRoleDTO change,
-            @AuthenticationPrincipal CustomUserDetails userDetails
-    ) {
-    	change.setMemberNo(memberNo);
-        String actingRole = userDetails.getAuthorities().iterator().next().getAuthority();
-        boolean success = memberService.changeRole(change, actingRole);
+    public ResponseEntity<?> changeRole(@PathVariable("memberNo") Long memberNo,
+                                        @RequestBody ChangeRoleDTO change,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        return success ? ResponseEntity.ok("변경에 성공했습니다!")
-                       : ResponseEntity.badRequest().body("변경에 실패했습니다...");
+        change.setMemberNo(memberNo);
+
+        String actingRole = userDetails.getAuthorities().stream()
+                .map(auth -> auth.getAuthority())
+                .filter(auth -> auth.startsWith("ROLE_"))
+                .findFirst()
+                .orElse(null);
+
+        memberService.changeRole(change, actingRole);
+
+        return ResponseEntity.ok("변경에 성공했습니다!");
     }
     
     
