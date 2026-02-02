@@ -130,9 +130,6 @@
 
     <!-- 충전소 리뷰 등록 -->
     <insert id="commentSave" parameterType="com.kh.evision.station.model.vo.ReviewVO">
-        <selectKey keyProperty="reviewNo" resultType="Long" order="BEFORE">
-            SELECT NVL(MAX(REVIEW_NO), 0) + 1 FROM TB_REVIEW
-        </selectKey>
         INSERT 
           INTO 
           	   TB_REVIEW 
